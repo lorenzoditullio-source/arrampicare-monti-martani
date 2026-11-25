@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1c1917">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Monti Martani Multipitch — Guida Open Source</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,7 +14,7 @@
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #e7e5e4; /* Stone 200 */
+            background-color: #fafaf9; /* Stone 50 */
             color: #1c1917; /* Stone 900 */
         }
         .font-mono-code {
@@ -25,24 +28,11 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* Simulazione cornice smartphone su schermi desktop */
-        @media (min-width: 640px) {
-            .phone-shell {
-                width: 412px;
-                height: 850px;
-                max-height: 92vh;
-                border-radius: 42px;
-                border: 10px solid #1c1917;
-                box-shadow: 0 25px 60px -15px rgba(28, 25, 23, 0.35), 0 0 0 2px #44403c;
-                overflow: hidden;
-                position: relative;
-            }
-        }
-        @media (max-width: 639px) {
-            .phone-shell {
-                width: 100%;
-                min-height: 100vh;
-            }
+        /* Layout adattivo Full-Screen per Mobile, Tablet e PC */
+        .app-shell {
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
         }
         /* Animazioni morbide */
         .fade-in {
@@ -54,28 +44,63 @@
         }
     </style>
 </head>
-<body class="sm:min-h-screen sm:flex sm:flex-col sm:items-center sm:justify-center sm:p-4 selection:bg-orange-200 selection:text-stone-900">
+<body class="min-h-screen flex flex-col bg-stone-50 selection:bg-orange-200 selection:text-stone-900">
 
-    <!-- Contenitore Principale (Smartphone Frame su Desktop / Fullscreen su Mobile) -->
-    <div id="app-frame" class="phone-shell bg-stone-50 flex flex-col">
+    <!-- Contenitore Principale Responsive (Mobile & Desktop) -->
+    <div id="app-frame" class="app-shell flex flex-col">
         
-        <!-- Notch / Status Bar simulata su desktop -->
-        <div class="hidden sm:flex items-center justify-between px-6 pt-2.5 pb-1.5 bg-white text-[11px] font-semibold text-stone-700 select-none border-b border-stone-100 shrink-0">
-            <span>09:41</span>
-            <div class="w-24 h-4 bg-stone-900 rounded-full"></div>
-            <div class="flex items-center gap-1.5">
-                <span class="inline-block w-2 h-2 rounded-full bg-emerald-500" title="Offline Cache Attiva"></span>
-                <span>OFFLINE</span>
+        <!-- Top Navigation Bar (Visibile su Tablet/Desktop + Stato Offline su tutti) -->
+        <header class="bg-stone-900 text-white border-b border-stone-800 sticky top-0 z-30 shrink-0">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+                <!-- Logo / Titolo -->
+                <button onclick="navigateTo('home')" class="flex items-center gap-2.5 text-left group">
+                    <span class="w-8 h-8 rounded-xl bg-orange-600 flex items-center justify-center text-sm shadow-xs group-hover:bg-orange-500 transition">⛰️</span>
+                    <div>
+                        <div class="text-xs sm:text-sm font-extrabold tracking-tight leading-none">Monti Martani</div>
+                        <div class="text-[10px] text-stone-400 font-medium mt-0.5">Guida Arrampicata v. 2.1</div>
+                    </div>
+                </button>
+
+                <!-- Navigazione Desktop (nascosta su mobile dove c'è la bottom bar) -->
+                <nav class="hidden md:flex items-center gap-1.5">
+                    <button onclick="navigateTo('home')" id="desk-nav-home" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-800 text-orange-400 transition">
+                        Home / Mappa
+                    </button>
+                    <button onclick="navigateTo('intro')" id="desk-nav-intro" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-stone-300 hover:text-white hover:bg-stone-800/60 transition">
+                        1. Introduzione
+                    </button>
+                    <button onclick="navigateTo('routes')" id="desk-nav-routes" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-stone-300 hover:text-white hover:bg-stone-800/60 transition">
+                        Elenco Vie (<span id="desk-completed-counter">0</span>/<span id="desk-total-counter">24</span>)
+                    </button>
+                </nav>
+
+                <!-- Stato Offline & Pulsante Salva Offline -->
+                <div class="flex items-center gap-2">
+                    <span id="offline-status-badge" class="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full bg-stone-800 text-emerald-400 border border-stone-700">
+                        <span id="offline-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span id="offline-label">Pronta Offline</span>
+                    </span>
+                    <button
+                        onclick="downloadOfflineCopy()"
+                        title="Scarica una copia HTML completa da consultare offline anche senza internet"
+                        class="inline-flex items-center gap-1.5 text-[11px] font-bold bg-orange-600 hover:bg-orange-500 active:scale-[0.98] text-white px-3 py-1.5 rounded-xl transition shadow-2xs"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <span class="hidden sm:inline">Salva Offline</span>
+                    </button>
+                </div>
             </div>
-        </div>
+        </header>
 
-        <!-- Area Scorrevole dell'App -->
-        <div id="app-scroll-container" class="flex-1 overflow-y-auto no-scrollbar relative bg-[#fafaf9]">
+        <!-- Area Principale Centrata per Desktop -->
+        <main id="app-scroll-container" class="flex-1 w-full max-w-6xl mx-auto pb-20 md:pb-10">
             <!-- Il contenuto dinamico viene renderizzato qui via JS -->
-        </div>
+        </main>
 
-        <!-- Barra Navigazione Inferiore Stile App (3 Tab: Home/Mappa, Introduzione, Elenco Vie) -->
-        <nav class="bg-white border-t border-stone-200 px-3 py-2 flex items-center justify-around shrink-0 z-20">
+        <!-- Barra Navigazione Inferiore Stile App (Solo Smartphone < 768px) -->
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xs border-t border-stone-200 px-3 py-2 flex items-center justify-around z-30">
             <button onclick="navigateTo('home')" id="nav-home" class="flex flex-col items-center gap-0.5 text-orange-600 font-semibold text-xs px-3 py-1.5 rounded-xl transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
@@ -99,21 +124,21 @@
         </nav>
 
         <!-- Lightbox Visualizzatore Foto a Schermo Intero -->
-        <div id="photo-lightbox" onclick="closePhotoLightbox()" class="hidden fixed sm:absolute inset-0 bg-stone-950/95 z-50 flex flex-col justify-between p-4 fade-in">
-            <div class="flex items-center justify-between text-white">
+        <div id="photo-lightbox" onclick="closePhotoLightbox()" class="hidden fixed inset-0 bg-stone-950/95 z-50 flex flex-col justify-between p-4 sm:p-6 fade-in">
+            <div class="max-w-5xl w-full mx-auto flex items-center justify-between text-white">
                 <span class="text-xs font-bold text-orange-400 uppercase tracking-wider">Foto / Schizzo Parete</span>
-                <button onclick="closePhotoLightbox()" class="px-3 py-1.5 bg-stone-800 hover:bg-stone-700 rounded-xl text-xs font-bold">
+                <button onclick="closePhotoLightbox()" class="px-3.5 py-1.5 bg-stone-800 hover:bg-stone-700 rounded-xl text-xs font-bold">
                     ✕ Chiudi
                 </button>
             </div>
             <div class="flex-1 flex items-center justify-center my-3 overflow-hidden">
                 <img id="lightbox-img" src="" alt="Schizzo parete" class="max-w-full max-h-full rounded-2xl object-contain shadow-2xl border border-stone-800" />
             </div>
-            <p id="lightbox-caption" class="text-xs text-stone-300 text-center pb-2 leading-relaxed"></p>
+            <p id="lightbox-caption" class="max-w-3xl mx-auto text-xs sm:text-sm text-stone-300 text-center pb-2 leading-relaxed"></p>
         </div>
 
-        <!-- Toast / Messaggio Feedback Rapido (sostituisce alert) -->
-        <div id="toast-box" class="pointer-events-none fixed sm:absolute bottom-16 left-4 right-4 bg-stone-900 text-white text-xs font-medium px-4 py-3 rounded-xl shadow-lg opacity-0 transition-opacity duration-200 z-50 flex items-center justify-between">
+        <!-- Toast / Messaggio Feedback Rapido -->
+        <div id="toast-box" class="pointer-events-none fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm bg-stone-900 text-white text-xs font-medium px-4 py-3 rounded-xl shadow-lg opacity-0 transition-opacity duration-200 z-50 flex items-center justify-between border border-stone-700">
             <span id="toast-message">Messaggio</span>
         </div>
 
@@ -1277,32 +1302,36 @@
         function updateCompletedCounter() {
             const counterEl = document.getElementById('completed-counter');
             const totalEl = document.getElementById('total-counter');
+            const deskCounterEl = document.getElementById('desk-completed-counter');
+            const deskTotalEl = document.getElementById('desk-total-counter');
             if (counterEl) counterEl.textContent = state.completedRoutes.length;
             if (totalEl) totalEl.textContent = routesData.length;
+            if (deskCounterEl) deskCounterEl.textContent = state.completedRoutes.length;
+            if (deskTotalEl) deskTotalEl.textContent = routesData.length;
         }
 
+        let toastTimeout = null;
         function showToast(msg) {
             const box = document.getElementById('toast-box');
-            const msgEl = document.getElementById('toast-message');
-            if (!box || !msgEl) return;
-            msgEl.textContent = msg;
+            const label = document.getElementById('toast-message');
+            if (!box || !label) return;
+            label.textContent = msg;
             box.classList.remove('opacity-0');
-            clearTimeout(window._toastTimer);
-            window._toastTimer = setTimeout(() => {
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
                 box.classList.add('opacity-0');
-            }, 2400);
+            }, 2600);
         }
 
         function getGradeBadgeColor(grade) {
-            if (!grade) return 'bg-stone-100 text-stone-800 border-stone-200';
-            const g = grade.toLowerCase();
-            if (g.includes('ii') || g.includes('iii') || g.includes('iv') || g.startsWith('4') || g.startsWith('5')) {
-                return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+            const g = (grade || '').toLowerCase();
+            if (g.startsWith('7') || g.startsWith('8') || g.includes('td')) {
+                return 'bg-rose-50 text-rose-700 border-rose-200';
             }
-            if (g.startsWith('6a') || g.startsWith('6b') || g.startsWith('v')) {
-                return 'bg-amber-100 text-amber-800 border-amber-200';
+            if (g.startsWith('6b') || g.startsWith('6c') || g.includes('vi')) {
+                return 'bg-amber-50 text-amber-800 border-amber-200';
             }
-            return 'bg-rose-100 text-rose-800 border-rose-200';
+            return 'bg-emerald-50 text-emerald-700 border-emerald-200';
         }
 
         // ==========================================
@@ -1315,183 +1344,205 @@
             return `
                 <div class="fade-in pb-6">
                     <!-- Hero / Copertina Guida -->
-                    <header class="bg-stone-900 text-white px-5 pt-5 pb-6 rounded-b-3xl shadow-md">
-                        <div class="flex items-center justify-between gap-2 mb-3">
-                            <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-stone-800 text-orange-400 px-2.5 py-1 rounded-full border border-stone-700">
-                                <span>⛰️</span> Monti Martani • Terni / Cesi
-                            </span>
-                            <span class="font-mono-code text-[10px] font-semibold text-stone-300 bg-stone-800 px-2 py-0.5 rounded border border-stone-700">
-                                v. 2.1 • CC0
-                            </span>
-                        </div>
+                    <section class="bg-stone-900 text-white px-5 sm:px-8 pt-6 pb-7 rounded-b-3xl md:rounded-3xl md:mt-5 md:mx-4 shadow-md">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+                            <div class="max-w-2xl">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-stone-800 text-orange-400 px-2.5 py-1 rounded-full border border-stone-700">
+                                        <span>⛰️</span> Monti Martani • Terni / Cesi
+                                    </span>
+                                    <span class="font-mono-code text-[10px] font-semibold text-stone-300 bg-stone-800 px-2 py-0.5 rounded border border-stone-700">
+                                        v. 2.1 • CC0
+                                    </span>
+                                </div>
 
-                        <h1 class="text-2xl font-extrabold tracking-tight leading-tight mb-1.5">
-                            Arrampicare nei Monti Martani
-                        </h1>
-                        <p class="text-xs text-stone-300 leading-relaxed mb-4">
-                            Appunti di arrampicata sportiva e alpinistica: <strong class="text-white">${multipitchCount} vie multipitch</strong> e <strong class="text-white">${cragsCount} falesie</strong> tra Penna della Rocca, Colle Zannuto e Monte Eolo.
-                        </p>
+                                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight mb-2">
+                                    Arrampicare nei Monti Martani
+                                </h1>
+                                <p class="text-xs sm:text-sm text-stone-300 leading-relaxed">
+                                    Appunti di arrampicata sportiva e alpinistica: <strong class="text-white">${multipitchCount} vie multipitch</strong> e <strong class="text-white">${cragsCount} falesie</strong> tra Penna della Rocca, Colle Zannuto e Monte Eolo.
+                                </p>
+                            </div>
 
-                        <!-- Pulsante Primario Esplora Tutte -->
-                        <button
-                            onclick="openSectorRoutes('all')"
-                            class="w-full py-3 px-4 bg-orange-600 hover:bg-orange-500 active:scale-[0.99] text-white font-bold text-xs rounded-2xl shadow-sm flex items-center justify-between transition"
-                        >
-                            <span>Esplora tutte le vie e falesie (${routesData.length})</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                            </svg>
-                        </button>
-                    </header>
-
-                    <!-- Accesso Rapido alla Parte Introduttiva -->
-                    <section class="px-4 pt-5">
-                        <div class="flex items-center justify-between mb-2.5">
-                            <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">1. Parte Introduttiva</h2>
-                            <button onclick="navigateTo('intro')" class="text-xs font-bold text-orange-700 hover:underline">
-                                Leggi tutto →
-                            </button>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-2.5">
-                            ${introChapters.map(ch => `
+                            <!-- Pulsante Primario Esplora Tutte -->
+                            <div class="shrink-0 flex flex-col sm:flex-row md:flex-col gap-2">
                                 <button
-                                    onclick="openIntroChapter('${ch.id}')"
-                                    class="bg-white hover:border-orange-400 active:scale-[0.98] text-left p-3 rounded-2xl border border-stone-200/90 shadow-2xs transition flex flex-col justify-between"
+                                    onclick="openSectorRoutes('all')"
+                                    class="py-3 px-5 bg-orange-600 hover:bg-orange-500 active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-2xl shadow-sm flex items-center justify-between gap-4 transition"
                                 >
-                                    <span class="text-lg mb-1.5 block">${ch.icon}</span>
-                                    <div>
-                                        <div class="text-xs font-bold text-stone-900 leading-snug mb-0.5">${ch.title}</div>
-                                        <div class="text-[10px] text-stone-500 line-clamp-1">${ch.subtitle}</div>
-                                    </div>
+                                    <span>Esplora tutte le vie (${routesData.length})</span>
+                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
                                 </button>
-                            `).join('')}
-                        </div>
-                    </section>
-
-                    <!-- Mappa Schematica Interattiva dei Settori -->
-                    <section class="px-4 pt-5">
-                        <div class="flex items-center justify-between mb-2">
-                            <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">Mappa Schematica Settori</h2>
-                            <span class="text-[11px] font-semibold text-orange-700">Tocca un settore</span>
-                        </div>
-
-                        <div class="bg-[#efeae1] rounded-3xl p-3 border border-stone-300/90 shadow-xs overflow-hidden">
-                            <svg viewBox="0 0 340 245" class="w-full h-auto select-none">
-                                <defs>
-                                    <linearGradient id="martaniRidge" x1="0" y1="0" x2="1" y2="1">
-                                        <stop offset="0%" stop-color="#e7e0d2" />
-                                        <stop offset="100%" stop-color="#d6cec0" />
-                                    </linearGradient>
-                                </defs>
-                                <rect width="340" height="245" rx="16" fill="url(#martaniRidge)" />
-
-                                <!-- Curve di livello stilizzate -->
-                                <path d="M -10,45 Q 90,30 165,75 T 350,65" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
-                                <path d="M -10,95 Q 110,80 185,125 T 350,115" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
-                                <path d="M -10,145 Q 120,135 200,175 T 350,165" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
-
-                                <!-- Dorsale Monti Martani -->
-                                <polyline points="25,40 105,65 185,105 265,135 320,155" fill="none" stroke="#a89f91" stroke-width="3" stroke-linecap="round" />
-                                <text x="32" y="28" fill="#78716c" font-size="8.5" font-weight="700" letter-spacing="0.06em">VERSO MONTE TORRE MAGGIORE</text>
-                                <text x="200" y="232" fill="#78716c" font-size="8.5" font-weight="700" letter-spacing="0.06em">CONCA TERNANA / S.S. 79</text>
-
-                                <!-- Sentieri di avvicinamento tratteggiati -->
-                                <path d="M 55,195 Q 65,140 72,85" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
-                                <path d="M 165,205 Q 175,165 182,122" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
-                                <path d="M 275,205 Q 272,175 268,148" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
-
-                                <!-- Parcheggi / Punti di accesso -->
-                                <g>
-                                    <rect x="36" y="192" width="38" height="16" rx="5" fill="#1d4ed8" />
-                                    <text x="55" y="203" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Eremo</text>
-                                </g>
-                                <g>
-                                    <rect x="145" y="200" width="42" height="16" rx="5" fill="#1d4ed8" />
-                                    <text x="166" y="211" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Cesi P</text>
-                                </g>
-                                <g>
-                                    <rect x="252" y="200" width="48" height="16" rx="5" fill="#1d4ed8" />
-                                    <text x="276" y="211" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Ulivo P</text>
-                                </g>
-
-                                <!-- Nodo Cliccabile Settore 4: Monte Eolo / Sant'Erasmo -->
-                                <g onclick="openSectorRoutes('monte-eolo')" class="cursor-pointer">
-                                    <circle cx="72" cy="75" r="24" fill="#ea580c" fill-opacity="0.18" />
-                                    <circle cx="72" cy="75" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
-                                    <text x="72" y="79" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">4</text>
-                                    <rect x="16" y="95" width="112" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
-                                    <text x="72" y="106" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Monte Eolo / S. Erasmo</text>
-                                    <text x="72" y="116" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">10 schede (Multi + Falesie)</text>
-                                </g>
-
-                                <!-- Nodo Cliccabile Settore 3: Colle Zannuto -->
-                                <g onclick="openSectorRoutes('colle-zannuto')" class="cursor-pointer">
-                                    <circle cx="182" cy="112" r="24" fill="#ea580c" fill-opacity="0.18" />
-                                    <circle cx="182" cy="112" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
-                                    <text x="182" y="116" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">3</text>
-                                    <rect x="130" y="132" width="104" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
-                                    <text x="182" y="143" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Colle Zannuto</text>
-                                    <text x="182" y="153" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">3 schede • 700 m</text>
-                                </g>
-
-                                <!-- Nodo Cliccabile Settore 2: Penna della Rocca -->
-                                <g onclick="openSectorRoutes('penna-rocca')" class="cursor-pointer">
-                                    <circle cx="268" cy="140" r="24" fill="#ea580c" fill-opacity="0.18" />
-                                    <circle cx="268" cy="140" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
-                                    <text x="268" y="144" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">2</text>
-                                    <rect x="212" y="160" width="112" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
-                                    <text x="268" y="171" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Penna della Rocca</text>
-                                    <text x="268" y="181" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">13 schede • 707 m</text>
-                                </g>
-                            </svg>
-
-                            <!-- Legenda Mappa -->
-                            <div class="flex items-center justify-between px-2 pt-2 text-[10px] font-semibold text-stone-600">
-                                <span class="flex items-center gap-1.5">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-orange-600 inline-block"></span> Capitoli / Settori
-                                </span>
-                                <span class="flex items-center gap-1.5">
-                                    <span class="w-3 h-0.5 border-t-2 border-dashed border-amber-700 inline-block"></span> Sentieri CAI
-                                </span>
-                                <span class="flex items-center gap-1.5">
-                                    <span class="px-1.5 py-0.2 rounded bg-blue-700 text-white text-[9px]">P</span> Parcheggi
-                                </span>
+                                <button
+                                    onclick="downloadOfflineCopy()"
+                                    class="py-2.5 px-4 bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold text-xs rounded-2xl border border-stone-700 flex items-center justify-center gap-2 transition"
+                                >
+                                    <span>📥 Scarica guida per uso offline</span>
+                                </button>
                             </div>
                         </div>
-
-                        <!-- Lista Rapida Settori sotto la mappa -->
-                        <div class="mt-3 space-y-2">
-                            ${sectorsData.map(sec => {
-                                const count = routesData.filter(r => r.sectorId === sec.id).length;
-                                return `
-                                    <button
-                                        onclick="openSectorRoutes('${sec.id}')"
-                                        class="w-full bg-white hover:border-orange-400 active:scale-[0.99] p-3 rounded-2xl border border-stone-200 flex items-center justify-between transition text-left"
-                                    >
-                                        <div class="flex items-center gap-3">
-                                            <span class="w-8 h-8 rounded-xl bg-orange-100 text-orange-700 font-extrabold text-xs flex items-center justify-center shrink-0">
-                                                ${sec.code}
-                                            </span>
-                                            <div>
-                                                <div class="text-xs font-bold text-stone-900">${sec.name}</div>
-                                                <div class="text-[11px] text-stone-500">Esp. ${sec.exposure} • Avv. ${sec.approachTime}</div>
-                                            </div>
-                                        </div>
-                                        <span class="text-xs font-bold text-stone-700 bg-stone-100 px-2.5 py-1 rounded-lg shrink-0">
-                                            ${count} schede →
-                                        </span>
-                                    </button>
-                                `;
-                            }).join('')}
-                        </div>
                     </section>
+
+                    <!-- Griglia Principale Desktop: Introduzione + Mappa Settori -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 pt-6">
+                        
+                        <!-- Colonna Sinistra (5 col su Desktop): Parte Introduttiva + Lista Settori -->
+                        <div class="lg:col-span-5 space-y-6">
+                            <!-- Accesso Rapido alla Parte Introduttiva -->
+                            <section>
+                                <div class="flex items-center justify-between mb-2.5">
+                                    <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">1. Parte Introduttiva</h2>
+                                    <button onclick="navigateTo('intro')" class="text-xs font-bold text-orange-700 hover:underline">
+                                        Leggi tutto →
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2.5">
+                                    ${introChapters.map(ch => `
+                                        <button
+                                            onclick="openIntroChapter('${ch.id}')"
+                                            class="bg-white hover:border-orange-400 active:scale-[0.98] text-left p-3.5 rounded-2xl border border-stone-200/90 shadow-2xs transition flex flex-col justify-between"
+                                        >
+                                            <span class="text-lg mb-1.5 block">${ch.icon}</span>
+                                            <div>
+                                                <div class="text-xs font-bold text-stone-900 leading-snug mb-0.5">${ch.title}</div>
+                                                <div class="text-[10px] text-stone-500 line-clamp-1">${ch.subtitle}</div>
+                                            </div>
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </section>
+
+                            <!-- Lista Rapida Settori -->
+                            <section>
+                                <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2.5">Aree e Pareti Principali</h2>
+                                <div class="space-y-2.5">
+                                    ${sectorsData.map(sec => {
+                                        const count = routesData.filter(r => r.sectorId === sec.id).length;
+                                        return `
+                                            <button
+                                                onclick="openSectorRoutes('${sec.id}')"
+                                                class="w-full bg-white hover:border-orange-400 active:scale-[0.99] p-3.5 rounded-2xl border border-stone-200 flex items-center justify-between transition text-left"
+                                            >
+                                                <div class="flex items-center gap-3">
+                                                    <span class="w-9 h-9 rounded-xl bg-orange-100 text-orange-700 font-extrabold text-xs flex items-center justify-center shrink-0">
+                                                        ${sec.code}
+                                                    </span>
+                                                    <div>
+                                                        <div class="text-xs sm:text-sm font-bold text-stone-900">${sec.name}</div>
+                                                        <div class="text-[11px] text-stone-500">Esp. ${sec.exposure} • Avv. ${sec.approachTime}</div>
+                                                    </div>
+                                                </div>
+                                                <span class="text-xs font-bold text-stone-700 bg-stone-100 px-2.5 py-1 rounded-lg shrink-0">
+                                                    ${count} schede →
+                                                </span>
+                                            </button>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- Colonna Destra (7 col su Desktop): Mappa Schematica Interattiva -->
+                        <section class="lg:col-span-7">
+                            <div class="flex items-center justify-between mb-2.5">
+                                <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">Mappa Schematica Settori</h2>
+                                <span class="text-[11px] font-semibold text-orange-700">Tocca un settore sulla mappa</span>
+                            </div>
+
+                            <div class="bg-[#efeae1] rounded-3xl p-4 border border-stone-300/90 shadow-xs overflow-hidden">
+                                <svg viewBox="0 0 340 245" class="w-full h-auto max-h-[420px] mx-auto select-none">
+                                    <defs>
+                                        <linearGradient id="martaniRidge" x1="0" y1="0" x2="1" y2="1">
+                                            <stop offset="0%" stop-color="#e7e0d2" />
+                                            <stop offset="100%" stop-color="#d6cec0" />
+                                        </linearGradient>
+                                    </defs>
+                                    <rect width="340" height="245" rx="16" fill="url(#martaniRidge)" />
+
+                                    <!-- Curve di livello stilizzate -->
+                                    <path d="M -10,45 Q 90,30 165,75 T 350,65" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
+                                    <path d="M -10,95 Q 110,80 185,125 T 350,115" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
+                                    <path d="M -10,145 Q 120,135 200,175 T 350,165" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
+
+                                    <!-- Dorsale Monti Martani -->
+                                    <polyline points="25,40 105,65 185,105 265,135 320,155" fill="none" stroke="#a89f91" stroke-width="3" stroke-linecap="round" />
+                                    <text x="32" y="28" fill="#78716c" font-size="8.5" font-weight="700" letter-spacing="0.06em">VERSO MONTE TORRE MAGGIORE</text>
+                                    <text x="200" y="232" fill="#78716c" font-size="8.5" font-weight="700" letter-spacing="0.06em">CONCA TERNANA / S.S. 79</text>
+
+                                    <!-- Sentieri di avvicinamento tratteggiati -->
+                                    <path d="M 55,195 Q 65,140 72,85" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
+                                    <path d="M 165,205 Q 175,165 182,122" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
+                                    <path d="M 275,205 Q 272,175 268,148" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
+
+                                    <!-- Parcheggi / Punti di accesso -->
+                                    <g>
+                                        <rect x="36" y="192" width="38" height="16" rx="5" fill="#1d4ed8" />
+                                        <text x="55" y="203" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Eremo</text>
+                                    </g>
+                                    <g>
+                                        <rect x="145" y="200" width="42" height="16" rx="5" fill="#1d4ed8" />
+                                        <text x="166" y="211" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Cesi P</text>
+                                    </g>
+                                    <g>
+                                        <rect x="252" y="200" width="48" height="16" rx="5" fill="#1d4ed8" />
+                                        <text x="276" y="211" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Ulivo P</text>
+                                    </g>
+
+                                    <!-- Nodo Cliccabile Settore 4: Monte Eolo / Sant'Erasmo -->
+                                    <g onclick="openSectorRoutes('monte-eolo')" class="cursor-pointer">
+                                        <circle cx="72" cy="75" r="24" fill="#ea580c" fill-opacity="0.18" />
+                                        <circle cx="72" cy="75" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
+                                        <text x="72" y="79" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">4</text>
+                                        <rect x="16" y="95" width="112" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
+                                        <text x="72" y="106" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Monte Eolo / S. Erasmo</text>
+                                        <text x="72" y="116" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">10 schede (Multi + Falesie)</text>
+                                    </g>
+
+                                    <!-- Nodo Cliccabile Settore 3: Colle Zannuto -->
+                                    <g onclick="openSectorRoutes('colle-zannuto')" class="cursor-pointer">
+                                        <circle cx="182" cy="112" r="24" fill="#ea580c" fill-opacity="0.18" />
+                                        <circle cx="182" cy="112" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
+                                        <text x="182" y="116" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">3</text>
+                                        <rect x="130" y="132" width="104" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
+                                        <text x="182" y="143" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Colle Zannuto</text>
+                                        <text x="182" y="153" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">3 schede • 700 m</text>
+                                    </g>
+
+                                    <!-- Nodo Cliccabile Settore 2: Penna della Rocca -->
+                                    <g onclick="openSectorRoutes('penna-rocca')" class="cursor-pointer">
+                                        <circle cx="268" cy="140" r="24" fill="#ea580c" fill-opacity="0.18" />
+                                        <circle cx="268" cy="140" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
+                                        <text x="268" y="144" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">2</text>
+                                        <rect x="212" y="160" width="112" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
+                                        <text x="268" y="171" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Penna della Rocca</text>
+                                        <text x="268" y="181" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">13 schede • 707 m</text>
+                                    </g>
+                                </svg>
+
+                                <!-- Legenda Mappa -->
+                                <div class="flex items-center justify-between px-2 pt-3 text-[11px] font-semibold text-stone-600">
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-orange-600 inline-block"></span> Capitoli / Settori
+                                    </span>
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="w-3 h-0.5 border-t-2 border-dashed border-amber-700 inline-block"></span> Sentieri CAI
+                                    </span>
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="px-1.5 py-0.2 rounded bg-blue-700 text-white text-[9px]">P</span> Parcheggi
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
                 </div>
             `;
         }
 
         // ==========================================
-        // 2. SCHERMATA PARTE INTRODUTTIVA
+        // 2. SCHERMATA INTRODUZIONE
         // ==========================================
         function renderIntroScreen() {
             const activeChapter = state.selectedIntroId
@@ -1500,8 +1551,8 @@
 
             if (activeChapter) {
                 return `
-                    <div class="fade-in pb-8">
-                        <div class="bg-white px-4 py-3 border-b border-stone-200 sticky top-0 z-10 flex items-center justify-between">
+                    <div class="fade-in pb-8 max-w-3xl mx-auto">
+                        <div class="bg-white/95 backdrop-blur-xs px-4 py-3 border-b border-stone-200 sticky top-14 z-10 flex items-center justify-between md:rounded-b-2xl">
                             <button onclick="state.selectedIntroId = null; render();" class="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 bg-stone-100 hover:bg-stone-200 px-3 py-2 rounded-xl transition">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -1511,23 +1562,23 @@
                             <span class="text-[11px] font-semibold text-stone-400">Capitolo 1</span>
                         </div>
 
-                        <div class="px-5 pt-5">
+                        <div class="px-5 pt-6">
                             <div class="text-3xl mb-2">${activeChapter.icon}</div>
-                            <h1 class="text-xl font-extrabold text-stone-900 leading-tight mb-1">
+                            <h1 class="text-xl sm:text-2xl font-extrabold text-stone-900 leading-tight mb-1">
                                 ${activeChapter.title}
                             </h1>
-                            <p class="text-xs font-medium text-orange-700 mb-5">
+                            <p class="text-xs sm:text-sm font-medium text-orange-700 mb-5">
                                 ${activeChapter.subtitle}
                             </p>
 
-                            <div class="space-y-3.5 text-xs text-stone-700 leading-relaxed bg-white p-4 rounded-2xl border border-stone-200 shadow-2xs">
+                            <div class="space-y-4 text-xs sm:text-sm text-stone-700 leading-relaxed bg-white p-5 sm:p-6 rounded-2xl border border-stone-200 shadow-2xs">
                                 ${activeChapter.content.map(paragraph => `<p>${paragraph}</p>`).join('')}
                             </div>
 
                             ${activeChapter.id === 'premessa' ? `
-                                <div class="mt-4 bg-stone-900 text-white rounded-2xl p-4 space-y-2.5">
+                                <div class="mt-4 bg-stone-900 text-white rounded-2xl p-5 space-y-2.5">
                                     <div class="text-xs font-bold text-orange-400 uppercase tracking-wider">Bibliografia & Fonti Storiche</div>
-                                    <ul class="text-xs text-stone-300 space-y-1.5 list-disc pl-4">
+                                    <ul class="text-xs sm:text-sm text-stone-300 space-y-1.5 list-disc pl-4">
                                         <li><em>Al di là delle ciminiere - Salite su roccia nel ternano</em> (CAI Terni, 1988)</li>
                                         <li><em>Arrampicate nel ternano</em> di Silvano Lepri (1988)</li>
                                         <li>Archivio storico montimartani.it, climbook.com e falesia.it</li>
@@ -1541,30 +1592,30 @@
 
             return `
                 <div class="fade-in pb-8">
-                    <header class="bg-white px-5 pt-5 pb-4 border-b border-stone-200 sticky top-0 z-10">
+                    <div class="bg-white px-5 pt-5 pb-4 border-b border-stone-200 md:rounded-b-3xl md:mx-4">
                         <div class="text-[11px] font-bold uppercase tracking-wider text-orange-700 mb-0.5">Guida Generale</div>
-                        <h1 class="text-xl font-extrabold text-stone-900">1. Introduzione ai Martani</h1>
-                        <p class="text-xs text-stone-500 mt-0.5">Storia, geologia, aneddoti e crediti dell'opera</p>
-                    </header>
+                        <h1 class="text-xl sm:text-2xl font-extrabold text-stone-900">1. Introduzione ai Martani</h1>
+                        <p class="text-xs sm:text-sm text-stone-500 mt-0.5">Storia, geologia, aneddoti e crediti dell'opera</p>
+                    </div>
 
-                    <div class="px-4 pt-4 space-y-3">
+                    <div class="px-4 pt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
                         ${introChapters.map(ch => `
                             <article
                                 onclick="openIntroChapter('${ch.id}')"
-                                class="bg-white hover:border-orange-400 active:scale-[0.99] p-4 rounded-2xl border border-stone-200 shadow-2xs transition cursor-pointer"
+                                class="bg-white hover:border-orange-400 active:scale-[0.99] p-5 rounded-2xl border border-stone-200 shadow-2xs transition cursor-pointer flex flex-col justify-between"
                             >
-                                <div class="flex items-start gap-3">
+                                <div class="flex items-start gap-3.5">
                                     <span class="text-2xl shrink-0 mt-0.5">${ch.icon}</span>
                                     <div class="flex-1">
-                                        <h2 class="text-sm font-bold text-stone-900 mb-0.5">${ch.title}</h2>
-                                        <p class="text-xs text-stone-500 mb-2">${ch.subtitle}</p>
-                                        <p class="text-xs text-stone-600 line-clamp-2 leading-relaxed">
+                                        <h2 class="text-sm sm:text-base font-bold text-stone-900 mb-0.5">${ch.title}</h2>
+                                        <p class="text-xs text-stone-500 mb-2.5">${ch.subtitle}</p>
+                                        <p class="text-xs text-stone-600 line-clamp-3 leading-relaxed">
                                             ${ch.content[0]}
                                         </p>
-                                        <div class="mt-2.5 text-[11px] font-bold text-orange-700">
-                                            Leggi capitolo completo →
-                                        </div>
                                     </div>
+                                </div>
+                                <div class="mt-3 pt-2.5 border-t border-stone-100 text-xs font-bold text-orange-700">
+                                    Leggi capitolo completo →
                                 </div>
                             </article>
                         `).join('')}
@@ -1588,18 +1639,44 @@
             return `
                 <div class="fade-in pb-6">
                     <!-- Header Elenco Vie -->
-                    <header class="bg-white px-4 pt-4 pb-3.5 border-b border-stone-200 sticky top-0 z-10">
-                        <div class="flex items-center justify-between mb-2.5">
-                            <button onclick="navigateTo('home')" class="inline-flex items-center gap-1 text-xs font-bold text-stone-700 bg-stone-100 hover:bg-stone-200 px-2.5 py-1.5 rounded-xl transition">
+                    <div class="bg-white px-4 sm:px-6 pt-4 pb-4 border-b border-stone-200 sticky top-14 z-10 md:rounded-b-3xl md:mx-4 shadow-2xs">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <button onclick="navigateTo('home')" class="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-xl transition">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                                 </svg>
                                 <span>Mappa Settori</span>
                             </button>
 
+                            <!-- Selettore Rapido Settore -->
+                            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                                <button
+                                    onclick="setSectorFilter('all')"
+                                    class="px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap border transition ${
+                                        state.selectedSectorId === 'all'
+                                            ? 'bg-orange-600 text-white border-orange-600'
+                                            : 'bg-stone-100 text-stone-600 border-stone-200 hover:bg-stone-200/70'
+                                    }"
+                                >
+                                    Tutti i settori
+                                </button>
+                                ${sectorsData.map(sec => `
+                                    <button
+                                        onclick="setSectorFilter('${sec.id}')"
+                                        class="px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap border transition ${
+                                            state.selectedSectorId === sec.id
+                                                ? 'bg-orange-600 text-white border-orange-600'
+                                                : 'bg-stone-100 text-stone-600 border-stone-200 hover:bg-stone-200/70'
+                                        }"
+                                    >
+                                        Sett. ${sec.code}: ${sec.shortName}
+                                    </button>
+                                `).join('')}
+                            </div>
+
                             <button
                                 onclick="toggleOnlyCompleted()"
-                                class="text-xs font-bold px-2.5 py-1.5 rounded-xl border transition ${
+                                class="text-xs font-bold px-3 py-1.5 rounded-xl border transition ${
                                     state.onlyCompleted
                                         ? 'bg-emerald-600 text-white border-emerald-600'
                                         : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
@@ -1609,78 +1686,54 @@
                             </button>
                         </div>
 
-                        <!-- Selettore Rapido Settore -->
-                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar mb-2.5">
-                            <button
-                                onclick="setSectorFilter('all')"
-                                class="px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap border transition ${
-                                    state.selectedSectorId === 'all'
-                                        ? 'bg-orange-600 text-white border-orange-600'
-                                        : 'bg-stone-100 text-stone-600 border-stone-200'
-                                }"
-                            >
-                                Tutti i settori
-                            </button>
-                            ${sectorsData.map(sec => `
-                                <button
-                                    onclick="setSectorFilter('${sec.id}')"
-                                    class="px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap border transition ${
-                                        state.selectedSectorId === sec.id
-                                            ? 'bg-orange-600 text-white border-orange-600'
-                                            : 'bg-stone-100 text-stone-600 border-stone-200'
-                                    }"
-                                >
-                                    Sett. ${sec.code}: ${sec.shortName}
-                                </button>
-                            `).join('')}
-                        </div>
+                        <div class="flex flex-col md:flex-row md:items-center gap-2.5">
+                            <!-- Barra di Ricerca -->
+                            <div class="relative flex-1">
+                                <svg class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                                <input
+                                    type="text"
+                                    value="${state.searchQuery}"
+                                    oninput="updateSearch(this.value)"
+                                    placeholder="Cerca nome via o grado (es. 6b, Diedro)..."
+                                    class="w-full pl-9 pr-4 py-2 bg-stone-100 hover:bg-stone-200/70 focus:bg-white text-xs text-stone-900 placeholder-stone-400 rounded-xl border border-stone-200 focus:border-orange-500 focus:outline-hidden transition"
+                                />
+                            </div>
 
-                        <!-- Barra di Ricerca -->
-                        <div class="relative mb-2.5">
-                            <svg class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            <input
-                                type="text"
-                                value="${state.searchQuery}"
-                                oninput="updateSearch(this.value)"
-                                placeholder="Cerca nome via o grado (es. 6b, Diedro)..."
-                                class="w-full pl-9 pr-4 py-2 bg-stone-100 hover:bg-stone-200/70 focus:bg-white text-xs text-stone-900 placeholder-stone-400 rounded-xl border border-stone-200 focus:border-orange-500 focus:outline-hidden transition"
-                            />
+                            <!-- Filtri Rapidi a Pillola -->
+                            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+                                ${filters.map(f => {
+                                    const isActive = state.activeFilter === f.key && !state.onlyCompleted;
+                                    return `
+                                        <button
+                                            onclick="setFilter('${f.key}')"
+                                            class="px-3 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap transition border ${
+                                                isActive
+                                                    ? 'bg-stone-900 text-white border-stone-900 shadow-2xs'
+                                                    : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-100'
+                                            }"
+                                        >
+                                            ${f.label}
+                                        </button>
+                                    `;
+                                }).join('')}
+                            </div>
                         </div>
-
-                        <!-- Filtri Rapidi a Pillola -->
-                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
-                            ${filters.map(f => {
-                                const isActive = state.activeFilter === f.key && !state.onlyCompleted;
-                                return `
-                                    <button
-                                        onclick="setFilter('${f.key}')"
-                                        class="px-2.5 py-1 rounded-full text-[11px] font-semibold whitespace-nowrap transition border ${
-                                            isActive
-                                                ? 'bg-stone-900 text-white border-stone-900 shadow-2xs'
-                                                : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-100'
-                                        }"
-                                    >
-                                        ${f.label}
-                                    </button>
-                                `;
-                            }).join('')}
-                        </div>
-                    </header>
+                    </div>
 
                     <!-- Intestazione Lista -->
-                    <div class="px-4 pt-3.5 pb-2 flex items-center justify-between">
+                    <div class="px-4 pt-4 pb-2.5 flex items-center justify-between">
                         <span class="text-xs font-bold uppercase tracking-wider text-stone-400">
                             ${state.onlyCompleted ? 'Le tue vie salite' : 'Itinerari selezionati'}
                         </span>
                         <span class="text-xs font-medium text-stone-500">
-                            Tocca per relazione tiri
+                            Tocca una scheda per i dettagli
                         </span>
                     </div>
 
-                    <!-- Lista Schede Vie -->
-                    <div id="routes-list-wrapper" class="px-4 space-y-3">
+                    <!-- Griglia Schede Vie -->
+                    <div id="routes-list-wrapper" class="px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
                         ${generateRoutesCardsHTML()}
                     </div>
                 </div>
@@ -1692,10 +1745,11 @@
 
             if (filtered.length === 0) {
                 return `
-                    <div class="bg-white rounded-2xl p-8 text-center border border-stone-200 mt-2">
-                        <p class="text-sm font-semibold text-stone-700 mb-1">Nessuna via trovata</p>
-                        <p class="text-xs text-stone-500 mb-4">Prova a reimpostare il filtro settore o la difficoltà.</p>
-                        <button onclick="state.selectedSectorId='all'; state.activeFilter='all'; state.onlyCompleted=false; state.searchQuery=''; render();" class="px-4 py-2 bg-stone-900 text-white text-xs font-semibold rounded-xl">
+                    <div class="col-span-full bg-white rounded-3xl p-8 border border-stone-200 text-center">
+                        <div class="text-2xl mb-2">🧗</div>
+                        <div class="text-sm font-bold text-stone-900 mb-1">Nessuna via trovata</div>
+                        <p class="text-xs text-stone-500 mb-4">Prova a modificare i filtri o la parola cercata.</p>
+                        <button onclick="state.searchQuery=''; state.activeFilter='all'; state.selectedSectorId='all'; state.onlyCompleted=false; render();" class="px-4 py-2 bg-stone-900 text-white text-xs font-bold rounded-xl">
                             Mostra tutte le vie
                         </button>
                     </div>
@@ -1705,46 +1759,44 @@
             return filtered.map(route => {
                 const isDone = state.completedRoutes.includes(route.id);
                 const isFalesia = route.type === 'falesia';
-                const gradeClass = isFalesia
-                    ? 'bg-sky-100 text-sky-900 border-sky-200'
-                    : getGradeBadgeColor(route.gradeMax);
+                const gradeClass = getGradeBadgeColor(route.gradeMax);
 
                 return `
                     <article
                         onclick="openRouteDetail('${route.id}')"
-                        class="bg-white rounded-2xl p-4 border border-stone-200/90 hover:border-orange-400 shadow-2xs active:scale-[0.99] transition cursor-pointer relative group"
+                        class="bg-white hover:border-orange-400 active:scale-[0.99] p-4 rounded-2xl border border-stone-200 shadow-2xs transition cursor-pointer flex flex-col justify-between"
                     >
-                        <div class="flex items-start justify-between gap-2 mb-1.5">
-                            <div>
-                                <div class="text-[11px] font-semibold text-orange-700 mb-0.5">${route.sector}</div>
-                                <h2 class="text-base font-bold text-stone-900 group-hover:text-orange-700 transition leading-snug">
-                                    ${route.name}
-                                </h2>
-                            </div>
-                            ${isDone ? `
-                                <span class="shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-lg">
-                                    ✓ Salita
-                                </span>
-                            ` : `
-                                <span class="shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${
-                                    isFalesia ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'bg-orange-50 text-orange-700 border border-orange-200'
+                        <div>
+                            <div class="flex items-start justify-between gap-2 mb-1.5">
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${
+                                    isFalesia
+                                        ? 'bg-sky-50 text-sky-700 border border-sky-200'
+                                        : 'bg-orange-50 text-orange-700 border border-orange-200'
                                 }">
                                     ${isFalesia ? 'Falesia' : 'Multipitch'}
                                 </span>
-                            `}
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    ${isDone ? '<span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">✓ Salita</span>' : ''}
+                                    <span class="font-mono-code text-xs font-bold px-2 py-0.5 rounded border ${gradeClass}">
+                                        ${route.gradeMax}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <h3 class="text-sm sm:text-base font-extrabold text-stone-900 leading-snug mb-1">
+                                ${route.name}
+                            </h3>
+                            <div class="text-[11px] font-medium text-stone-500 mb-2">
+                                ${route.sector}
+                            </div>
+                            <p class="text-xs text-stone-600 line-clamp-2 leading-relaxed mb-3">
+                                ${route.summary}
+                            </p>
                         </div>
 
-                        <!-- Tag Metadati Principali -->
-                        <div class="flex flex-wrap items-center gap-1.5 mt-2.5">
-                            <span class="font-mono-code text-xs font-bold px-2 py-0.5 rounded-md border ${gradeClass}">
-                                ${isFalesia ? `Gradi ${route.gradeObbl}–${route.gradeMax}` : `${route.gradeMax} (${route.gradeObbl} obbl.)`}
-                            </span>
-                            <span class="text-xs font-semibold text-stone-700 bg-stone-100 px-2 py-0.5 rounded-md">
-                                ${isFalesia ? route.length : `${route.length} • ${route.pitchesCount} tiri`}
-                            </span>
-                            <span class="text-xs font-medium text-stone-600 bg-stone-100 px-2 py-0.5 rounded-md">
-                                Esp. ${route.exposure}
-                            </span>
+                        <div class="pt-2.5 border-t border-stone-100 flex items-center justify-between text-[11px] font-semibold text-stone-500">
+                            <span>${isFalesia ? route.length : `${route.length} • ${route.pitchesCount} tiri`}</span>
+                            <span>Esp. ${route.exposure.split(' ')[0]}</span>
                         </div>
                     </article>
                 `;
@@ -1752,7 +1804,7 @@
         }
 
         // ==========================================
-        // 4. SCHEDA DETTAGLIO SINGOLA VIA O FALESIA
+        // 4. SCHEDA DETTAGLIO VIA / FALESIA
         // ==========================================
         function renderDetailView() {
             const route = routesData.find(r => r.id === state.selectedRouteId);
@@ -1760,29 +1812,25 @@
 
             const isDone = state.completedRoutes.includes(route.id);
             const isFalesia = route.type === 'falesia';
-            const gradeClass = isFalesia
-                ? 'bg-sky-100 text-sky-900 border-sky-200'
-                : getGradeBadgeColor(route.gradeMax);
-
-            // Costruzione punti polilinea SVG per lo schizzo (solo multipitch)
-            const polylinePoints = !isFalesia && route.svgPath
+            const gradeClass = getGradeBadgeColor(route.gradeMax);
+            const polylinePoints = (!isFalesia && route.svgPath)
                 ? route.svgPath.map(p => `${p.x},${p.y}`).join(' ')
                 : '';
 
             return `
                 <div class="fade-in pb-8">
                     <!-- Top Bar Dettaglio -->
-                    <div class="bg-white/95 backdrop-blur-xs px-4 py-3 border-b border-stone-200 sticky top-0 z-20 flex items-center justify-between gap-2">
+                    <div class="bg-white/95 backdrop-blur-xs px-4 sm:px-6 py-3 border-b border-stone-200 sticky top-14 z-20 flex items-center justify-between gap-2 md:rounded-b-2xl md:mx-4">
                         <button onclick="navigateTo('routes')" class="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-3 py-2 rounded-xl transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                             </svg>
-                            <span>Elenco</span>
+                            <span>Torna all'elenco</span>
                         </button>
 
                         <button
                             onclick="toggleRouteCompleted('${route.id}')"
-                            class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl border transition ${
+                            class="inline-flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl border transition ${
                                 isDone
                                     ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
                                     : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
@@ -1792,292 +1840,299 @@
                         </button>
                     </div>
 
-                    <!-- Intestazione Via / Falesia -->
-                    <div class="px-4 pt-5 pb-4 bg-white border-b border-stone-200">
-                        <div class="text-xs font-semibold text-orange-700 mb-1">${route.sector}</div>
-                        <h1 class="text-xl font-extrabold text-stone-900 tracking-tight leading-tight mb-1">
-                            ${route.name}
-                        </h1>
-                        ${route.openers ? `<div class="text-[11px] font-medium text-stone-500 mb-2.5">Apritori / Chiodatura: <span class="text-stone-700 font-semibold">${route.openers}</span></div>` : ''}
-                        <p class="text-xs text-stone-600 leading-relaxed mb-4">
-                            ${route.summary}
-                        </p>
+                    <!-- Layout Desktop a 2 Colonne (Colonna Sinistra: Dati & Schizzo | Colonna Destra: Relazione & Tiri) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 pt-5">
+                        
+                        <!-- Colonna Sinistra (5 col su Desktop) -->
+                        <div class="lg:col-span-5 space-y-5">
+                            <!-- Intestazione & Proprietà -->
+                            <div class="p-5 bg-white rounded-3xl border border-stone-200 shadow-2xs">
+                                <div class="text-xs font-semibold text-orange-700 mb-1">${route.sector}</div>
+                                <h1 class="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight leading-tight mb-1.5">
+                                    ${route.name}
+                                </h1>
+                                ${route.openers ? `<div class="text-xs font-medium text-stone-500 mb-3">Apritori / Chiodatura: <span class="text-stone-700 font-semibold">${route.openers}</span></div>` : ''}
+                                <p class="text-xs sm:text-sm text-stone-600 leading-relaxed mb-4">
+                                    ${route.summary}
+                                </p>
 
-                        <!-- Box Foto / Schizzo Originale del Documento (cliccabile per ingrandire) -->
-                        ${route.photoUrl ? `
-                            <div class="mb-4">
-                                <div
-                                    onclick="openPhotoLightbox('${route.photoUrl}', '${(route.photoCaption || route.name).replace(/'/g, "\\'")}')"
-                                    class="relative rounded-2xl overflow-hidden border border-stone-200 bg-stone-900 cursor-zoom-in group shadow-2xs"
-                                >
-                                    <img
-                                        src="${route.photoUrl}"
-                                        alt="${route.photoCaption || route.name}"
-                                        onerror="this.src='https://placehold.co/800x500/292524/fb923c?text=Inserisci+foto+qui+(images/...)'"
-                                        class="w-full h-44 object-cover group-hover:opacity-95 transition"
-                                    />
-                                    <span class="absolute bottom-2.5 right-2.5 bg-stone-950/85 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg border border-stone-700">
-                                        🔍 Tocca per ingrandire
-                                    </span>
-                                </div>
-                                ${route.photoCaption ? `
-                                    <p class="text-[11px] text-stone-500 mt-1.5 italic leading-snug">
-                                        ${route.photoCaption}
-                                    </p>
-                                ` : ''}
-                            </div>
-                        ` : ''}
-
-                        <!-- Griglia Proprietà -->
-                        <div class="bg-stone-50 rounded-2xl border border-stone-200/90 divide-y divide-stone-200/70 text-xs overflow-hidden">
-                            <div class="grid grid-cols-2 divide-x divide-stone-200/70">
-                                <div class="p-3">
-                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Range Difficoltà' : 'Difficoltà Max / Obbl.'}</div>
-                                    <div class="font-mono-code font-bold text-stone-900">
-                                        <span class="px-1.5 py-0.5 rounded border ${gradeClass}">${route.gradeMax}</span>
-                                        <span class="text-stone-600 ml-1">${isFalesia ? `(da ${route.gradeObbl})` : `(${route.gradeObbl} obbl.)`}</span>
-                                    </div>
-                                </div>
-                                <div class="p-3">
-                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Numero Vie' : 'Sviluppo e Tiri'}</div>
-                                    <div class="font-bold text-stone-900">${isFalesia ? route.length : `${route.length} • ${route.pitchesCount} tiri`}</div>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 divide-x divide-stone-200/70">
-                                <div class="p-3">
-                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">Chiodatura</div>
-                                    <div class="font-semibold text-stone-800">${route.protectionType}</div>
-                                </div>
-                                <div class="p-3">
-                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">Esposizione</div>
-                                    <div class="font-semibold text-stone-800">${route.exposure}</div>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 divide-x divide-stone-200/70">
-                                <div class="p-3">
-                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Periodo Consigliato' : 'Tempo Salita'}</div>
-                                    <div class="font-semibold text-stone-800">${route.climbTime}</div>
-                                </div>
-                                <div class="p-3">
-                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Quota' : 'Tempo Discesa'}</div>
-                                    <div class="font-semibold text-stone-800">${route.descentTime}</div>
-                                </div>
-                            </div>
-
-                            <div class="p-3">
-                                <div class="text-[11px] text-stone-400 font-medium mb-0.5">Materiale e Note</div>
-                                <div class="font-medium text-stone-800">${route.gear}</div>
-                            </div>
-                        </div>
-
-                        <!-- Pulsante GPS / Accesso -->
-                        <button
-                            onclick="copyGpsCoords('${route.gpsCoords}')"
-                            class="mt-3 w-full py-2.5 px-3.5 bg-stone-900 hover:bg-stone-800 active:scale-[0.99] text-white rounded-xl text-xs font-semibold flex items-center justify-between transition"
-                        >
-                            <span class="flex items-center gap-2 shrink-0">
-                                <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                <span>Riferimento Accesso</span>
-                            </span>
-                            <span class="font-mono-code text-[10px] text-stone-300 bg-stone-800 px-2 py-0.5 rounded-md truncate max-w-[175px]">
-                                ${route.gpsCoords}
-                            </span>
-                        </button>
-                    </div>
-
-                    ${!isFalesia ? `
-                    <!-- Schizzo / Topo Vettoriale Interattivo (Solo Multipitch) -->
-                    <div class="px-4 pt-5">
-                        <div class="flex items-center justify-between mb-2">
-                            <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">Schizzo Parete (Tocca le soste)</h2>
-                            <span class="text-[11px] text-orange-700 font-semibold">Interattivo</span>
-                        </div>
-
-                        <div class="bg-stone-900 rounded-2xl p-3 border border-stone-800 shadow-inner">
-                            <svg viewBox="0 0 260 235" class="w-full h-52 select-none">
-                                <defs>
-                                    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#1c1917" />
-                                        <stop offset="100%" stop-color="#292524" />
-                                    </linearGradient>
-                                    <linearGradient id="rockGrad" x1="0" y1="0" x2="1" y2="1">
-                                        <stop offset="0%" stop-color="#57534e" />
-                                        <stop offset="60%" stop-color="#44403c" />
-                                        <stop offset="100%" stop-color="#292524" />
-                                    </linearGradient>
-                                </defs>
-                                <rect width="260" height="235" rx="12" fill="url(#skyGrad)" />
-                                <polygon points="25,225 55,140 85,75 135,15 185,20 215,95 240,225" fill="url(#rockGrad)" stroke="#78716c" stroke-width="1.2" />
-                                <polyline points="95,180 125,130 140,85 160,25" fill="none" stroke="#292524" stroke-width="1.5" opacity="0.6" />
-                                <polyline points="170,190 165,120 180,60" fill="none" stroke="#78716c" stroke-width="1" opacity="0.35" />
-
-                                <polyline
-                                    points="${polylinePoints}"
-                                    fill="none"
-                                    stroke="#f97316"
-                                    stroke-width="3"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-dasharray="5,3"
-                                />
-
-                                ${route.svgPath.map((pt, idx) => {
-                                    const isAttacco = idx === 0;
-                                    const isSelected = !isAttacco && state.expandedPitchIndex === pt.pitchIndex;
-                                    if (isAttacco) {
-                                        return `
-                                            <g>
-                                                <circle cx="${pt.x}" cy="${pt.y}" r="5" fill="#fafaf9" stroke="#ea580c" stroke-width="2" />
-                                                <text x="${pt.x - 18}" y="${pt.y + 14}" fill="#d6d3d1" font-size="9" font-weight="600">${pt.label}</text>
-                                            </g>
-                                        `;
-                                    }
-                                    return `
-                                        <g onclick="focusPitchFromSvg(${pt.pitchIndex})" class="cursor-pointer">
-                                            <circle
-                                                cx="${pt.x}"
-                                                cy="${pt.y}"
-                                                r="${isSelected ? '9' : '7'}"
-                                                fill="${isSelected ? '#ea580c' : '#1c1917'}"
-                                                stroke="${isSelected ? '#ffffff' : '#fb923c'}"
-                                                stroke-width="2"
-                                            />
-                                            <text
-                                                x="${pt.x + 11}"
-                                                y="${pt.y + 3}"
-                                                fill="${isSelected ? '#fdba74' : '#fafaf9'}"
-                                                font-size="10"
-                                                font-weight="700"
-                                            >${pt.label}</text>
-                                        </g>
-                                    `;
-                                }).join('')}
-                            </svg>
-                        </div>
-                    </div>
-                    ` : ''}
-
-                    <!-- Avvicinamento -->
-                    <div class="px-4 pt-5">
-                        <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">1. Avvicinamento</h2>
-                        <div class="bg-white rounded-2xl p-3.5 border border-stone-200 text-xs text-stone-700 leading-relaxed">
-                            ${route.approach}
-                        </div>
-                    </div>
-
-                    ${!isFalesia ? `
-                    <!-- Relazione Tiro per Tiro (Multipitch) -->
-                    <div class="px-4 pt-5">
-                        <div class="flex items-center justify-between mb-2">
-                            <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">2. Relazione Tiro per Tiro</h2>
-                            <span class="text-[11px] text-stone-400">Spunta i tiri saliti</span>
-                        </div>
-
-                        <div class="space-y-2">
-                            ${route.pitches.map((pitch, idx) => {
-                                const isExpanded = state.expandedPitchIndex === idx;
-                                const isPitchDone = !!state.checkedPitches[`${route.id}_${idx}`];
-                                const pGradeClass = getGradeBadgeColor(pitch.grade);
-
-                                return `
-                                    <div
-                                        id="pitch-card-${idx}"
-                                        class="bg-white rounded-2xl border transition overflow-hidden ${
-                                            isExpanded ? 'border-orange-400 shadow-xs' : 'border-stone-200'
-                                        }"
-                                    >
+                                <!-- Box Foto / Schizzo Originale del Documento -->
+                                ${route.photoUrl ? `
+                                    <div class="mb-4">
                                         <div
-                                            onclick="togglePitchAccordion(${idx})"
-                                            class="p-3 flex items-center justify-between gap-2 cursor-pointer select-none ${
-                                                isPitchDone ? 'bg-emerald-50/40' : ''
-                                            }"
+                                            onclick="openPhotoLightbox('${route.photoUrl}', '${(route.photoCaption || route.name).replace(/'/g, "\\'")}')"
+                                            class="relative rounded-2xl overflow-hidden border border-stone-200 bg-stone-900 cursor-zoom-in group shadow-2xs"
                                         >
-                                            <div class="flex items-center gap-2.5">
-                                                <button
-                                                    onclick="togglePitchChecked('${route.id}', ${idx}, event)"
-                                                    title="Spunta tiro completato"
-                                                    class="w-5 h-5 rounded-md border flex items-center justify-center transition shrink-0 ${
-                                                        isPitchDone
-                                                            ? 'bg-emerald-600 border-emerald-600 text-white'
-                                                            : 'border-stone-300 bg-white hover:border-orange-500'
-                                                    }"
-                                                >
-                                                    ${isPitchDone ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>' : ''}
-                                                </button>
-
-                                                <span class="font-mono-code text-xs font-extrabold text-stone-900">${pitch.num}</span>
-                                                <span class="font-mono-code text-xs font-bold px-2 py-0.5 rounded border ${pGradeClass}">${pitch.grade}</span>
-                                                <span class="text-xs font-medium text-stone-500">${pitch.length} • ${pitch.bolts}</span>
-                                            </div>
-
-                                            <svg class="w-4 h-4 text-stone-400 transition-transform ${isExpanded ? 'rotate-180 text-orange-600' : ''}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                            </svg>
-                                        </div>
-
-                                        ${isExpanded ? `
-                                            <div class="px-3.5 pb-3.5 pt-1 text-xs text-stone-700 leading-relaxed border-t border-stone-100 bg-stone-50/50">
-                                                ${pitch.desc}
-                                            </div>
-                                        ` : ''}
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-                    </div>
-                    ` : `
-                    <!-- Elenco Monotiri della Falesia -->
-                    <div class="px-4 pt-5">
-                        <div class="flex items-center justify-between mb-2">
-                            <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">2. Elenco Vie della Falesia</h2>
-                            <span class="text-[11px] text-stone-400">${route.cragRoutes.length} tiri</span>
-                        </div>
-
-                        ${route.cragRoutes.length === 0 ? `
-                            <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-xs text-rose-900">
-                                Area dismessa con divieto di accesso da parte della proprietà della cava.
-                            </div>
-                        ` : `
-                            <div class="bg-white rounded-2xl border border-stone-200 overflow-hidden divide-y divide-stone-100">
-                                ${route.cragRoutes.map((cr, idx) => `
-                                    <div class="px-3.5 py-2.5 flex items-center justify-between gap-2 text-xs">
-                                        <div>
-                                            ${cr.sectorTag ? `<span class="text-[10px] font-bold uppercase text-orange-700 block">${cr.sectorTag}</span>` : ''}
-                                            <span class="font-semibold text-stone-900">${idx + 1}. ${cr.name}</span>
-                                            ${cr.meters && cr.meters !== '-' ? `<span class="text-stone-400 ml-1">(${cr.meters})</span>` : ''}
-                                        </div>
-                                        <div class="flex items-center gap-2 shrink-0">
-                                            ${cr.stars ? `<span class="text-[11px] text-amber-500 font-bold tracking-tighter">${cr.stars}</span>` : ''}
-                                            <span class="font-mono-code font-bold px-2 py-0.5 rounded bg-stone-100 text-stone-800 border border-stone-200">
-                                                ${cr.grade}
+                                            <img
+                                                src="${route.photoUrl}"
+                                                alt="${route.photoCaption || route.name}"
+                                                onerror="this.src='https://placehold.co/800x500/292524/fb923c?text=Inserisci+foto+qui+(images/...)'"
+                                                class="w-full h-48 sm:h-56 object-cover group-hover:opacity-95 transition"
+                                            />
+                                            <span class="absolute bottom-2.5 right-2.5 bg-stone-950/85 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg border border-stone-700">
+                                                🔍 Tocca per ingrandire
                                             </span>
                                         </div>
+                                        ${route.photoCaption ? `
+                                            <p class="text-[11px] text-stone-500 mt-1.5 italic leading-snug">
+                                                ${route.photoCaption}
+                                            </p>
+                                        ` : ''}
                                     </div>
-                                `).join('')}
-                            </div>
-                        `}
-                    </div>
-                    `}
+                                ` : ''}
 
-                    <!-- Discesa -->
-                    <div class="px-4 pt-5">
-                        <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">3. Discesa / Calata</h2>
-                        <div class="bg-amber-50/70 rounded-2xl p-3.5 border border-amber-200/80 text-xs text-stone-800 leading-relaxed">
-                            ${route.descent}
+                                <!-- Griglia Proprietà -->
+                                <div class="bg-stone-50 rounded-2xl border border-stone-200/90 divide-y divide-stone-200/70 text-xs overflow-hidden">
+                                    <div class="grid grid-cols-2 divide-x divide-stone-200/70">
+                                        <div class="p-3">
+                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Range Difficoltà' : 'Difficoltà Max / Obbl.'}</div>
+                                            <div class="font-mono-code font-bold text-stone-900">
+                                                <span class="px-1.5 py-0.5 rounded border ${gradeClass}">${route.gradeMax}</span>
+                                                <span class="text-stone-600 ml-1">${isFalesia ? `(da ${route.gradeObbl})` : `(${route.gradeObbl} obbl.)`}</span>
+                                            </div>
+                                        </div>
+                                        <div class="p-3">
+                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Numero Vie' : 'Sviluppo e Tiri'}</div>
+                                            <div class="font-bold text-stone-900">${isFalesia ? route.length : `${route.length} • ${route.pitchesCount} tiri`}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 divide-x divide-stone-200/70">
+                                        <div class="p-3">
+                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">Chiodatura</div>
+                                            <div class="font-semibold text-stone-800">${route.protectionType}</div>
+                                        </div>
+                                        <div class="p-3">
+                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">Esposizione</div>
+                                            <div class="font-semibold text-stone-800">${route.exposure}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 divide-x divide-stone-200/70">
+                                        <div class="p-3">
+                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Periodo Consigliato' : 'Tempo Salita'}</div>
+                                            <div class="font-semibold text-stone-800">${route.climbTime}</div>
+                                        </div>
+                                        <div class="p-3">
+                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Quota' : 'Tempo Discesa'}</div>
+                                            <div class="font-semibold text-stone-800">${route.descentTime}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-3">
+                                        <div class="text-[11px] text-stone-400 font-medium mb-0.5">Materiale e Note</div>
+                                        <div class="font-medium text-stone-800">${route.gear}</div>
+                                    </div>
+                                </div>
+
+                                <!-- Pulsante GPS / Accesso -->
+                                <button
+                                    onclick="copyGpsCoords('${route.gpsCoords}')"
+                                    class="mt-3 w-full py-2.5 px-3.5 bg-stone-900 hover:bg-stone-800 active:scale-[0.99] text-white rounded-xl text-xs font-semibold flex items-center justify-between transition"
+                                >
+                                    <span class="flex items-center gap-2 shrink-0">
+                                        <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        <span>Copia Riferimento Accesso</span>
+                                    </span>
+                                    <span class="font-mono-code text-[10px] text-stone-300 bg-stone-800 px-2 py-0.5 rounded-md truncate max-w-[180px]">
+                                        ${route.gpsCoords}
+                                    </span>
+                                </button>
+                            </div>
+
+                            ${!isFalesia ? `
+                            <!-- Schizzo / Topo Vettoriale Interattivo -->
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">Schizzo Parete (Tocca le soste)</h2>
+                                    <span class="text-[11px] text-orange-700 font-semibold">Interattivo</span>
+                                </div>
+
+                                <div class="bg-stone-900 rounded-2xl p-3 border border-stone-800 shadow-inner">
+                                    <svg viewBox="0 0 260 235" class="w-full h-56 select-none">
+                                        <defs>
+                                            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#1c1917" />
+                                                <stop offset="100%" stop-color="#292524" />
+                                            </linearGradient>
+                                            <linearGradient id="rockGrad" x1="0" y1="0" x2="1" y2="1">
+                                                <stop offset="0%" stop-color="#57534e" />
+                                                <stop offset="60%" stop-color="#44403c" />
+                                                <stop offset="100%" stop-color="#292524" />
+                                            </linearGradient>
+                                        </defs>
+                                        <rect width="260" height="235" rx="12" fill="url(#skyGrad)" />
+                                        <polygon points="25,225 55,140 85,75 135,15 185,20 215,95 240,225" fill="url(#rockGrad)" stroke="#78716c" stroke-width="1.2" />
+                                        <polyline points="95,180 125,130 140,85 160,25" fill="none" stroke="#292524" stroke-width="1.5" opacity="0.6" />
+                                        <polyline points="170,190 165,120 180,60" fill="none" stroke="#78716c" stroke-width="1" opacity="0.35" />
+
+                                        <polyline
+                                            points="${polylinePoints}"
+                                            fill="none"
+                                            stroke="#f97316"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-dasharray="5,3"
+                                        />
+
+                                        ${route.svgPath.map((pt, idx) => {
+                                            const isAttacco = idx === 0;
+                                            const isSelected = !isAttacco && state.expandedPitchIndex === pt.pitchIndex;
+                                            if (isAttacco) {
+                                                return `
+                                                    <g>
+                                                        <circle cx="${pt.x}" cy="${pt.y}" r="5" fill="#fafaf9" stroke="#ea580c" stroke-width="2" />
+                                                        <text x="${pt.x - 18}" y="${pt.y + 14}" fill="#d6d3d1" font-size="9" font-weight="600">${pt.label}</text>
+                                                    </g>
+                                                `;
+                                            }
+                                            return `
+                                                <g onclick="focusPitchFromSvg(${pt.pitchIndex})" class="cursor-pointer">
+                                                    <circle
+                                                        cx="${pt.x}"
+                                                        cy="${pt.y}"
+                                                        r="${isSelected ? '9' : '7'}"
+                                                        fill="${isSelected ? '#ea580c' : '#1c1917'}"
+                                                        stroke="${isSelected ? '#ffffff' : '#fb923c'}"
+                                                        stroke-width="2"
+                                                    />
+                                                    <text
+                                                        x="${pt.x + 11}"
+                                                        y="${pt.y + 3}"
+                                                        fill="${isSelected ? '#fdba74' : '#fafaf9'}"
+                                                        font-size="10"
+                                                        font-weight="700"
+                                                    >${pt.label}</text>
+                                                </g>
+                                            `;
+                                        }).join('')}
+                                    </svg>
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Colonna Destra (7 col su Desktop): Avvicinamento, Tiri/Vie, Discesa -->
+                        <div class="lg:col-span-7 space-y-5">
+                            <!-- Avvicinamento -->
+                            <div>
+                                <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">1. Avvicinamento</h2>
+                                <div class="bg-white rounded-2xl p-4 border border-stone-200 text-xs sm:text-sm text-stone-700 leading-relaxed">
+                                    ${route.approach}
+                                </div>
+                            </div>
+
+                            ${!isFalesia ? `
+                            <!-- Relazione Tiro per Tiro (Multipitch) -->
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">2. Relazione Tiro per Tiro</h2>
+                                    <span class="text-[11px] text-stone-400">Spunta i tiri saliti</span>
+                                </div>
+
+                                <div class="space-y-2.5">
+                                    ${route.pitches.map((pitch, idx) => {
+                                        const isExpanded = state.expandedPitchIndex === idx;
+                                        const isPitchDone = !!state.checkedPitches[`${route.id}_${idx}`];
+                                        const pGradeClass = getGradeBadgeColor(pitch.grade);
+
+                                        return `
+                                            <div
+                                                id="pitch-card-${idx}"
+                                                class="bg-white rounded-2xl border transition overflow-hidden ${
+                                                    isExpanded ? 'border-orange-400 shadow-xs' : 'border-stone-200'
+                                                }"
+                                            >
+                                                <div
+                                                    onclick="togglePitchAccordion(${idx})"
+                                                    class="p-3.5 flex items-center justify-between gap-2 cursor-pointer select-none ${
+                                                        isPitchDone ? 'bg-emerald-50/40' : ''
+                                                    }"
+                                                >
+                                                    <div class="flex items-center gap-2.5">
+                                                        <button
+                                                            onclick="togglePitchChecked('${route.id}', ${idx}, event)"
+                                                            title="Spunta tiro completato"
+                                                            class="w-5 h-5 rounded-md border flex items-center justify-center transition shrink-0 ${
+                                                                isPitchDone
+                                                                    ? 'bg-emerald-600 border-emerald-600 text-white'
+                                                                    : 'border-stone-300 bg-white hover:border-orange-500'
+                                                            }"
+                                                        >
+                                                            ${isPitchDone ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>' : ''}
+                                                        </button>
+
+                                                        <span class="font-mono-code text-xs sm:text-sm font-extrabold text-stone-900">${pitch.num}</span>
+                                                        <span class="font-mono-code text-xs font-bold px-2 py-0.5 rounded border ${pGradeClass}">${pitch.grade}</span>
+                                                        <span class="text-xs font-medium text-stone-500">${pitch.length} • ${pitch.bolts}</span>
+                                                    </div>
+
+                                                    <svg class="w-4 h-4 text-stone-400 transition-transform ${isExpanded ? 'rotate-180 text-orange-600' : ''}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </div>
+
+                                                ${isExpanded ? `
+                                                    <div class="px-4 pb-4 pt-2 text-xs sm:text-sm text-stone-700 leading-relaxed border-t border-stone-100 bg-stone-50/50">
+                                                        ${pitch.desc}
+                                                    </div>
+                                                ` : ''}
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                            ` : `
+                            <!-- Elenco Monotiri della Falesia -->
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">2. Elenco Vie della Falesia</h2>
+                                    <span class="text-[11px] text-stone-400">${route.cragRoutes.length} tiri</span>
+                                </div>
+
+                                ${route.cragRoutes.length === 0 ? `
+                                    <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-xs text-rose-900">
+                                        Area dismessa con divieto di accesso da parte della proprietà della cava.
+                                    </div>
+                                ` : `
+                                    <div class="bg-white rounded-2xl border border-stone-200 overflow-hidden divide-y divide-stone-100">
+                                        ${route.cragRoutes.map((cr, idx) => `
+                                            <div class="px-4 py-3 flex items-center justify-between gap-2 text-xs sm:text-sm">
+                                                <div>
+                                                    ${cr.sectorTag ? `<span class="text-[10px] font-bold uppercase text-orange-700 block">${cr.sectorTag}</span>` : ''}
+                                                    <span class="font-semibold text-stone-900">${idx + 1}. ${cr.name}</span>
+                                                    ${cr.meters && cr.meters !== '-' ? `<span class="text-stone-400 ml-1">(${cr.meters})</span>` : ''}
+                                                </div>
+                                                <div class="flex items-center gap-2 shrink-0">
+                                                    ${cr.stars ? `<span class="text-xs text-amber-500 font-bold tracking-tighter">${cr.stars}</span>` : ''}
+                                                    <span class="font-mono-code text-xs font-bold px-2.5 py-0.5 rounded bg-stone-100 text-stone-800 border border-stone-200">
+                                                        ${cr.grade}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                `}
+                            </div>
+                            `}
+
+                            <!-- Discesa -->
+                            <div>
+                                <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">3. Discesa / Calata</h2>
+                                <div class="bg-amber-50/70 rounded-2xl p-4 border border-amber-200/80 text-xs sm:text-sm text-stone-800 leading-relaxed">
+                                    ${route.descent}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        // ==========================================
-        // LOGICA DI FILTRO, NAVIGAZIONE E AZIONI
-        // ==========================================
         function getFilteredRoutes() {
             return routesData.filter(route => {
                 if (state.selectedSectorId !== 'all' && route.sectorId !== state.selectedSectorId) {
@@ -2245,6 +2300,116 @@
             if (navHome) navHome.className = state.view === 'home' ? activeCls : inactiveCls;
             if (navIntro) navIntro.className = state.view === 'intro' ? activeCls : inactiveCls;
             if (navRoutes) navRoutes.className = (state.view === 'routes' || state.view === 'detail') ? activeCls : inactiveCls;
+
+            const dHome = document.getElementById('desk-nav-home');
+            const dIntro = document.getElementById('desk-nav-intro');
+            const dRoutes = document.getElementById('desk-nav-routes');
+
+            const dActive = 'px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-800 text-orange-400 transition';
+            const dInactive = 'px-3.5 py-2 rounded-xl text-xs font-semibold text-stone-300 hover:text-white hover:bg-stone-800/60 transition';
+
+            if (dHome) dHome.className = state.view === 'home' ? dActive : dInactive;
+            if (dIntro) dIntro.className = state.view === 'intro' ? dActive : dInactive;
+            if (dRoutes) dRoutes.className = (state.view === 'routes' || state.view === 'detail') ? dActive : dInactive;
+        }
+
+        // ==========================================
+        // SALVATAGGIO OFFLINE (PWA + DOWNLOAD HTML)
+        // ==========================================
+        function setupOfflineSupport() {
+            // 1. Registra Web App Manifest dinamico per installazione su Home Screen
+            try {
+                const manifest = {
+                    name: 'Arrampicare nei Monti Martani',
+                    short_name: 'Monti Martani',
+                    start_url: './index.html',
+                    display: 'standalone',
+                    background_color: '#fafaf9',
+                    theme_color: '#1c1917',
+                    icons: [
+                        {
+                            src: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23ea580c%22/><text y=%22.9em%22 font-size=%2275%22 x=%2212%22>⛰️</text></svg>',
+                            sizes: '192x192',
+                            type: 'image/svg+xml'
+                        }
+                    ]
+                };
+                const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+                const manifestLink = document.createElement('link');
+                manifestLink.rel = 'manifest';
+                manifestLink.href = URL.createObjectURL(manifestBlob);
+                document.head.appendChild(manifestLink);
+            } catch (e) {}
+
+            // 2. Service Worker per cache automatica su GitHub Pages / HTTPS
+            if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+                const swCode = `
+                    const CACHE_NAME = 'martani-guida-v2-1';
+                    self.addEventListener('install', (event) => {
+                        self.skipWaiting();
+                        event.waitUntil(
+                            caches.open(CACHE_NAME).then((cache) => {
+                                return cache.addAll(['./', './index.html']).catch(() => {});
+                            })
+                        );
+                    });
+                    self.addEventListener('activate', (event) => {
+                        event.waitUntil(self.clients.claim());
+                    });
+                    self.addEventListener('fetch', (event) => {
+                        if (event.request.method !== 'GET') return;
+                        event.respondWith(
+                            caches.match(event.request).then((cached) => {
+                                const networkFetch = fetch(event.request).then((response) => {
+                                    if (response && response.status === 200) {
+                                        const copy = response.clone();
+                                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+                                    }
+                                    return response;
+                                }).catch(() => cached);
+                                return cached || networkFetch;
+                            })
+                        );
+                    });
+                `;
+                const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+            }
+
+            // 3. Indicatore stato rete in tempo reale
+            const updateOnlineStatus = () => {
+                const dot = document.getElementById('offline-dot');
+                const label = document.getElementById('offline-label');
+                if (!dot || !label) return;
+                if (navigator.onLine) {
+                    dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                    label.textContent = 'Pronta Offline';
+                } else {
+                    dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                    label.textContent = 'Modalità Offline';
+                }
+            };
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            updateOnlineStatus();
+        }
+
+        function downloadOfflineCopy() {
+            try {
+                const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+                const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Guida_Monti_Martani_Offline.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('Guida salvata! Aprila in qualsiasi momento anche senza campo.');
+            } catch (err) {
+                showToast('Usa "Salva pagina" dal menu del browser per l\'uso offline.');
+            }
         }
 
         // ==========================================
@@ -2265,7 +2430,7 @@
             }
 
             updateBottomNavUI();
-            container.scrollTop = 0;
+            window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
         // ==========================================
@@ -2273,6 +2438,7 @@
         // ==========================================
         window.onload = function() {
             updateCompletedCounter();
+            setupOfflineSupport();
             render();
         };
     </script>
