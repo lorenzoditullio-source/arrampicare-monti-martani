@@ -6,21 +6,22 @@
     <meta name="theme-color" content="#1c1917">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Monti Martani Multipitch — Guida Open Source</title>
+    <title>Arrampicare nei Monti Martani — Guida Open Source v. 2.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #fafaf9; /* Stone 50 */
-            color: #1c1917; /* Stone 900 */
+            background-color: #fafaf9;
+            color: #1c1917;
         }
         .font-mono-code {
             font-family: 'JetBrains Mono', monospace;
         }
-        /* Nasconde scrollbar mantenendo lo scorrimento fluido */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -28,13 +29,25 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* Layout adattivo Full-Screen per Mobile, Tablet e PC */
         .app-shell {
             width: 100%;
             min-height: 100vh;
             min-height: 100dvh;
         }
-        /* Animazioni morbide */
+        .leaflet-popup-content-wrapper {
+            border-radius: 16px !important;
+            padding: 2px !important;
+            box-shadow: 0 10px 25px -5px rgba(28, 25, 23, 0.25) !important;
+            border: 1px solid #e7e5e4;
+        }
+        .leaflet-popup-content {
+            margin: 12px 14px !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+        .leaflet-container {
+            font-family: 'Inter', sans-serif !important;
+            z-index: 10;
+        }
         .fade-in {
             animation: fadeIn 0.2s ease-out forwards;
         }
@@ -46,13 +59,10 @@
 </head>
 <body class="min-h-screen flex flex-col bg-stone-50 selection:bg-orange-200 selection:text-stone-900">
 
-    <!-- Contenitore Principale Responsive (Mobile & Desktop) -->
     <div id="app-frame" class="app-shell flex flex-col">
-        
-        <!-- Top Navigation Bar (Visibile su Tablet/Desktop + Stato Offline su tutti) -->
+        <!-- Top Navigation Bar (Desktop & Mobile) -->
         <header class="bg-stone-900 text-white border-b border-stone-800 sticky top-0 z-30 shrink-0">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
-                <!-- Logo / Titolo -->
                 <button onclick="navigateTo('home')" class="flex items-center gap-2.5 text-left group">
                     <span class="w-8 h-8 rounded-xl bg-orange-600 flex items-center justify-center text-sm shadow-xs group-hover:bg-orange-500 transition">⛰️</span>
                     <div>
@@ -61,7 +71,7 @@
                     </div>
                 </button>
 
-                <!-- Navigazione Desktop (nascosta su mobile dove c'è la bottom bar) -->
+                <!-- Navigazione Desktop -->
                 <nav class="hidden md:flex items-center gap-1.5">
                     <button onclick="navigateTo('home')" id="desk-nav-home" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-800 text-orange-400 transition">
                         Home / Mappa
@@ -70,11 +80,11 @@
                         1. Introduzione
                     </button>
                     <button onclick="navigateTo('routes')" id="desk-nav-routes" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-stone-300 hover:text-white hover:bg-stone-800/60 transition">
-                        Elenco Vie (<span id="desk-completed-counter">0</span>/<span id="desk-total-counter">24</span>)
+                        Elenco Vie (<span id="desk-completed-counter">0</span>/<span id="desk-total-counter">25</span>)
                     </button>
                 </nav>
 
-                <!-- Stato Offline & Pulsante Salva Offline -->
+                <!-- Stato Offline & Download 1-Clic -->
                 <div class="flex items-center gap-2">
                     <span id="offline-status-badge" class="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full bg-stone-800 text-emerald-400 border border-stone-700">
                         <span id="offline-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
@@ -94,12 +104,10 @@
             </div>
         </header>
 
-        <!-- Area Principale Centrata per Desktop -->
-        <main id="app-scroll-container" class="flex-1 w-full max-w-6xl mx-auto pb-20 md:pb-10">
-            <!-- Il contenuto dinamico viene renderizzato qui via JS -->
-        </main>
+        <!-- Area Contenuto Principale -->
+        <main id="app-scroll-container" class="flex-1 w-full max-w-6xl mx-auto pb-20 md:pb-10"></main>
 
-        <!-- Barra Navigazione Inferiore Stile App (Solo Smartphone < 768px) -->
+        <!-- Barra Navigazione Inferiore Smartphone (< 768px) -->
         <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xs border-t border-stone-200 px-3 py-2 flex items-center justify-around z-30">
             <button onclick="navigateTo('home')" id="nav-home" class="flex flex-col items-center gap-0.5 text-orange-600 font-semibold text-xs px-3 py-1.5 rounded-xl transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -119,11 +127,11 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                 </svg>
-                <span>Elenco (<span id="completed-counter">0</span>/<span id="total-counter">24</span>)</span>
+                <span>Elenco (<span id="completed-counter">0</span>/<span id="total-counter">25</span>)</span>
             </button>
         </nav>
 
-        <!-- Lightbox Visualizzatore Foto a Schermo Intero -->
+        <!-- Lightbox Foto a Schermo Intero -->
         <div id="photo-lightbox" onclick="closePhotoLightbox()" class="hidden fixed inset-0 bg-stone-950/95 z-50 flex flex-col justify-between p-4 sm:p-6 fade-in">
             <div class="max-w-5xl w-full mx-auto flex items-center justify-between text-white">
                 <span class="text-xs font-bold text-orange-400 uppercase tracking-wider">Foto / Schizzo Parete</span>
@@ -137,16 +145,91 @@
             <p id="lightbox-caption" class="max-w-3xl mx-auto text-xs sm:text-sm text-stone-300 text-center pb-2 leading-relaxed"></p>
         </div>
 
-        <!-- Toast / Messaggio Feedback Rapido -->
+        <!-- Toast Feedback -->
         <div id="toast-box" class="pointer-events-none fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm bg-stone-900 text-white text-xs font-medium px-4 py-3 rounded-xl shadow-lg opacity-0 transition-opacity duration-200 z-50 flex items-center justify-between border border-stone-700">
             <span id="toast-message">Messaggio</span>
         </div>
-
     </div>
 
     <script>
         // ==========================================
-        // DATI REALI: ARRAMPICARE NEI MONTI MARTANI v2.1
+        // 1. COORDINATE GPS CALIBRATE DALL'UTENTE
+        // ==========================================
+        const defaultMapLocations = [
+            {
+                id: 'sec-2',
+                kind: 'sector',
+                sectorId: 'penna-rocca',
+                code: '2',
+                lat: 42.6008,
+                lng: 12.6273,
+                title: 'Penna della Rocca (707 m)',
+                subtitle: 'La Rocca, Parete Sud-Ovest, Parete Austeri ed Est (13 schede)'
+            },
+            {
+                id: 'sec-3',
+                kind: 'sector',
+                sectorId: 'colle-zannuto',
+                code: '3',
+                lat: 42.6065,
+                lng: 12.6069,
+                title: 'Colle Zannuto & Antro del Drago',
+                subtitle: 'Falesia di Colle Zannuto, Cercando gli Umbri Dispersi e Antro del Drago'
+            },
+            {
+                id: 'sec-4',
+                kind: 'sector',
+                sectorId: 'monte-eolo',
+                code: '4',
+                lat: 42.6104,
+                lng: 12.5908,
+                title: 'Monte Eolo / Falesia Sant’Erasmo',
+                subtitle: '6 settori immersi nel bosco + Concatenamento multipitch e Due Torri'
+            },
+            {
+                id: 'sec-4-3',
+                kind: 'sector',
+                sectorId: 'monte-eolo',
+                filterQuery: 'Sant’Andrea',
+                code: '4.3',
+                lat: 42.6124,
+                lng: 12.5854,
+                title: 'Penne di Sant’Andrea (Cesi)',
+                subtitle: 'Falesia, Rock n’ Roll, Frida Calo, Akuna Matata, ZAER, La Terza Via'
+            },
+            {
+                id: 'park-1',
+                kind: 'parking',
+                code: 'P1',
+                lat: 42.6000,
+                lng: 12.6221,
+                title: 'Parcheggio Santuario Madonna dell’Ulivo',
+                subtitle: 'Accesso per Penna della Rocca (La Rocca, Sud-Ovest, Austeri, Est)'
+            },
+            {
+                id: 'park-2',
+                kind: 'parking',
+                code: 'P2',
+                lat: 42.6032,
+                lng: 12.6086,
+                title: 'Parcheggio Vocabolo S. Biagio / Sentiero 3',
+                subtitle: 'Accesso sterrata e sentiero CAI n. 3 per Colle Zannuto'
+            },
+            {
+                id: 'park-3',
+                kind: 'parking',
+                code: 'P3',
+                lat: 42.6143,
+                lng: 12.5914,
+                title: 'Parcheggio Eremo di Sant’Erasmo / Osservatorio',
+                subtitle: 'Accesso per Falesia Sant’Erasmo e Falesia Le Due Torri'
+            }
+        ];
+
+        let mapLocations = JSON.parse(localStorage.getItem('martani_calibrated_pins_v21') || 'null') || JSON.parse(JSON.stringify(defaultMapLocations));
+
+        // ==========================================
+        // 2. MACRO-SETTORI & CAPITOLI INTRODUTTIVI
         // ==========================================
         const sectorsData = [
             {
@@ -155,10 +238,8 @@
                 name: 'Penna della Rocca (707 m)',
                 shortName: 'Penna della Rocca',
                 exposure: 'Sud-Ovest / Est',
-                approachTime: '15–20 min',
-                parkingName: 'Santuario Madonna dell’Ulivo',
-                parkingGps: 'Santuario Madonna dell’Ulivo (Terni / Cesi)',
-                routesCount: 13
+                approachTime: '15–25 min',
+                parkingName: 'Santuario Madonna dell’Ulivo (P1)'
             },
             {
                 id: 'colle-zannuto',
@@ -167,9 +248,7 @@
                 shortName: 'Colle Zannuto',
                 exposure: 'Ovest / Sud-Ovest',
                 approachTime: '15–30 min',
-                parkingName: 'Via Vocabolo S. Biagio / Cesi',
-                parkingGps: '42°36\'29.77"N, 12°35\'50.03"E',
-                routesCount: 3
+                parkingName: 'Vocabolo S. Biagio / Cesi (P2)'
             },
             {
                 id: 'monte-eolo',
@@ -178,9 +257,7 @@
                 shortName: 'Monte Eolo / Cesi',
                 exposure: 'Sud / Sud-Est',
                 approachTime: '5–15 min',
-                parkingName: 'Eremo S. Erasmo / Strada S. Erasmo (Cesi)',
-                parkingGps: 'Cesi (TR) — Eremo di Sant\'Erasmo',
-                routesCount: 10
+                parkingName: 'Eremo S. Erasmo / Strada S. Erasmo (P3)'
             }
         ];
 
@@ -192,9 +269,9 @@
                 subtitle: 'Appunti di arrampicata v. 2.1 — Pubblico Dominio CC0',
                 content: [
                     'Questo opuscolo nasce dall\'esigenza di raccogliere e divulgare le informazioni aggiornate sulle opportunità di arrampicata sportiva e alpinistica offerte dai Monti Martani, a nord di Terni.',
-                    'La sezione meridionale dei Martani, compresa tra Rocca San Zenone e Cesi, presenta sul versante occidentale numerose pareti rocciose ideali per l\'arrampicata. La roccia, un calcare grigio compatto e spesso lavorato a "goccia", garantisce un\'esperienza di scalata tecnica e divertente.',
-                    'Un ringraziamento speciale va a Bruno Spina, Pino Calandrella, Stefano Cudini, Carlo Capuano, Daniele Ceccarini, Marco Principi, Andrea Leonardi e Alessandro Pasquantonio per il prezioso contributo storico e fotografico.',
-                    'Licenza & Contatti: Opera soggetta a licenza Creative Commons CC0 Pubblico Dominio. Per suggerimenti, correzioni e aggiornamenti sullo stato degli itinerari: lorenzoditullio@gmail.com.'
+                    'La sezione meridionale dei Martani, compresa tra Rocca San Zenone e Cesi, presenta sul versante occidentale numerose pareti rocciose ideali per l\'arrampicata. La roccia, un calcare grigio compatto e spesso lavorato a "goccia", garantisce un\'esperienza di scalata tecnica e divertente. L\'esposizione prevalentemente soleggiata rende inoltre l\'arrampicata piacevole anche durante i mesi invernali.',
+                    'Un ringraziamento va a tutti coloro che hanno contribuito con materiale fotografico e informazioni, in particolare Bruno Spina, Pino Calandrella, Stefano Cudini, Carlo Capuano, Daniele Ceccarini, Marco Principi, Andrea Leonardi e Alessandro Pasquantonio.',
+                    'Licenza & Contatti: Quest\'opera è soggetta alla licenza Creative Commons CC0 pubblico dominio. L\'arrampicata è uno sport pericoloso e potenzialmente mortale; l\'autore non si assume responsabilità per eventuali inesattezze. Per suggerimenti e aggiornamenti: lorenzoditullio@gmail.com.'
                 ]
             },
             {
@@ -203,9 +280,9 @@
                 title: '1.1 Monti Martani — Geografia e Roccia',
                 subtitle: 'Il massiccio calcareo tra Conca Ternana, Tevere e Valle Umbra',
                 content: [
-                    'La catena dei Monti Martani si sviluppa con direttrice prevalente nord-sud per circa 45 chilometri nelle province di Terni e Perugia, delimitata a est dalla Valle Umbra e dalla ValSerra, a ovest dalla valle del Tevere e a sud dalla Conca Ternana.',
-                    'Nella porzione meridionale, cime come il Monte di Torre Maggiore, la Penna della Rocca e il Colle Zannuto espongono speroni e placche calcaree ben esposte al sole, ideali sia per l\'arrampicata sportiva monotiro che per vie multipitch.',
-                    'L\'origine calcarea rende l\'intero comprensorio un importante distretto carsico, ricco di grotte e inghiottitoi esplorati dagli speleologi.'
+                    'La catena dei Monti Martani si sviluppa con una direttrice prevalente nord-sud per circa 45 chilometri nelle province di Terni e Perugia. È delimitata a est dalla Valle Umbra e dalla ValSerra, a ovest dalla valle del fiume Tevere e del torrente Naia, e a sud dalla Conca Ternana.',
+                    'Nella porzione meridionale, cime come il Monte di Torre Maggiore (1121 m), la Penna della Rocca e il Colle Zannuto espongono speroni e placche calcaree ben esposte al sole, ideali sia per l\'arrampicata sportiva monotiro che per vie multipitch.',
+                    'L\'origine calcarea rende l\'intero comprensorio un importante distretto carsico, costellato da grotte e inghiottitoi esplorati dagli speleologi.'
                 ]
             },
             {
@@ -215,8 +292,8 @@
                 subtitle: 'Dai pionieri del CAI Terni alle vie plaisir moderne',
                 content: [
                     'L\'esplorazione alpinistica dei Monti Martani ha avuto inizio sulla parete est della Penna della Rocca, oggi nota come "Austeri" in memoria di Orlando Austeri che vi perse la vita nel 1926.',
-                    'Dagli anni \'60 gli scalatori del CAI di Terni iniziarono a tracciare i primi itinerari, seguiti negli anni \'70 e \'80 da Silvano Lepri e Paolo Nobili con vie classiche fino al VI grado su tutte le pareti del gruppo.',
-                    'Negli anni 2000 l\'attività è proseguita con Stefano Zavka, Fausto Sanna, Carlo e Gabriele Capuano. Dal 2015, in collaborazione con Carlo Capuano e diversi amici, sono stati aperti nuovi itinerari di tipo "plaisir" privilegiando roccia solida e chiodatura sistematica a fix.'
+                    'Dagli anni \'60 gli scalatori del CAI di Terni tracciarono i primi itinerari, seguiti negli anni \'70 e \'80 da Silvano Lepri e Paolo Nobili con vie classiche fino al VI grado su tutte le pareti del gruppo.',
+                    'Negli anni 2000 l\'attività è proseguita con Stefano Zavka, Fausto Sanna, Carlo e Gabriele Capuano. A partire dal 2015, in collaborazione con Carlo Capuano e l\'aiuto di diversi amici, sono stati aperti nuovi itinerari di tipo "plaisir", privilegiando roccia solida e chiodatura sistematica a fix.'
                 ]
             },
             {
@@ -225,22 +302,26 @@
                 title: '1.3 Curiosità, Aneddoti e Tutela',
                 subtitle: 'Lo scoiattolo di Monte Eolo, il falchetto e il chiodo fantasma',
                 content: [
-                    'Esercitazioni di volo (Monte Eolo): Un giovane climber impegnato sulle rocce di Monte Eolo si vide planare direttamente sui capelli un piccolo scoiattolo in volo imprevisto!',
-                    'Uno speciale compagno di scalata (Colle Zannuto): Invitiamo tutti i climber a evitare schiamazzi inutili per non disturbare il magnifico falchetto che nidifica sulle rocce sommitali dell\'Antro del Drago.',
-                    'Il chiodo fantasma (Penna della Rocca): Sul settore destro della parete, il forte scalatore ternano Bocci superò uno strapiombo giallo ritenuto inviolato trovando però un vecchio chiodo artigianale oltre il passaggio. Anni dopo un ripetitore trovò la fessura vuota con un ciuffo di fiori: l\'enigma dell\'autore resta tuttora avvolto nel mistero.'
+                    'Esercitazioni di volo (Monte Eolo): Un giovane alpinista impegnato sulle rocce di Monte Eolo si vide precipitare in testa un oggetto non identificato: era un piccolo scoiattolo ben appigliato ai suoi capelli alle prese con una planata inattesa!',
+                    'Uno speciale compagno di scalata (Colle Zannuto): Preghiamo tutti i climber di evitare inutili schiamazzi che potrebbero disturbare il magnifico falchetto che nidifica sulle rocce sommitali dell\'Antro del Drago.',
+                    'Sottosopra (Colle Zannuto): In corrispondenza della cava di Colle Zannuto è stata rinvenuta un\'interessante grotta dello sviluppo di 300 metri, a conferma della natura carsica del territorio.',
+                    'Il chiodo fantasma (Penna della Rocca): Sul settore destro della parete, il forte scalatore ternano Bocci superò uno strapiombo giallo ritenuto inviolato trovando però un vecchio chiodo artigianale oltre il passaggio. Anni dopo un ripetitore trovò la fessura vuota con un ciuffo di fiorellini rupestri: l\'enigma dell\'autore resta tuttora avvolto nel mistero.'
                 ]
             }
         ];
 
+        // ==========================================
+        // 3. DATABASE COMPLETO VIE E FALESIE (25 SCHEDE)
+        // ==========================================
         const routesData = [
             // --- 2. PENNA DELLA ROCCA ---
             {
                 id: 'cresta-persichetti',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.1 Penna della Rocca — La Rocca',
+                sector: '2.1.1 Penna della Rocca — La Rocca',
                 name: 'Cresta di Rocca Persichetti (Via Normale)',
-                openers: 'Itinerario classico di cresta',
+                openers: 'Itinerario classico di cresta ovest',
                 gradeMax: 'II',
                 gradeObbl: 'F+',
                 difficultyLevel: 'facile',
@@ -252,9 +333,9 @@
                 climbTime: '45 min',
                 descentTime: '20 min a piedi',
                 gear: 'Cordino, eventuali protezioni veloci, casco',
-                gpsCoords: 'Santuario Madonna dell’Ulivo',
-                summary: 'Risale integralmente la cresta ovest della Rocca fino alla vetta con brevi tratti di arrampicata e alcuni passaggi esposti.',
-                approach: 'Dalla strada pedonale che conduce al Santuario della Madonna dell\'Ulivo si devia a sinistra seguendo una traccia con bolli rossi, superando un muretto a secco fino al filo di cresta.',
+                gpsCoords: '42.6000, 12.6221 (Santuario Madonna dell’Ulivo)',
+                summary: 'Risale integralmente la cresta ovest della Rocca fino alla vetta. Presenta brevi tratti di arrampicata e alcuni passaggi esposti.',
+                approach: 'Dalla strada pedonale che conduce al Santuario della Madonna dell\'Ulivo si devia a sinistra seguendo una traccia segnalata con bolli rossi, superando un muretto a secco fino al filo di cresta.',
                 descent: 'Dalla vetta attraversare la Rocca e scendere nel canalone di destra seguendo tracce di sentiero fino alla base della falesia e poi al Santuario.',
                 svgPath: [
                     { x: 40, y: 205, label: 'Attacco' },
@@ -268,7 +349,7 @@
                 id: 'assalto-rocca',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.1 Penna della Rocca — La Rocca',
+                sector: '2.1.2 Penna della Rocca — La Rocca',
                 name: 'Assalto alla Rocca',
                 openers: 'Silvano Lepri e Conti (1979)',
                 gradeMax: 'IV+',
@@ -282,8 +363,8 @@
                 climbTime: '1h 15m',
                 descentTime: '15 min a piedi',
                 gear: 'NDA (Normale Dotazione Alpinistica), cordini per alberi',
-                gpsCoords: 'Santuario Madonna dell’Ulivo',
-                summary: 'Via storica ideale per chi inizia ad arrampicare da capocordata su terreno alpinistico con possibilità di varianti.',
+                gpsCoords: '42.6000, 12.6221 (Santuario Madonna dell’Ulivo)',
+                summary: 'Via storica ottima per chi inizia ad arrampicare da capocordata su terreno alpinistico con possibilità di varianti di difficoltà superiore.',
                 approach: 'Dal Santuario Madonna dell\'Ulivo salire a sinistra nel sottobosco dopo il muretto, proseguendo sul ghiaione verso sinistra fino al margine sinistro della falesia della Rocca (15 min).',
                 descent: 'Entrare nella Rocca e imboccare il canalone di destra seguendo tracce di sentiero fino alla base della parete (circa 15 minuti).',
                 svgPath: [
@@ -292,15 +373,15 @@
                     { x: 135, y: 45, label: 'S2', pitchIndex: 1 }
                 ],
                 pitches: [
-                    { num: 'L1', grade: 'III', length: '40 m', bolts: 'Fix', desc: 'Salire dritti per placche su roccia molto buona fino a un terrazzino. Deviare a destra su rocce appoggiate e poi a sinistra superando gradoni fino a un terrazzo erboso (sosta su alberello).' },
-                    { num: 'L2', grade: 'IV+', length: '30 m', bolts: 'Alpinistica', desc: 'Superare la paretina di fronte leggermente a destra e proseguire per ampi terrazzi fino alla Rocca (variante diretta di V).' }
+                    { num: 'L1', grade: 'III', length: '40 m', bolts: 'Fix', desc: 'Salire dritti per placche su roccia molto buona fino a un terrazzino. Deviare leggermente a destra su rocce più appoggiate e poi verso sinistra, superando dei gradoni fino a un ampio terrazzo erboso. Sosta su alberello.' },
+                    { num: 'L2', grade: 'IV+', length: '30 m', bolts: 'Alpinistica', desc: 'Superare la paretina che si trova di fronte leggermente a destra e proseguire per ampi terrazzi fino alla Rocca (variante diretta con passi di V).' }
                 ]
             },
             {
                 id: 'innominata',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.1 Penna della Rocca — La Rocca',
+                sector: '2.1.3 Penna della Rocca — La Rocca',
                 name: 'Innominata',
                 openers: 'Carlo Catalano (Anni \'80)',
                 gradeMax: '5c',
@@ -314,8 +395,8 @@
                 climbTime: '1h 15m',
                 descentTime: '15 min a piedi',
                 gear: 'NDA (Normale Dotazione Alpinistica)',
-                gpsCoords: 'Santuario Madonna dell’Ulivo',
-                summary: 'Itinerario classico che attacca lo spigolo destro della falesia della Rocca proseguendo poi su placche appoggiate fino in cima.',
+                gpsCoords: '42.6000, 12.6221 (Santuario Madonna dell’Ulivo)',
+                summary: 'Attacca dallo spigolo destro della falesia della Rocca e prosegue su placche appoggiate fino alla cima.',
                 approach: 'Come per la Falesia della Rocca (15 minuti dal Santuario Madonna dell\'Ulivo), portandosi sullo spigolo destro.',
                 descent: 'Dalla cima della Rocca scendere lungo il canalone di destra fino alla base.',
                 svgPath: [
@@ -333,23 +414,23 @@
                 type: 'falesia',
                 sectorId: 'penna-rocca',
                 sector: '2.1.4 Penna della Rocca — Falesia',
-                name: 'Falesia della Rocca (11 vie)',
+                name: 'Falesia della Rocca (12 lunghezze)',
                 openers: 'Valorizzata da Alessandro Quadriglia',
                 gradeMax: '6b+',
                 gradeObbl: '5a',
                 difficultyLevel: 'facile',
-                length: '11 vie',
-                pitchesCount: 11,
+                length: '11 vie (12 tiri)',
+                pitchesCount: 12,
                 protectionType: 'Fix acciaio inox',
                 protectionCategory: 'sport',
                 exposure: 'Sud-Est',
                 climbTime: 'Primavera - Autunno',
                 descentTime: '400 m s.l.m.',
                 gear: 'Corda singola, 10-12 rinvii',
-                gpsCoords: 'Santuario Madonna dell’Ulivo (15 min)',
-                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=La+Rocca+-+Panoramica+delle+vie+(images/la-rocca.jpg)',
+                gpsCoords: '42.6000, 12.6221 (Santuario Madonna dell’Ulivo)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=La+Rocca+-+Panoramica+delle+vie',
                 photoCaption: 'La Rocca: panoramica delle vie e mappa accesso dal Santuario Madonna dell’Ulivo',
-                summary: 'Falesia situata sotto la rocca diruta che domina la conca ternana, riattrezzata in ottica sportiva con ottima chiodatura.',
+                summary: 'Falesia situata sotto la rocca diruta che domina la conca ternana, riattrezzata in ottica sportiva con ottima chiodatura a fix inox.',
                 approach: 'Dal Santuario Madonna dell\'Ulivo salire a sinistra nel sottobosco dopo il muretto e seguire il ghiaione verso sinistra fino alla base (15 min).',
                 descent: 'Calata sportiva in moulinette dagli anelli di sosta.',
                 cragRoutes: [
@@ -371,7 +452,7 @@
                 id: 'ali-angelo',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.2 Penna della Rocca — Parete Sud-Ovest',
+                sector: '2.2.1 Penna della Rocca — Parete Sud-Ovest',
                 name: 'Le Ali dell’Angelo (Itinerario 4)',
                 openers: 'Lorenzo Di Tullio e Carlo Capuano (2016, restyling 2018)',
                 gradeMax: '6a',
@@ -385,8 +466,8 @@
                 climbTime: '1h 45m',
                 descentTime: '20 min (doppie)',
                 gear: '14 rinvii, mezze corde o corda da 60m',
-                gpsCoords: 'Santuario Madonna dell’Ulivo (15 min)',
-                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Penna+della+Rocca+SO+-+It.+4+Ali+dell%27Angelo+(P.+Calandrella)',
+                gpsCoords: '42.6008, 12.6273 (Parete Sud-Ovest)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Penna+della+Rocca+SO+-+It.+4+Ali+dell%27Angelo',
                 photoCaption: 'Penna della Rocca parete sud-ovest (it. 4) e secondo tiro delle Ali dell’Angelo — foto di Pino Calandrella',
                 summary: 'Sale il netto diedro obliquo che incide lo scudo della parete sud-ovest. ATTENZIONE: non seguire i fix color oro a destra di L1 (roccia friabile).',
                 approach: 'Dal Santuario Madonna dell\'Ulivo salire a sinistra nel sottobosco dopo il muretto, salire il ghiaione verso sinistra, costeggiare il bosco e deviare a destra verso le pareti (15 min).',
@@ -400,14 +481,14 @@
                 pitches: [
                     { num: 'L1', grade: '5c', length: '40 m', bolts: 'Chiodo + Fix', desc: 'Attacco con chiodo come prima protezione; salire la placca a sinistra, aggirare lo spigolo a destra e traversare fino al diedro risalendolo fino alla sosta. Non seguire i fix oro a destra.' },
                     { num: 'L2', grade: '6a', length: '30 m', bolts: 'Fix', desc: 'Proseguire lungo il diedro accennato, deviare leggermente a destra per uscire dallo strapiombo e continuare su placche appoggiate fino in sosta.' },
-                    { num: 'L3', grade: '5a', length: '30 m', bolts: 'Fix', desc: 'Proseguire dritti per placche appoggiate fino a un diedrino al termine del quale si trova la sosta su comoda cengia.' }
+                    { num: 'L3', grade: '5a', length: '30 m', bolts: 'Fix', desc: 'Proseguire dritti per placche appoggiate fino a un diedrino al termine del quale si trova la sosta su una comoda cengia.' }
                 ]
             },
             {
                 id: 'tommaso-flavio',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.2 Penna della Rocca — Parete Sud-Ovest',
+                sector: '2.2.2 Penna della Rocca — Parete Sud-Ovest',
                 name: 'Tommaso Flavio (Itinerario 5)',
                 openers: 'Carlo Capuano, Lorenzo Di Tullio e altri (2015)',
                 gradeMax: '6b',
@@ -421,7 +502,7 @@
                 climbTime: '2h 00m',
                 descentTime: '25 min (doppie)',
                 gear: '14 rinvii, due corde da 60m',
-                gpsCoords: 'Santuario Madonna dell’Ulivo (15 min)',
+                gpsCoords: '42.6008, 12.6273 (Parete Sud-Ovest)',
                 photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Panoramica+Parete+SO+-+It.+5+Tommaso+Flavio',
                 photoCaption: 'Penna della Rocca parete sud-ovest (itinerario 5) e Carlo Capuano in apertura sull’ultimo tiro',
                 summary: 'Supera le placche compatte e i piccoli tetti della porzione centrale della parete sud-ovest con bella arrampicata su roccia buona.',
@@ -445,7 +526,7 @@
                 id: 'zagara-ernesto',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.2 Penna della Rocca — Parete Sud-Ovest',
+                sector: '2.2.3 Penna della Rocca — Parete Sud-Ovest',
                 name: 'La Zagara di Ernesto',
                 openers: 'A. Pasquantonio, M. Principi, A. Leonardi e altri (2025)',
                 gradeMax: '6b+',
@@ -459,7 +540,7 @@
                 climbTime: '2h 00m',
                 descentTime: '20 min (doppie)',
                 gear: '14 rinvii',
-                gpsCoords: 'A destra di Tommaso Flavio',
+                gpsCoords: '42.6008, 12.6273 (A destra di Tommaso Flavio)',
                 summary: 'Recente itinerario sportivo aperto nel 2025 immediatamente a destra della Tommaso Flavio, caratterizzato da un lungo traverso e una pancia tecnica.',
                 approach: 'Stesso avvicinamento della parete sud-ovest (15 min dal Santuario Madonna dell\'Ulivo), attacco subito a destra di Tommaso Flavio.',
                 descent: 'In corda doppia lungo la via.',
@@ -479,7 +560,7 @@
                 id: 'ravanata-finanziere',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.2 Penna della Rocca — Parete Sud-Ovest',
+                sector: '2.2.4 Penna della Rocca — Parete Sud-Ovest',
                 name: 'Ravanata del Finanziere (Itinerario 6)',
                 openers: 'Lorenzo Di Tullio e Carlo Capuano (2018)',
                 gradeMax: '6a+',
@@ -493,8 +574,8 @@
                 climbTime: '3h 30m',
                 descentTime: '40 min',
                 gear: 'NDA (friend/cordini per clessidre e alberi), 12 rinvii',
-                gpsCoords: 'Sperone tra parete SO e parete Austeri',
-                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Primo+tiro+Ravanata+del+Finanziere+(P.+Calandrella)',
+                gpsCoords: '42.6008, 12.6273 (Sperone tra SO e Austeri)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Primo+tiro+Ravanata+del+Finanziere',
                 photoCaption: 'Itinerario 6 sulla panoramica Sud-Ovest e primo tiro della Ravanata del Finanziere — foto di Pino Calandrella',
                 summary: 'La via più lunga della parete: primi due tiri sportivi a fix e parte alta d\'avventura fino in vetta alla Penna della Rocca.',
                 approach: 'Come per la parete sud-ovest, poco a destra della Tommaso Flavio prima dello sperone che divide dalla parete Austeri.',
@@ -525,7 +606,7 @@
                 id: 'via-placche',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.3 Penna della Rocca — Parete Austeri',
+                sector: '2.3.1 Penna della Rocca — Parete Austeri',
                 name: 'Via delle Placche (Itinerario 7)',
                 openers: 'S. Lepri, P. Nobili, Catalano, Fabbretti, Baroncini, Pierbattisti (1979-85)',
                 gradeMax: 'VI',
@@ -539,7 +620,7 @@
                 climbTime: '2h 30m',
                 descentTime: '30 min',
                 gear: 'NDA (friend/nut, cordini), corde da 60m',
-                gpsCoords: 'Parete Austeri — Margine sinistro',
+                gpsCoords: '42.6008, 12.6273 (Parete Austeri — Margine sx)',
                 summary: 'Considerata la più impegnativa tra le classiche della zona, si snoda sul margine sinistro verticale della parete Austeri.',
                 approach: 'Dal Santuario Madonna dell\'Ulivo prendere il sentiero nel sottobosco e, prima del ghiaione, svoltare a destra sul sentiero CAI in piano. Oltrepassato lo sperone ("coda di rondine"), salire a sinistra per tracce fino alla parete (20 min).',
                 descent: 'Consigliabile scendere dalla seconda sosta con una doppia da 60 m (oppure traversare a destra verso S3 della Via Austeri).',
@@ -559,7 +640,7 @@
                 id: 'via-austeri',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.3 Penna della Rocca — Parete Austeri',
+                sector: '2.3.2 Penna della Rocca — Parete Austeri',
                 name: 'Via Austeri — Parete Est (Itinerario 8)',
                 openers: 'Silvano Lepri e Paolo Nobili (1976, rettifica C. Capuano)',
                 gradeMax: 'V+',
@@ -573,7 +654,7 @@
                 climbTime: '2h 15m',
                 descentTime: '30 min',
                 gear: 'NDA (friend medi/piccoli, cordini)',
-                gpsCoords: 'Targa commemorativa Orlando Austeri',
+                gpsCoords: '42.6008, 12.6273 (Targa Orlando Austeri)',
                 summary: 'Storica linea al centro della parete est dedicata a Orlando Austeri (targa e croce all\'attacco). Soste attrezzate a fix.',
                 approach: 'Come per la Parete Austeri (20 minuti dal Santuario Madonna dell\'Ulivo), fino alla croce e alla targa commemorativa alla base.',
                 descent: 'Dal terrazzo finale effettuare una doppia di 30 m nel canalone opposto (calata su albero 5 m sotto l\'ultima sosta) e scendere per tracce alla base.',
@@ -595,7 +676,7 @@
                 id: 'via-gea',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.3 Penna della Rocca — Parete Austeri',
+                sector: '2.3.3 Penna della Rocca — Parete Austeri',
                 name: 'GEA (Itinerario 9)',
                 openers: 'Carlo Capuano e altri (2011)',
                 gradeMax: '6a+',
@@ -609,7 +690,7 @@
                 climbTime: '2h 15m',
                 descentTime: '30 min',
                 gear: 'NDA (friend fino al #2, cordini), 10 rinvii',
-                gpsCoords: 'Parete Austeri — Centro-destra',
+                gpsCoords: '42.6008, 12.6273 (Parete Austeri — Centro-dx)',
                 summary: 'Dedicata a Giulio, Elia e Anita. Condivide L1 con la Austeri per poi salire autonomamente a destra su un secondo tiro di roccia fantastica.',
                 approach: 'Come per la Parete Austeri (20 minuti dal Santuario Madonna dell\'Ulivo), attacco sopra la targa Austeri o poco a destra.',
                 descent: 'Dal terrazzo finale doppia di 30 m su albero nel canalone opposto (5 m sotto l\'ultima sosta) e rientro per sentiero.',
@@ -631,7 +712,7 @@
                 id: 'fashion-v',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.3 Penna della Rocca — Parete Austeri',
+                sector: '2.3.4 Penna della Rocca — Parete Austeri',
                 name: 'Fashion V (Itinerario 10)',
                 openers: 'Carlo Capuano e altri (2010)',
                 gradeMax: 'VI+',
@@ -645,8 +726,8 @@
                 climbTime: '2h 30m',
                 descentTime: '30 min',
                 gear: 'NDA (friend, nut, cordini)',
-                gpsCoords: 'Parete Austeri — Destra della targa',
-                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Primo+tiro+di+Fashion+V+(P.+Calandrella)',
+                gpsCoords: '42.6008, 12.6273 (Parete Austeri — Destra targa)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Primo+tiro+di+Fashion+V',
                 photoCaption: 'Parete Austeri (itinerario 10) e primo tiro di Fashion V — foto di Pino Calandrella',
                 summary: 'Ripercorre la prima parte del "Naso dell\'Indiano" (Lepri-Nobili 1978) per poi deviare a sinistra su una placca verticale tecnica.',
                 approach: 'Come per la Parete Austeri (20 minuti dal Santuario Madonna dell\'Ulivo), attacco presso una clessidra con cordino poco a destra della targa Austeri.',
@@ -667,7 +748,7 @@
                 id: 'dente-cinghiale',
                 type: 'multipitch',
                 sectorId: 'penna-rocca',
-                sector: '2.4 Penna della Rocca — Parete Est',
+                sector: '2.4.1 Penna della Rocca — Parete Est',
                 name: 'Dente del Cinghiale',
                 openers: 'Itinerario classico di cresta/sperone',
                 gradeMax: 'IV',
@@ -681,8 +762,8 @@
                 climbTime: '2h 30m',
                 descentTime: '45 min a piedi',
                 gear: 'NDA, cordini lunghi per spuntoni e alberi, 2 corde 50/60m',
-                gpsCoords: 'Spigolo destro Parete Austeri (bollo rosso)',
-                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Parete+Est+Penna+della+Rocca+-+Dente+del+Cinghiale+(B.+Spina)',
+                gpsCoords: '42.6008, 12.6273 (Spigolo destro Parete Austeri)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Parete+Est+Penna+della+Rocca+-+Dente+del+Cinghiale',
                 photoCaption: 'Parete est Penna della Rocca — Dente del Cinghiale, foto di Bruno Spina',
                 summary: 'Itinerario d\'ambiente lungo lo sperone est fino alla vetta della Penna della Rocca. Consigliati tiri da 30 m per evitare attriti.',
                 approach: 'Raggiunta la base della Parete Austeri (20 min), proseguire sotto la parete aggirando lo spigolo destro e salire per tracce fino allo spiazzo con bollo rosso (25-30 min).',
@@ -723,7 +804,7 @@
                 climbTime: 'Estate',
                 descentTime: '700 m s.l.m.',
                 gear: 'Corda da 70/80m, 15 rinvii',
-                gpsCoords: '42°36\'29.77"N, 12°35\'50.03"E',
+                gpsCoords: '42.6032, 12.6086 (Voc. S. Biagio / Sentiero 3)',
                 summary: 'La falesia più bella della zona per qualità del calcare e lunghezza dei tiri, immersa in un ambiente selvaggio sopra Cesi.',
                 approach: 'Da Cesi salire la sterrata via Vocabolo S. Biagio (consigliato 4x4), al casolare a sinistra e al cartello CAI n.3 a destra. Parcheggiare a 550m s.l.m., seguire il sentiero n.3 per 15 min fino a quota 700m, entrare nel bosco a destra superando un muretto e scendere nel canale con corde fisse.',
                 descent: 'Soste con anello chiuso di calata: manovra in sosta richiesta.',
@@ -763,7 +844,7 @@
                 climbTime: '2h 30m',
                 descentTime: '40 min a piedi',
                 gear: 'NDA, chiodi e martello indispensabili, GPS consigliato',
-                gpsCoords: '42°36\'21.276"N, 12°36\'24.408"E',
+                gpsCoords: '42.6059, 12.6068 (Attacco via)',
                 photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Tracciato+e+Mappa+Accesso+-+Cercando+gli+Umbri+Dispersi',
                 photoCaption: 'Tracciato della via, mappa di avvicinamento/discesa e Carlo Capuano sul primo tiro',
                 summary: 'Itinerario selvaggio e d\'avventura riservato a cordate esperte. Avvicinamento intricato nel sottobosco e roccia da verificare.',
@@ -787,7 +868,7 @@
                 sectorId: 'colle-zannuto',
                 sector: '3.3 Colle Zannuto — Cava di Cesi',
                 name: 'Falesia Antro del Drago (Accesso Vietato)',
-                openers: 'Area storica abbandonata',
+                openers: 'Area storica abbandonata (10 vie)',
                 gradeMax: 'N.D.',
                 gradeObbl: 'N.D.',
                 difficultyLevel: 'facile',
@@ -799,8 +880,8 @@
                 climbTime: 'Accesso Vietato',
                 descentTime: '700 m s.l.m.',
                 gear: 'Divieto di accesso imposto dalla proprietà della cava',
-                gpsCoords: 'Sopra cava dismessa S.S. 79 Ternana',
-                summary: 'Falesia situata sopra la cava di Cesi dentro una grande caverna giallo-arancio. Attualmente abbandonata con divieto di accesso.',
+                gpsCoords: '42.6065, 12.6069 (Sopra cava dismessa S.S. 79)',
+                summary: 'Falesia situata sopra la cava di Cesi dentro una grande caverna di calcare giallo-arancio. Attualmente abbandonata con divieto di accesso.',
                 approach: 'Area soggetta a divieto di accesso da parte dei responsabili della cava.',
                 descent: 'Non praticabile.',
                 cragRoutes: []
@@ -825,8 +906,8 @@
                 climbTime: 'Primavera - Autunno',
                 descentTime: '700 m s.l.m.',
                 gear: 'Corda singola da 60/70m, 12 rinvii',
-                gpsCoords: 'Eremo di S. Erasmo (4 km sopra Cesi)',
-                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Panoramica+Falesia+Sant%27Erasmo+(S.+Cudini)',
+                gpsCoords: '42.6143, 12.5914 (Eremo di Sant’Erasmo)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Panoramica+Falesia+Sant%27Erasmo',
                 photoCaption: 'Cartello descrittivo e panoramica della falesia di Sant’Erasmo — foto di Stefano Cudini',
                 summary: 'Sito immerso nel verde della Rocchetta di Cesi con ottime zone d\'ombra, diviso nei settori Torre Alta, Torre Bassa, Diavoli e Santi, Sasso Est, Mezzogiorno e Sasso Nuovo.',
                 approach: 'Da Cesi salire per 4 km fino al parcheggio dell\'Eremo di S. Erasmo. Oltrepassare la chiesa verso sinistra nel bosco fino ai ruderi delle Torri, poi scendere ripidamente a sinistra fino alle pareti (15 min).',
@@ -891,7 +972,7 @@
                 climbTime: '1h 15m',
                 descentTime: '10 min a piedi',
                 gear: '12 rinvii, corda singola da 60m',
-                gpsCoords: 'Scaletta a pioli — Falesia Sant’Erasmo',
+                gpsCoords: '42.6104, 12.5908 (Scaletta a pioli — Sant’Erasmo)',
                 summary: 'Combinazione di tiri della falesia che permette di raggiungere direttamente i ruderi posti sulla sommità dell\'altopiano di Sant\'Erasmo.',
                 approach: 'Come per la falesia di Sant\'Erasmo (15 min dall\'Eremo), attaccando direttamente dalla scaletta a pioli fissata in parete.',
                 descent: 'Dall\'uscita presso i ruderi delle Torri si rientra comodamente a piedi verso l\'Eremo di Sant\'Erasmo in 10 minuti.',
@@ -927,7 +1008,7 @@
                 climbTime: 'Inverno - Primavera - Autunno',
                 descentTime: '400 m s.l.m.',
                 gear: 'Corda singola 60m, 12 rinvii',
-                gpsCoords: 'Strada per S. Erasmo sopra Cesi (curva a gomito)',
+                gpsCoords: '42.6124, 12.5854 (Penne di Sant’Andrea)',
                 summary: 'Calcare grigio compatto con grip eccezionale in una piccola gola sopra Cesi. Include la falesia principale (17 vie) e i Pilastri a sinistra di Rock n\' Roll (10 vie).',
                 approach: 'Da Cesi imboccare la strada per S. Erasmo; dopo una curva a gomito a sinistra parcheggiare presso un casottino e seguire il sentiero a destra per pochi minuti.',
                 descent: 'Calata sportiva dagli anelli di sosta.',
@@ -978,8 +1059,8 @@
                 climbTime: '2h 00m',
                 descentTime: '20 min (doppie)',
                 gear: '14 rinvii, due corde da 60m',
-                gpsCoords: 'Sentiero Falesia Sant’Andrea (freccia a destra)',
-                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Tracciato+Rock+n%27+Roll+(P.+Calandrella)',
+                gpsCoords: '42.6124, 12.5854 (Sentiero Falesia Sant’Andrea)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Tracciato+Rock+n%27+Roll',
                 photoCaption: 'Tracciato della via Rock n’ Roll e secondo tiro — foto di Pino Calandrella',
                 summary: 'Bella via plaisir chiodata dal basso che segue diverse fessure e diedri regalando una scalata tecnica e divertente.',
                 approach: 'Dal casottino sulla strada per S. Erasmo seguire il sentiero per la falesia di Sant\'Andrea fino a una freccia verso destra che porta sotto l\'attacco.',
@@ -1018,7 +1099,7 @@
                 climbTime: '1h 30m',
                 descentTime: '15 min (a piedi o 3 doppie)',
                 gear: '12 rinvii',
-                gpsCoords: 'A sinistra di Rock n’ Roll',
+                gpsCoords: '42.6124, 12.5854 (A sinistra di Rock n’ Roll)',
                 summary: 'Itinerario recente aperto nell\'ottobre 2024 immediatamente a sinistra di Rock n\' Roll con un bellissimo terzo tiro su placca.',
                 approach: 'Come per Rock n\' Roll, l\'attacco è situato subito alla sua sinistra.',
                 descent: 'Dalla sosta finale è possibile proseguire a piedi lungo il sentiero fino alla strada principale oppure effettuare 3 calate in doppia.',
@@ -1052,7 +1133,7 @@
                 climbTime: '30 min',
                 descentTime: '10 min (corda fissa + cengia)',
                 gear: '14 rinvii',
-                gpsCoords: 'Destra Falesia S. Andrea (dopo "La neve del 2012")',
+                gpsCoords: '42.6124, 12.5854 (Destra Falesia S. Andrea)',
                 summary: 'Interessante tiro di approccio alla parte alta del pilastro; conduce in prossimità dell\'attacco di Akuna Matata.',
                 approach: 'Come per la falesia di Sant\'Andrea, subito dopo l\'ultima via "La neve del 2012" (targhetta alla base).',
                 descent: 'Spostarsi alla base dello spigolo dove è fissata una corda fissa e traversare su piccola cengia verso destra fino al sentiero principale (oppure proseguire su Akuna Matata).',
@@ -1082,7 +1163,7 @@
                 climbTime: '2h 15m',
                 descentTime: '20 min (doppie o sentiero CAI 674/c)',
                 gear: '14 rinvii, qualche friend medio per L3',
-                gpsCoords: 'A monte di Die Gartenroute',
+                gpsCoords: '42.6124, 12.5854 (A monte di Die Gartenroute)',
                 photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Tracciato+Die+Gartenroute+(15)+e+Akuna+Matata+(16)',
                 photoCaption: 'Tracciato di Die Gartenroute (15), Akuna Matata (16) e il grande anello di ferro degli anni \'80 — foto Pino Calandrella',
                 summary: 'Ripercorre in parte la storica "Via dell\'Anello" (Lepri-Nobili 1981) salendo direttamente il placcone monolitico superiore.',
@@ -1122,7 +1203,7 @@
                 climbTime: '1h 00m',
                 descentTime: '20 min (come Akuna Matata)',
                 gear: '12 rinvii',
-                gpsCoords: 'A sinistra del 2° tiro di Akuna Matata',
+                gpsCoords: '42.6124, 12.5854 (A sinistra del 2° tiro Akuna Matata)',
                 summary: 'Sfrutta la bellissima parete di placca alla sinistra di Akuna Matata, partendo dai primi 3 spit del secondo tiro di quest\'ultima.',
                 approach: 'Come per Akuna Matata (raggiungere S1 di Akuna Matata).',
                 descent: 'Vedere discesa di Akuna Matata (doppie o sentiero CAI 674/c).',
@@ -1154,7 +1235,7 @@
                 climbTime: '1h 15m',
                 descentTime: '20 min (doppie)',
                 gear: '12 rinvii',
-                gpsCoords: 'A destra di Akuna Matata',
+                gpsCoords: '42.6124, 12.5854 (A destra di Akuna Matata)',
                 summary: 'Via plaisir di tre lunghezze situata immediatamente sulla destra di Akuna Matata.',
                 approach: 'Come per Akuna Matata, attaccando sulla destra della stessa.',
                 descent: 'In corda doppia lungo la via.',
@@ -1188,7 +1269,7 @@
                 climbTime: '1h 15m',
                 descentTime: '20 min (doppie)',
                 gear: '12 rinvii',
-                gpsCoords: 'A destra di Canti nel Bosco',
+                gpsCoords: '42.6124, 12.5854 (A destra di Canti nel Bosco)',
                 summary: 'Itinerario sportivo di tre tiri subito a destra di Canti nel Bosco.',
                 approach: 'Come per Akuna Matata, attaccando a destra di Canti nel Bosco.',
                 descent: 'In corda doppia lungo la via.',
@@ -1222,7 +1303,7 @@
                 climbTime: '1h 45m',
                 descentTime: '25 min (doppie su Akuna Matata)',
                 gear: '12 rinvii, due corde da 60m',
-                gpsCoords: 'A destra di Qualche Volta',
+                gpsCoords: '42.6124, 12.5854 (A destra di Qualche Volta)',
                 photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Tracciato+La+Terza+Via+con+indicazione+calate',
                 photoCaption: 'Tracciato della Terza Via con indicazione delle calate in doppia',
                 summary: 'Quattro lunghezze di ottima arrampicata che culminano sulla cresta sommitale con rientro sulle calate di Akuna Matata.',
@@ -1260,7 +1341,7 @@
                 climbTime: 'Inverno - Primavera - Autunno',
                 descentTime: '580 m s.l.m.',
                 gear: 'Corda singola 60m, 10 rinvii',
-                gpsCoords: 'Parcheggio Osservatorio Astronomico (Voc. S. Erasmo)',
+                gpsCoords: '42.6143, 12.5914 (Osservatorio Astronomico / S. Erasmo)',
                 summary: 'Piccola falesia ben esposta nei pressi dell\'Osservatorio Astronomico sopra Cesi con tiri dal 5b fino all\'8a+.',
                 approach: 'Da Terni Nord verso Cesi, poi Strada della Pittura, via di Terra Maiura (cartello giallo OSSERVATORIO) e Vocabolo S. Erasmo per 2,7 km fino all\'Osservatorio. Scendere a sud lasciando l\'osservatorio a destra, seguire gli omini e la freccia sull\'albero verso sud-est fino alla bacheca alla base (10 min).',
                 descent: 'Calata sportiva dagli anelli di sosta.',
@@ -1274,14 +1355,40 @@
                     { name: 'La via del di dietro', grade: '6a+', meters: '18 m', stars: '+++' },
                     { name: 'Fifty/fifty', grade: '6a', meters: '15 m', stars: '+++' }
                 ]
+            },
+            {
+                id: 'sassi-pelasgi',
+                type: 'falesia',
+                sectorId: 'monte-eolo',
+                sector: '4.5 Monte Eolo — Cesi (S.S. 79)',
+                name: 'Sassi dei Pelasgi',
+                openers: 'Settore d\'arrampicata sopra Cesi',
+                gradeMax: 'N.D.',
+                gradeObbl: 'N.D.',
+                difficultyLevel: 'facile',
+                length: 'Settore monotiri',
+                pitchesCount: 0,
+                protectionType: 'Fix / Chiodatura locale',
+                protectionCategory: 'sport',
+                exposure: 'Sud-Ovest',
+                climbTime: 'Primavera - Autunno - Inverno',
+                descentTime: '10 min avv.',
+                gear: 'Corda singola, 10 rinvii',
+                gpsCoords: 'S.S. 79 — Cartello stradale località Cesi',
+                summary: 'Piccolo settore immerso nel bosco di pini d\'Aleppo immediatamente a monte del cartello stradale di Cesi lungo la S.S. 79.',
+                approach: 'Parcheggiare l\'auto su uno slargo (a destra venendo da Terni) della S.S. 79 in corrispondenza del cartello stradale di Cesi. Imboccare il sentiero poco oltre che sale prima verso Cesi e poi a destra nel bosco di pini d\'Aleppo (10 min).',
+                descent: 'Calata sportiva dagli anelli di sosta.',
+                cragRoutes: []
             }
         ];
 
         // ==========================================
-        // STATO APPLICAZIONE (CON PERSISTENZA LOCALE)
+        // 4. STATO APPLICAZIONE E PERSISTENZA
         // ==========================================
         let state = {
             view: 'home', // 'home' | 'intro' | 'routes' | 'detail'
+            mapEditMode: false,
+            mapLayer: 'topo',
             selectedIntroId: null,
             selectedSectorId: 'all',
             selectedRouteId: null,
@@ -1300,14 +1407,16 @@
         }
 
         function updateCompletedCounter() {
-            const counterEl = document.getElementById('completed-counter');
-            const totalEl = document.getElementById('total-counter');
-            const deskCounterEl = document.getElementById('desk-completed-counter');
-            const deskTotalEl = document.getElementById('desk-total-counter');
-            if (counterEl) counterEl.textContent = state.completedRoutes.length;
-            if (totalEl) totalEl.textContent = routesData.length;
-            if (deskCounterEl) deskCounterEl.textContent = state.completedRoutes.length;
-            if (deskTotalEl) deskTotalEl.textContent = routesData.length;
+            const ids = ['completed-counter', 'desk-completed-counter'];
+            const totals = ['total-counter', 'desk-total-counter'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = state.completedRoutes.length;
+            });
+            totals.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = routesData.length;
+            });
         }
 
         let toastTimeout = null;
@@ -1323,6 +1432,22 @@
             }, 2600);
         }
 
+        function copyToClipboard(text, successMsg) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast(successMsg || 'Copiato negli appunti!');
+            } catch (err) {
+                showToast('Impossibile copiare automaticamente');
+            }
+            document.body.removeChild(textarea);
+        }
+
         function getGradeBadgeColor(grade) {
             const g = (grade || '').toLowerCase();
             if (g.startsWith('7') || g.startsWith('8') || g.includes('td')) {
@@ -1335,7 +1460,124 @@
         }
 
         // ==========================================
-        // 1. SCHERMATA INIZIALE (HOME / MAPPA SETTORI)
+        // 5. NAVIGAZIONE E AZIONI UTENTE
+        // ==========================================
+        function updateNavActiveState() {
+            const activeView = state.view === 'detail' ? 'routes' : state.view;
+            ['home', 'intro', 'routes'].forEach(v => {
+                const mobBtn = document.getElementById(`nav-${v}`);
+                const deskBtn = document.getElementById(`desk-nav-${v}`);
+                const isActive = activeView === v;
+
+                if (mobBtn) {
+                    mobBtn.className = isActive
+                        ? 'flex flex-col items-center gap-0.5 text-orange-600 font-semibold text-xs px-3 py-1.5 rounded-xl transition'
+                        : 'flex flex-col items-center gap-0.5 text-stone-500 hover:text-stone-800 font-medium text-xs px-3 py-1.5 rounded-xl transition';
+                }
+                if (deskBtn) {
+                    deskBtn.className = isActive
+                        ? 'px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-800 text-orange-400 transition'
+                        : 'px-3.5 py-2 rounded-xl text-xs font-semibold text-stone-300 hover:text-white hover:bg-stone-800/60 transition';
+                }
+            });
+        }
+
+        function navigateTo(viewName) {
+            state.view = viewName;
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openIntroChapter(chapterId) {
+            state.selectedIntroId = chapterId;
+            state.view = 'intro';
+            render();
+            setTimeout(() => {
+                const target = document.getElementById(`intro-card-${chapterId}`);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 60);
+        }
+
+        function openSectorRoutes(sectorId, optionalSearchQuery) {
+            state.selectedSectorId = sectorId || 'all';
+            state.searchQuery = optionalSearchQuery || '';
+            state.view = 'routes';
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openRouteDetail(routeId) {
+            state.selectedRouteId = routeId;
+            state.expandedPitchIndex = 0;
+            state.view = 'detail';
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function handleSearchInput(val) {
+            state.searchQuery = val;
+            render();
+            const input = document.getElementById('routes-search-input');
+            if (input) {
+                input.focus();
+                input.setSelectionRange(val.length, val.length);
+            }
+        }
+
+        function setFilter(filterKey) {
+            state.activeFilter = filterKey;
+            render();
+        }
+
+        function toggleOnlyCompleted() {
+            state.onlyCompleted = !state.onlyCompleted;
+            render();
+        }
+
+        function toggleRouteCompleted(routeId, event) {
+            if (event) event.stopPropagation();
+            const idx = state.completedRoutes.indexOf(routeId);
+            if (idx === -1) {
+                state.completedRoutes.push(routeId);
+                showToast('Segnata come salita! ✓');
+            } else {
+                state.completedRoutes.splice(idx, 1);
+                showToast('Rimossa dalle vie salite');
+            }
+            saveState();
+            render();
+        }
+
+        function togglePitchAccordion(idx) {
+            state.expandedPitchIndex = state.expandedPitchIndex === idx ? -1 : idx;
+            render();
+        }
+
+        function togglePitchChecked(routeId, idx, event) {
+            if (event) event.stopPropagation();
+            const key = `${routeId}_${idx}`;
+            state.checkedPitches[key] = !state.checkedPitches[key];
+            saveState();
+            render();
+        }
+
+        function openPhotoLightbox(url, caption) {
+            const lb = document.getElementById('photo-lightbox');
+            const img = document.getElementById('lightbox-img');
+            const cap = document.getElementById('lightbox-caption');
+            if (!lb || !img) return;
+            img.src = url;
+            if (cap) cap.textContent = caption || '';
+            lb.classList.remove('hidden');
+        }
+
+        function closePhotoLightbox() {
+            const lb = document.getElementById('photo-lightbox');
+            if (lb) lb.classList.add('hidden');
+        }
+
+        // ==========================================
+        // 6. SCHERMATA 1: HOME + MAPPA TOPOGRAFICA CALIBRATA
         // ==========================================
         function renderHomeScreen() {
             const multipitchCount = routesData.filter(r => r.type === 'multipitch').length;
@@ -1360,17 +1602,16 @@
                                     Arrampicare nei Monti Martani
                                 </h1>
                                 <p class="text-xs sm:text-sm text-stone-300 leading-relaxed">
-                                    Appunti di arrampicata sportiva e alpinistica: <strong class="text-white">${multipitchCount} vie multipitch</strong> e <strong class="text-white">${cragsCount} falesie</strong> tra Penna della Rocca, Colle Zannuto e Monte Eolo.
+                                    Appunti di arrampicata sportiva e alpinistica di <strong class="text-white">Lorenzo Di Tullio</strong>: <strong class="text-white">${multipitchCount} vie multipitch</strong> e <strong class="text-white">${cragsCount} falesie</strong> tra Penna della Rocca, Colle Zannuto e Monte Eolo.
                                 </p>
                             </div>
 
-                            <!-- Pulsante Primario Esplora Tutte -->
                             <div class="shrink-0 flex flex-col sm:flex-row md:flex-col gap-2">
                                 <button
                                     onclick="openSectorRoutes('all')"
                                     class="py-3 px-5 bg-orange-600 hover:bg-orange-500 active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-2xl shadow-sm flex items-center justify-between gap-4 transition"
                                 >
-                                    <span>Esplora tutte le vie (${routesData.length})</span>
+                                    <span>Esplora tutte le schede (${routesData.length})</span>
                                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                     </svg>
@@ -1385,12 +1626,12 @@
                         </div>
                     </section>
 
-                    <!-- Griglia Principale Desktop: Introduzione + Mappa Settori -->
+                    <!-- Griglia Principale: Introduzione + Settori (Sinistra) & Mappa Topografica (Destra) -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 pt-6">
                         
-                        <!-- Colonna Sinistra (5 col su Desktop): Parte Introduttiva + Lista Settori -->
+                        <!-- Colonna Sinistra (5 col su Desktop) -->
                         <div class="lg:col-span-5 space-y-6">
-                            <!-- Accesso Rapido alla Parte Introduttiva -->
+                            <!-- Parte Introduttiva -->
                             <section>
                                 <div class="flex items-center justify-between mb-2.5">
                                     <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">1. Parte Introduttiva</h2>
@@ -1415,7 +1656,7 @@
                                 </div>
                             </section>
 
-                            <!-- Lista Rapida Settori -->
+                            <!-- Aree e Pareti Principali -->
                             <section>
                                 <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2.5">Aree e Pareti Principali</h2>
                                 <div class="space-y-2.5">
@@ -1445,94 +1686,87 @@
                             </section>
                         </div>
 
-                        <!-- Colonna Destra (7 col su Desktop): Mappa Schematica Interattiva -->
+                        <!-- Colonna Destra (7 col su Desktop): Mappa Topografica & Satellitare Calibrata -->
                         <section class="lg:col-span-7">
-                            <div class="flex items-center justify-between mb-2.5">
-                                <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">Mappa Schematica Settori</h2>
-                                <span class="text-[11px] font-semibold text-orange-700">Tocca un settore sulla mappa</span>
+                            <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                                <div>
+                                    <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">Mappa Topografica & Accessi</h2>
+                                    <span class="text-[11px] text-stone-500">Tocca un pin per aprire le vie o navigare con Google Maps</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button
+                                        onclick="toggleMapEditMode()"
+                                        class="px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${
+                                            state.mapEditMode
+                                                ? 'bg-amber-500 text-stone-950 border-amber-500 shadow-2xs'
+                                                : 'bg-white text-stone-700 border-stone-200 hover:border-amber-400'
+                                        }"
+                                    >
+                                        ${state.mapEditMode ? '✓ Fine Modifica' : '✏️ Sposta Pin'}
+                                    </button>
+                                    <button
+                                        onclick="setMapLayer('topo')"
+                                        class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
+                                            state.mapLayer === 'topo'
+                                                ? 'bg-stone-900 text-white'
+                                                : 'bg-white text-stone-700 border border-stone-200 hover:bg-stone-100'
+                                        }"
+                                    >
+                                        Sentieri / Topo
+                                    </button>
+                                    <button
+                                        onclick="setMapLayer('sat')"
+                                        class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
+                                            state.mapLayer === 'sat'
+                                                ? 'bg-stone-900 text-white'
+                                                : 'bg-white text-stone-700 border border-stone-200 hover:bg-stone-100'
+                                        }"
+                                    >
+                                        Satellite
+                                    </button>
+                                </div>
                             </div>
 
-                            <div class="bg-[#efeae1] rounded-3xl p-4 border border-stone-300/90 shadow-xs overflow-hidden">
-                                <svg viewBox="0 0 340 245" class="w-full h-auto max-h-[420px] mx-auto select-none">
-                                    <defs>
-                                        <linearGradient id="martaniRidge" x1="0" y1="0" x2="1" y2="1">
-                                            <stop offset="0%" stop-color="#e7e0d2" />
-                                            <stop offset="100%" stop-color="#d6cec0" />
-                                        </linearGradient>
-                                    </defs>
-                                    <rect width="340" height="245" rx="16" fill="url(#martaniRidge)" />
+                            ${state.mapEditMode ? `
+                                <div class="mb-2.5 bg-amber-50 border border-amber-300 rounded-2xl p-3 text-xs text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                                    <div>
+                                        <div class="font-extrabold">Calibrazione pin attiva</div>
+                                        <div class="text-[11px] text-amber-800">Trascina i pin sulla mappa per affinare la posizione, poi copia le coordinate.</div>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 shrink-0">
+                                        <button onclick="copyCalibratedLocations()" class="px-3 py-1.5 bg-stone-900 hover:bg-stone-800 text-white font-bold text-[11px] rounded-xl transition">
+                                            📋 Copia Coordinate
+                                        </button>
+                                        <button onclick="resetMapLocations()" class="px-2.5 py-1.5 bg-white hover:bg-amber-100 text-amber-900 font-semibold text-[11px] rounded-xl border border-amber-300 transition">
+                                            Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            ` : ''}
 
-                                    <!-- Curve di livello stilizzate -->
-                                    <path d="M -10,45 Q 90,30 165,75 T 350,65" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
-                                    <path d="M -10,95 Q 110,80 185,125 T 350,115" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
-                                    <path d="M -10,145 Q 120,135 200,175 T 350,165" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
+                            <div class="bg-white rounded-3xl p-2.5 border border-stone-300/90 shadow-xs overflow-hidden">
+                                <div id="martani-leaflet-map" class="w-full h-[380px] sm:h-[460px] rounded-2xl bg-[#efeae1] overflow-hidden relative"></div>
 
-                                    <!-- Dorsale Monti Martani -->
-                                    <polyline points="25,40 105,65 185,105 265,135 320,155" fill="none" stroke="#a89f91" stroke-width="3" stroke-linecap="round" />
-                                    <text x="32" y="28" fill="#78716c" font-size="8.5" font-weight="700" letter-spacing="0.06em">VERSO MONTE TORRE MAGGIORE</text>
-                                    <text x="200" y="232" fill="#78716c" font-size="8.5" font-weight="700" letter-spacing="0.06em">CONCA TERNANA / S.S. 79</text>
-
-                                    <!-- Sentieri di avvicinamento tratteggiati -->
-                                    <path d="M 55,195 Q 65,140 72,85" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
-                                    <path d="M 165,205 Q 175,165 182,122" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
-                                    <path d="M 275,205 Q 272,175 268,148" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
-
-                                    <!-- Parcheggi / Punti di accesso -->
-                                    <g>
-                                        <rect x="36" y="192" width="38" height="16" rx="5" fill="#1d4ed8" />
-                                        <text x="55" y="203" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Eremo</text>
-                                    </g>
-                                    <g>
-                                        <rect x="145" y="200" width="42" height="16" rx="5" fill="#1d4ed8" />
-                                        <text x="166" y="211" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Cesi P</text>
-                                    </g>
-                                    <g>
-                                        <rect x="252" y="200" width="48" height="16" rx="5" fill="#1d4ed8" />
-                                        <text x="276" y="211" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Ulivo P</text>
-                                    </g>
-
-                                    <!-- Nodo Cliccabile Settore 4: Monte Eolo / Sant'Erasmo -->
-                                    <g onclick="openSectorRoutes('monte-eolo')" class="cursor-pointer">
-                                        <circle cx="72" cy="75" r="24" fill="#ea580c" fill-opacity="0.18" />
-                                        <circle cx="72" cy="75" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
-                                        <text x="72" y="79" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">4</text>
-                                        <rect x="16" y="95" width="112" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
-                                        <text x="72" y="106" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Monte Eolo / S. Erasmo</text>
-                                        <text x="72" y="116" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">10 schede (Multi + Falesie)</text>
-                                    </g>
-
-                                    <!-- Nodo Cliccabile Settore 3: Colle Zannuto -->
-                                    <g onclick="openSectorRoutes('colle-zannuto')" class="cursor-pointer">
-                                        <circle cx="182" cy="112" r="24" fill="#ea580c" fill-opacity="0.18" />
-                                        <circle cx="182" cy="112" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
-                                        <text x="182" y="116" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">3</text>
-                                        <rect x="130" y="132" width="104" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
-                                        <text x="182" y="143" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Colle Zannuto</text>
-                                        <text x="182" y="153" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">3 schede • 700 m</text>
-                                    </g>
-
-                                    <!-- Nodo Cliccabile Settore 2: Penna della Rocca -->
-                                    <g onclick="openSectorRoutes('penna-rocca')" class="cursor-pointer">
-                                        <circle cx="268" cy="140" r="24" fill="#ea580c" fill-opacity="0.18" />
-                                        <circle cx="268" cy="140" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
-                                        <text x="268" y="144" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">2</text>
-                                        <rect x="212" y="160" width="112" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
-                                        <text x="268" y="171" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Penna della Rocca</text>
-                                        <text x="268" y="181" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">13 schede • 707 m</text>
-                                    </g>
-                                </svg>
-
-                                <!-- Legenda Mappa -->
-                                <div class="flex items-center justify-between px-2 pt-3 text-[11px] font-semibold text-stone-600">
-                                    <span class="flex items-center gap-1.5">
-                                        <span class="w-2.5 h-2.5 rounded-full bg-orange-600 inline-block"></span> Capitoli / Settori
-                                    </span>
-                                    <span class="flex items-center gap-1.5">
-                                        <span class="w-3 h-0.5 border-t-2 border-dashed border-amber-700 inline-block"></span> Sentieri CAI
-                                    </span>
-                                    <span class="flex items-center gap-1.5">
-                                        <span class="px-1.5 py-0.2 rounded bg-blue-700 text-white text-[9px]">P</span> Parcheggi
-                                    </span>
+                                <div class="flex flex-wrap items-center justify-between gap-2 px-2 pt-3 pb-1 text-[11px] font-semibold text-stone-600">
+                                    <div class="flex items-center gap-3">
+                                        <span class="flex items-center gap-1.5">
+                                            <span class="w-3 h-3 rounded-full bg-orange-600 border-2 border-white shadow-2xs inline-block"></span> Settori Pareti
+                                        </span>
+                                        <span class="flex items-center gap-1.5">
+                                            <span class="px-1.5 py-0.2 rounded bg-blue-700 text-white text-[9px] font-extrabold">P</span> Parcheggi (Google Maps)
+                                        </span>
+                                    </div>
+                                    <a
+                                        href="https://www.google.com/maps/search/?api=1&query=42.6075,12.6065"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="inline-flex items-center gap-1 text-blue-700 hover:text-blue-800 font-bold hover:underline"
+                                    >
+                                        <span>Apri comprensorio su Google Maps</span>
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                    </a>
                                 </div>
                             </div>
                         </section>
@@ -1542,856 +1776,605 @@
         }
 
         // ==========================================
-        // 2. SCHERMATA INTRODUZIONE
+        // MAPPA LEAFLET (TOPO + SATELLITE + GOOGLE MAPS)
         // ==========================================
-        function renderIntroScreen() {
-            const activeChapter = state.selectedIntroId
-                ? introChapters.find(c => c.id === state.selectedIntroId)
-                : null;
+        let martaniMap = null;
+        let currentTileLayer = null;
 
-            if (activeChapter) {
-                return `
-                    <div class="fade-in pb-8 max-w-3xl mx-auto">
-                        <div class="bg-white/95 backdrop-blur-xs px-4 py-3 border-b border-stone-200 sticky top-14 z-10 flex items-center justify-between md:rounded-b-2xl">
-                            <button onclick="state.selectedIntroId = null; render();" class="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 bg-stone-100 hover:bg-stone-200 px-3 py-2 rounded-xl transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                                </svg>
-                                <span>Indice Introduzione</span>
-                            </button>
-                            <span class="text-[11px] font-semibold text-stone-400">Capitolo 1</span>
+        function setMapLayer(layerType) {
+            state.mapLayer = layerType;
+            render();
+        }
+
+        function toggleMapEditMode() {
+            state.mapEditMode = !state.mapEditMode;
+            render();
+            if (state.mapEditMode) {
+                showToast('Trascina i pin sulla mappa per spostarli!');
+            }
+        }
+
+        function copyCalibratedLocations() {
+            const summary = mapLocations
+                .map(l => `- [${l.code}] ${l.title}: lat: ${l.lat.toFixed(4)}, lng: ${l.lng.toFixed(4)}`)
+                .join('\n');
+            copyToClipboard(summary, 'Coordinate calibrate copiate negli appunti!');
+        }
+
+        function resetMapLocations() {
+            localStorage.removeItem('martani_calibrated_pins_v21');
+            mapLocations = JSON.parse(JSON.stringify(defaultMapLocations));
+            render();
+            showToast('Ripristinate le coordinate calibrate originali');
+        }
+
+        function initMartaniMap() {
+            const mapEl = document.getElementById('martani-leaflet-map');
+            if (!mapEl || typeof L === 'undefined') return;
+
+            if (martaniMap) {
+                martaniMap.remove();
+                martaniMap = null;
+            }
+
+            martaniMap = L.map('martani-leaflet-map', {
+                center: [42.6075, 12.6065],
+                zoom: 14,
+                scrollWheelZoom: false
+            });
+
+            if (state.mapLayer === 'sat') {
+                currentTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    maxZoom: 18,
+                    attribution: '© Esri, Maxar, Earthstar Geographics'
+                }).addTo(martaniMap);
+            } else {
+                currentTileLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 17,
+                    attribution: '© OpenStreetMap, SRTM | OpenTopoMap'
+                }).addTo(martaniMap);
+            }
+
+            mapLocations.forEach(loc => {
+                const isSector = loc.kind === 'sector';
+                const dragRing = state.mapEditMode ? 'outline: 3px dashed #f59e0b; outline-offset: 2px; cursor: grab;' : '';
+                const iconHtml = isSector
+                    ? `<div style="background:#ea580c;color:#fff;width:30px;height:30px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;border:2.5px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,0.35);${dragRing}">${loc.code}</div>`
+                    : `<div style="background:#1d4ed8;color:#fff;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,0.3);${dragRing}">${loc.code || 'P'}</div>`;
+
+                const customIcon = L.divIcon({
+                    html: iconHtml,
+                    className: '',
+                    iconSize: isSector ? [30, 30] : [26, 26],
+                    iconAnchor: isSector ? [15, 15] : [13, 13]
+                });
+
+                const gmapsDirUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat.toFixed(5)},${loc.lng.toFixed(5)}`;
+                const filterArg = loc.filterQuery ? `'${loc.filterQuery.replace(/'/g, "\\'")}'` : `''`;
+
+                const popupHtml = `
+                    <div style="min-width:205px;max-width:240px;">
+                        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:${isSector ? '#c2410c' : '#1d4ed8'};margin-bottom:2px;">
+                            ${isSector ? `Settore [${loc.code}]` : `Parcheggio [${loc.code}]`}
                         </div>
-
-                        <div class="px-5 pt-6">
-                            <div class="text-3xl mb-2">${activeChapter.icon}</div>
-                            <h1 class="text-xl sm:text-2xl font-extrabold text-stone-900 leading-tight mb-1">
-                                ${activeChapter.title}
-                            </h1>
-                            <p class="text-xs sm:text-sm font-medium text-orange-700 mb-5">
-                                ${activeChapter.subtitle}
-                            </p>
-
-                            <div class="space-y-4 text-xs sm:text-sm text-stone-700 leading-relaxed bg-white p-5 sm:p-6 rounded-2xl border border-stone-200 shadow-2xs">
-                                ${activeChapter.content.map(paragraph => `<p>${paragraph}</p>`).join('')}
-                            </div>
-
-                            ${activeChapter.id === 'premessa' ? `
-                                <div class="mt-4 bg-stone-900 text-white rounded-2xl p-5 space-y-2.5">
-                                    <div class="text-xs font-bold text-orange-400 uppercase tracking-wider">Bibliografia & Fonti Storiche</div>
-                                    <ul class="text-xs sm:text-sm text-stone-300 space-y-1.5 list-disc pl-4">
-                                        <li><em>Al di là delle ciminiere - Salite su roccia nel ternano</em> (CAI Terni, 1988)</li>
-                                        <li><em>Arrampicate nel ternano</em> di Silvano Lepri (1988)</li>
-                                        <li>Archivio storico montimartani.it, climbook.com e falesia.it</li>
-                                    </ul>
-                                </div>
+                        <div style="font-size:13px;font-weight:800;color:#1c1917;line-height:1.25;margin-bottom:4px;">
+                            ${loc.title}
+                        </div>
+                        <div style="font-size:10px;font-family:monospace;color:#78716c;margin-bottom:5px;">
+                            GPS: ${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}
+                        </div>
+                        <div style="font-size:11px;color:#57534e;line-height:1.35;margin-bottom:10px;">
+                            ${loc.subtitle}
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            ${isSector ? `
+                                <button
+                                    onclick="openSectorRoutes('${loc.sectorId}', ${filterArg})"
+                                    style="background:#ea580c;color:#fff;border:none;border-radius:9px;padding:7px 10px;font-size:11px;font-weight:700;cursor:pointer;width:100%;"
+                                >
+                                    Vedi schede vie del settore →
+                                </button>
                             ` : ''}
+                            <a
+                                href="${gmapsDirUrl}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style="background:#1c1917;color:#fff;text-decoration:none;border-radius:9px;padding:7px 10px;font-size:11px;font-weight:700;text-align:center;display:block;"
+                            >
+                                📍 Naviga con Google Maps
+                            </a>
                         </div>
                     </div>
                 `;
-            }
 
+                const marker = L.marker([loc.lat, loc.lng], {
+                    icon: customIcon,
+                    draggable: !!state.mapEditMode
+                }).addTo(martaniMap);
+
+                if (state.mapEditMode) {
+                    marker.on('dragend', function(e) {
+                        const pos = e.target.getLatLng();
+                        loc.lat = Number(pos.lat.toFixed(4));
+                        loc.lng = Number(pos.lng.toFixed(4));
+                        localStorage.setItem('martani_calibrated_pins_v21', JSON.stringify(mapLocations));
+                        showToast(`[${loc.code}] ${loc.title}: ${loc.lat}, ${loc.lng}`);
+                    });
+                } else {
+                    marker.bindPopup(popupHtml);
+                }
+            });
+        }
+
+        // ==========================================
+        // 7. SCHERMATA 2: CAPITOLI INTRODUTTIVI
+        // ==========================================
+        function renderIntroScreen() {
             return `
-                <div class="fade-in pb-8">
-                    <div class="bg-white px-5 pt-5 pb-4 border-b border-stone-200 md:rounded-b-3xl md:mx-4">
-                        <div class="text-[11px] font-bold uppercase tracking-wider text-orange-700 mb-0.5">Guida Generale</div>
-                        <h1 class="text-xl sm:text-2xl font-extrabold text-stone-900">1. Introduzione ai Martani</h1>
-                        <p class="text-xs sm:text-sm text-stone-500 mt-0.5">Storia, geologia, aneddoti e crediti dell'opera</p>
+                <div class="fade-in px-4 pt-5 pb-10 max-w-4xl mx-auto">
+                    <div class="mb-5">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-orange-700">Capitolo 1</span>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">Introduzione ai Monti Martani</h1>
+                        <p class="text-xs sm:text-sm text-stone-500 mt-1">Geologia, storia alpinistica, aneddoti e bibliografia dell'opera.</p>
                     </div>
 
-                    <div class="px-4 pt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-4">
                         ${introChapters.map(ch => `
-                            <article
-                                onclick="openIntroChapter('${ch.id}')"
-                                class="bg-white hover:border-orange-400 active:scale-[0.99] p-5 rounded-2xl border border-stone-200 shadow-2xs transition cursor-pointer flex flex-col justify-between"
-                            >
-                                <div class="flex items-start gap-3.5">
-                                    <span class="text-2xl shrink-0 mt-0.5">${ch.icon}</span>
-                                    <div class="flex-1">
-                                        <h2 class="text-sm sm:text-base font-bold text-stone-900 mb-0.5">${ch.title}</h2>
-                                        <p class="text-xs text-stone-500 mb-2.5">${ch.subtitle}</p>
-                                        <p class="text-xs text-stone-600 line-clamp-3 leading-relaxed">
-                                            ${ch.content[0]}
-                                        </p>
+                            <article id="intro-card-${ch.id}" class="bg-white rounded-3xl p-5 sm:p-6 border border-stone-200 shadow-2xs">
+                                <div class="flex items-start gap-3 mb-3">
+                                    <span class="w-10 h-10 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center text-lg shrink-0">
+                                        ${ch.icon}
+                                    </span>
+                                    <div>
+                                        <h2 class="text-base sm:text-lg font-extrabold text-stone-900 leading-snug">${ch.title}</h2>
+                                        <p class="text-xs text-stone-500">${ch.subtitle}</p>
                                     </div>
                                 </div>
-                                <div class="mt-3 pt-2.5 border-t border-stone-100 text-xs font-bold text-orange-700">
-                                    Leggi capitolo completo →
+                                <div class="space-y-3 text-xs sm:text-sm text-stone-700 leading-relaxed">
+                                    ${ch.content.map(p => `<p>${p}</p>`).join('')}
                                 </div>
                             </article>
                         `).join('')}
+
+                        <article class="bg-stone-900 text-stone-200 rounded-3xl p-5 sm:p-6">
+                            <h3 class="text-sm font-extrabold text-white mb-2">📚 Bibliografia e Sitografia</h3>
+                            <ul class="text-xs space-y-1.5 text-stone-300 list-disc pl-4">
+                                <li><em>Al di là delle ciminiere — Salite su roccia nel ternano</em>, CAI Terni (1988).</li>
+                                <li><em>Arrampicate nel ternano</em>, Silvano Lepri (1988).</li>
+                                <li>Archivio storico montimartani.it, climbook.com e falesia.it.</li>
+                            </ul>
+                        </article>
                     </div>
                 </div>
             `;
         }
 
         // ==========================================
-        // 3. ELENCO VIE & FALESIE FILTRABILE
+        // 8. SCHERMATA 3: ELENCO VIE & FALESIE
         // ==========================================
+        function getFilteredRoutes() {
+            return routesData.filter(route => {
+                if (state.selectedSectorId !== 'all' && route.sectorId !== state.selectedSectorId) return false;
+                if (state.onlyCompleted && !state.completedRoutes.includes(route.id)) return false;
+
+                if (state.activeFilter === 'multipitch' && route.type !== 'multipitch') return false;
+                if (state.activeFilter === 'falesia' && route.type !== 'falesia') return false;
+                if (state.activeFilter === 'easy' && route.difficultyLevel !== 'facile') return false;
+                if (state.activeFilter === 'trad' && route.protectionCategory !== 'trad') return false;
+
+                if (state.searchQuery.trim() !== '') {
+                    const q = state.searchQuery.toLowerCase();
+                    const hay = `${route.name} ${route.sector} ${route.gradeMax} ${route.openers || ''} ${route.summary}`.toLowerCase();
+                    if (!hay.includes(q)) return false;
+                }
+                return true;
+            });
+        }
+
         function renderRoutesListView() {
+            const filtered = getFilteredRoutes();
             const filters = [
-                { key: 'all', label: 'Tutti' },
+                { key: 'all', label: 'Tutte' },
                 { key: 'multipitch', label: 'Multipitch' },
                 { key: 'falesia', label: 'Falesie' },
-                { key: 'easy', label: 'Max 6a' },
-                { key: 'trad', label: 'Classiche / Trad' }
+                { key: 'easy', label: 'Max 6a / Classiche facili' },
+                { key: 'trad', label: 'Alpinistiche / Trad' }
             ];
 
             return `
-                <div class="fade-in pb-6">
-                    <!-- Header Elenco Vie -->
-                    <div class="bg-white px-4 sm:px-6 pt-4 pb-4 border-b border-stone-200 sticky top-14 z-10 md:rounded-b-3xl md:mx-4 shadow-2xs">
-                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-                            <button onclick="navigateTo('home')" class="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-xl transition">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                                </svg>
-                                <span>Mappa Settori</span>
-                            </button>
+                <div class="fade-in px-4 pt-5 pb-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                        <div>
+                            <h1 class="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight">Elenco Vie e Falesie</h1>
+                            <p class="text-xs text-stone-500">${filtered.length} schede trovate nei Monti Martani</p>
+                        </div>
 
-                            <!-- Selettore Rapido Settore -->
-                            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-                                <button
-                                    onclick="setSectorFilter('all')"
-                                    class="px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap border transition ${
-                                        state.selectedSectorId === 'all'
-                                            ? 'bg-orange-600 text-white border-orange-600'
-                                            : 'bg-stone-100 text-stone-600 border-stone-200 hover:bg-stone-200/70'
-                                    }"
-                                >
-                                    Tutti i settori
-                                </button>
-                                ${sectorsData.map(sec => `
-                                    <button
-                                        onclick="setSectorFilter('${sec.id}')"
-                                        class="px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap border transition ${
-                                            state.selectedSectorId === sec.id
-                                                ? 'bg-orange-600 text-white border-orange-600'
-                                                : 'bg-stone-100 text-stone-600 border-stone-200 hover:bg-stone-200/70'
-                                        }"
-                                    >
-                                        Sett. ${sec.code}: ${sec.shortName}
-                                    </button>
-                                `).join('')}
-                            </div>
+                        <select
+                            onchange="openSectorRoutes(this.value)"
+                            class="bg-white border border-stone-300 text-stone-800 text-xs font-bold rounded-xl px-3 py-2 focus:outline-none focus:border-orange-500"
+                        >
+                            <option value="all" ${state.selectedSectorId === 'all' ? 'selected' : ''}>Tutti i settori (${routesData.length})</option>
+                            ${sectorsData.map(s => `
+                                <option value="${s.id}" ${state.selectedSectorId === s.id ? 'selected' : ''}>${s.code}. ${s.shortName}</option>
+                            `).join('')}
+                        </select>
+                    </div>
 
+                    <!-- Barra Ricerca -->
+                    <div class="relative mb-3">
+                        <input
+                            id="routes-search-input"
+                            type="text"
+                            value="${state.searchQuery}"
+                            oninput="handleSearchInput(this.value)"
+                            placeholder="Cerca nome via, settore (es. Sant’Andrea), grado (es. 6a, IV+), apritore..."
+                            class="w-full bg-white border border-stone-300 rounded-2xl pl-9 pr-4 py-2.5 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-orange-500"
+                        />
+                        <svg class="w-4 h-4 text-stone-400 absolute left-3 top-3" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
+                        </svg>
+                    </div>
+
+                    <!-- Filtri Rapidi -->
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-4">
+                        ${filters.map(f => `
                             <button
-                                onclick="toggleOnlyCompleted()"
-                                class="text-xs font-bold px-3 py-1.5 rounded-xl border transition ${
-                                    state.onlyCompleted
-                                        ? 'bg-emerald-600 text-white border-emerald-600'
-                                        : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+                                onclick="setFilter('${f.key}')"
+                                class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
+                                    state.activeFilter === f.key
+                                        ? 'bg-stone-900 text-white border-stone-900'
+                                        : 'bg-white text-stone-600 border-stone-200 hover:border-stone-400'
                                 }"
                             >
-                                ✓ Salite (${state.completedRoutes.length})
+                                ${f.label}
+                            </button>
+                        `).join('')}
+                        <button
+                            onclick="toggleOnlyCompleted()"
+                            class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
+                                state.onlyCompleted
+                                    ? 'bg-emerald-600 text-white border-emerald-600'
+                                    : 'bg-white text-stone-600 border-stone-200 hover:border-stone-400'
+                            }"
+                        >
+                            ✓ Salite (${state.completedRoutes.length})
+                        </button>
+                    </div>
+
+                    ${filtered.length === 0 ? `
+                        <div class="bg-white rounded-3xl p-8 text-center border border-stone-200">
+                            <p class="text-sm font-bold text-stone-700 mb-1">Nessuna via corrisponde ai filtri</p>
+                            <p class="text-xs text-stone-500 mb-4">Prova a resettare la ricerca o cambiare settore.</p>
+                            <button onclick="state.activeFilter='all';state.selectedSectorId='all';state.searchQuery='';state.onlyCompleted=false;render();" class="px-4 py-2 bg-orange-600 text-white text-xs font-bold rounded-xl">
+                                Mostra tutte le schede
                             </button>
                         </div>
+                    ` : `
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                            ${filtered.map(r => {
+                                const isDone = state.completedRoutes.includes(r.id);
+                                const isCrag = r.type === 'falesia';
+                                return `
+                                    <article
+                                        onclick="openRouteDetail('${r.id}')"
+                                        class="bg-white hover:border-orange-400 active:scale-[0.99] rounded-2xl p-4 border ${isDone ? 'border-emerald-300 bg-emerald-50/20' : 'border-stone-200'} shadow-2xs transition cursor-pointer flex flex-col justify-between"
+                                    >
+                                        <div>
+                                            <div class="flex items-start justify-between gap-2 mb-1.5">
+                                                <span class="text-[10px] font-bold uppercase tracking-wider text-stone-500 line-clamp-1">${r.sector}</span>
+                                                <span class="shrink-0 font-mono-code text-xs font-extrabold px-2 py-0.5 rounded-lg border ${getGradeBadgeColor(r.gradeMax)}">
+                                                    ${r.gradeMax}
+                                                </span>
+                                            </div>
 
-                        <div class="flex flex-col md:flex-row md:items-center gap-2.5">
-                            <!-- Barra di Ricerca -->
-                            <div class="relative flex-1">
-                                <svg class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                                <input
-                                    type="text"
-                                    value="${state.searchQuery}"
-                                    oninput="updateSearch(this.value)"
-                                    placeholder="Cerca nome via o grado (es. 6b, Diedro)..."
-                                    class="w-full pl-9 pr-4 py-2 bg-stone-100 hover:bg-stone-200/70 focus:bg-white text-xs text-stone-900 placeholder-stone-400 rounded-xl border border-stone-200 focus:border-orange-500 focus:outline-hidden transition"
-                                />
-                            </div>
+                                            <h2 class="text-sm sm:text-base font-extrabold text-stone-900 leading-snug mb-1">${r.name}</h2>
+                                            <p class="text-xs text-stone-600 line-clamp-2 leading-relaxed mb-3">${r.summary}</p>
+                                        </div>
 
-                            <!-- Filtri Rapidi a Pillola -->
-                            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
-                                ${filters.map(f => {
-                                    const isActive = state.activeFilter === f.key && !state.onlyCompleted;
-                                    return `
-                                        <button
-                                            onclick="setFilter('${f.key}')"
-                                            class="px-3 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap transition border ${
-                                                isActive
-                                                    ? 'bg-stone-900 text-white border-stone-900 shadow-2xs'
-                                                    : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-100'
-                                            }"
-                                        >
-                                            ${f.label}
-                                        </button>
-                                    `;
-                                }).join('')}
-                            </div>
+                                        <div class="pt-2.5 border-t border-stone-100 flex items-center justify-between gap-2">
+                                            <div class="flex items-center gap-1.5 flex-wrap">
+                                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${isCrag ? 'bg-blue-50 text-blue-700' : 'bg-orange-50 text-orange-700'}">
+                                                    ${isCrag ? 'Falesia' : `${r.pitchesCount} tiri`}
+                                                </span>
+                                                <span class="text-[11px] font-semibold text-stone-500">${r.length}</span>
+                                            </div>
+
+                                            <button
+                                                onclick="toggleRouteCompleted('${r.id}', event)"
+                                                class="px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${
+                                                    isDone
+                                                        ? 'bg-emerald-600 text-white border-emerald-600'
+                                                        : 'bg-stone-50 text-stone-500 border-stone-200 hover:border-emerald-400'
+                                                }"
+                                            >
+                                                ${isDone ? '✓ Salita' : 'Segna'}
+                                            </button>
+                                        </div>
+                                    </article>
+                                `;
+                            }).join('')}
                         </div>
-                    </div>
-
-                    <!-- Intestazione Lista -->
-                    <div class="px-4 pt-4 pb-2.5 flex items-center justify-between">
-                        <span class="text-xs font-bold uppercase tracking-wider text-stone-400">
-                            ${state.onlyCompleted ? 'Le tue vie salite' : 'Itinerari selezionati'}
-                        </span>
-                        <span class="text-xs font-medium text-stone-500">
-                            Tocca una scheda per i dettagli
-                        </span>
-                    </div>
-
-                    <!-- Griglia Schede Vie -->
-                    <div id="routes-list-wrapper" class="px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                        ${generateRoutesCardsHTML()}
-                    </div>
+                    `}
                 </div>
             `;
         }
 
-        function generateRoutesCardsHTML() {
-            const filtered = getFilteredRoutes();
-
-            if (filtered.length === 0) {
-                return `
-                    <div class="col-span-full bg-white rounded-3xl p-8 border border-stone-200 text-center">
-                        <div class="text-2xl mb-2">🧗</div>
-                        <div class="text-sm font-bold text-stone-900 mb-1">Nessuna via trovata</div>
-                        <p class="text-xs text-stone-500 mb-4">Prova a modificare i filtri o la parola cercata.</p>
-                        <button onclick="state.searchQuery=''; state.activeFilter='all'; state.selectedSectorId='all'; state.onlyCompleted=false; render();" class="px-4 py-2 bg-stone-900 text-white text-xs font-bold rounded-xl">
-                            Mostra tutte le vie
-                        </button>
-                    </div>
-                `;
-            }
-
-            return filtered.map(route => {
-                const isDone = state.completedRoutes.includes(route.id);
-                const isFalesia = route.type === 'falesia';
-                const gradeClass = getGradeBadgeColor(route.gradeMax);
-
-                return `
-                    <article
-                        onclick="openRouteDetail('${route.id}')"
-                        class="bg-white hover:border-orange-400 active:scale-[0.99] p-4 rounded-2xl border border-stone-200 shadow-2xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                        <div>
-                            <div class="flex items-start justify-between gap-2 mb-1.5">
-                                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${
-                                    isFalesia
-                                        ? 'bg-sky-50 text-sky-700 border border-sky-200'
-                                        : 'bg-orange-50 text-orange-700 border border-orange-200'
-                                }">
-                                    ${isFalesia ? 'Falesia' : 'Multipitch'}
-                                </span>
-                                <div class="flex items-center gap-1.5 shrink-0">
-                                    ${isDone ? '<span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">✓ Salita</span>' : ''}
-                                    <span class="font-mono-code text-xs font-bold px-2 py-0.5 rounded border ${gradeClass}">
-                                        ${route.gradeMax}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <h3 class="text-sm sm:text-base font-extrabold text-stone-900 leading-snug mb-1">
-                                ${route.name}
-                            </h3>
-                            <div class="text-[11px] font-medium text-stone-500 mb-2">
-                                ${route.sector}
-                            </div>
-                            <p class="text-xs text-stone-600 line-clamp-2 leading-relaxed mb-3">
-                                ${route.summary}
-                            </p>
-                        </div>
-
-                        <div class="pt-2.5 border-t border-stone-100 flex items-center justify-between text-[11px] font-semibold text-stone-500">
-                            <span>${isFalesia ? route.length : `${route.length} • ${route.pitchesCount} tiri`}</span>
-                            <span>Esp. ${route.exposure.split(' ')[0]}</span>
-                        </div>
-                    </article>
-                `;
-            }).join('');
-        }
-
         // ==========================================
-        // 4. SCHEDA DETTAGLIO VIA / FALESIA
+        // 9. SCHERMATA 4: SCHEDA DETTAGLIO VIA / FALESIA
         // ==========================================
         function renderDetailView() {
-            const route = routesData.find(r => r.id === state.selectedRouteId);
-            if (!route) return renderRoutesListView();
-
+            const route = routesData.find(r => r.id === state.selectedRouteId) || routesData[0];
             const isDone = state.completedRoutes.includes(route.id);
-            const isFalesia = route.type === 'falesia';
-            const gradeClass = getGradeBadgeColor(route.gradeMax);
-            const polylinePoints = (!isFalesia && route.svgPath)
-                ? route.svgPath.map(p => `${p.x},${p.y}`).join(' ')
-                : '';
+            const isCrag = route.type === 'falesia';
 
             return `
-                <div class="fade-in pb-8">
-                    <!-- Top Bar Dettaglio -->
-                    <div class="bg-white/95 backdrop-blur-xs px-4 sm:px-6 py-3 border-b border-stone-200 sticky top-14 z-20 flex items-center justify-between gap-2 md:rounded-b-2xl md:mx-4">
-                        <button onclick="navigateTo('routes')" class="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-3 py-2 rounded-xl transition">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                            </svg>
-                            <span>Torna all'elenco</span>
+                <div class="fade-in px-4 pt-4 pb-10">
+                    <div class="flex items-center justify-between gap-2 mb-4">
+                        <button
+                            onclick="navigateTo('routes')"
+                            class="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 hover:text-stone-900 bg-white px-3 py-2 rounded-xl border border-stone-200 shadow-2xs"
+                        >
+                            ← Elenco vie
                         </button>
 
                         <button
-                            onclick="toggleRouteCompleted('${route.id}')"
+                            onclick="toggleRouteCompleted('${route.id}', event)"
                             class="inline-flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl border transition ${
                                 isDone
-                                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
-                                    : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                                    ? 'bg-emerald-600 text-white border-emerald-600'
+                                    : 'bg-white text-stone-700 border-stone-200 hover:border-emerald-400'
                             }"
                         >
-                            <span>${isDone ? '✓ Visitata / Salita' : 'Segna come salita'}</span>
+                            ${isDone ? '✓ Via salita' : 'Segna come salita'}
                         </button>
                     </div>
 
-                    <!-- Layout Desktop a 2 Colonne (Colonna Sinistra: Dati & Schizzo | Colonna Destra: Relazione & Tiri) -->
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 pt-5">
-                        
-                        <!-- Colonna Sinistra (5 col su Desktop) -->
-                        <div class="lg:col-span-5 space-y-5">
-                            <!-- Intestazione & Proprietà -->
-                            <div class="p-5 bg-white rounded-3xl border border-stone-200 shadow-2xs">
-                                <div class="text-xs font-semibold text-orange-700 mb-1">${route.sector}</div>
-                                <h1 class="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight leading-tight mb-1.5">
-                                    ${route.name}
-                                </h1>
-                                ${route.openers ? `<div class="text-xs font-medium text-stone-500 mb-3">Apritori / Chiodatura: <span class="text-stone-700 font-semibold">${route.openers}</span></div>` : ''}
-                                <p class="text-xs sm:text-sm text-stone-600 leading-relaxed mb-4">
-                                    ${route.summary}
-                                </p>
-
-                                <!-- Box Foto / Schizzo Originale del Documento -->
-                                ${route.photoUrl ? `
-                                    <div class="mb-4">
-                                        <div
-                                            onclick="openPhotoLightbox('${route.photoUrl}', '${(route.photoCaption || route.name).replace(/'/g, "\\'")}')"
-                                            class="relative rounded-2xl overflow-hidden border border-stone-200 bg-stone-900 cursor-zoom-in group shadow-2xs"
-                                        >
-                                            <img
-                                                src="${route.photoUrl}"
-                                                alt="${route.photoCaption || route.name}"
-                                                onerror="this.src='https://placehold.co/800x500/292524/fb923c?text=Inserisci+foto+qui+(images/...)'"
-                                                class="w-full h-48 sm:h-56 object-cover group-hover:opacity-95 transition"
-                                            />
-                                            <span class="absolute bottom-2.5 right-2.5 bg-stone-950/85 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg border border-stone-700">
-                                                🔍 Tocca per ingrandire
-                                            </span>
-                                        </div>
-                                        ${route.photoCaption ? `
-                                            <p class="text-[11px] text-stone-500 mt-1.5 italic leading-snug">
-                                                ${route.photoCaption}
-                                            </p>
-                                        ` : ''}
-                                    </div>
-                                ` : ''}
-
-                                <!-- Griglia Proprietà -->
-                                <div class="bg-stone-50 rounded-2xl border border-stone-200/90 divide-y divide-stone-200/70 text-xs overflow-hidden">
-                                    <div class="grid grid-cols-2 divide-x divide-stone-200/70">
-                                        <div class="p-3">
-                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Range Difficoltà' : 'Difficoltà Max / Obbl.'}</div>
-                                            <div class="font-mono-code font-bold text-stone-900">
-                                                <span class="px-1.5 py-0.5 rounded border ${gradeClass}">${route.gradeMax}</span>
-                                                <span class="text-stone-600 ml-1">${isFalesia ? `(da ${route.gradeObbl})` : `(${route.gradeObbl} obbl.)`}</span>
-                                            </div>
-                                        </div>
-                                        <div class="p-3">
-                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Numero Vie' : 'Sviluppo e Tiri'}</div>
-                                            <div class="font-bold text-stone-900">${isFalesia ? route.length : `${route.length} • ${route.pitchesCount} tiri`}</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-2 divide-x divide-stone-200/70">
-                                        <div class="p-3">
-                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">Chiodatura</div>
-                                            <div class="font-semibold text-stone-800">${route.protectionType}</div>
-                                        </div>
-                                        <div class="p-3">
-                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">Esposizione</div>
-                                            <div class="font-semibold text-stone-800">${route.exposure}</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-2 divide-x divide-stone-200/70">
-                                        <div class="p-3">
-                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Periodo Consigliato' : 'Tempo Salita'}</div>
-                                            <div class="font-semibold text-stone-800">${route.climbTime}</div>
-                                        </div>
-                                        <div class="p-3">
-                                            <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Quota' : 'Tempo Discesa'}</div>
-                                            <div class="font-semibold text-stone-800">${route.descentTime}</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="p-3">
-                                        <div class="text-[11px] text-stone-400 font-medium mb-0.5">Materiale e Note</div>
-                                        <div class="font-medium text-stone-800">${route.gear}</div>
-                                    </div>
-                                </div>
-
-                                <!-- Pulsante GPS / Accesso -->
-                                <button
-                                    onclick="copyGpsCoords('${route.gpsCoords}')"
-                                    class="mt-3 w-full py-2.5 px-3.5 bg-stone-900 hover:bg-stone-800 active:scale-[0.99] text-white rounded-xl text-xs font-semibold flex items-center justify-between transition"
-                                >
-                                    <span class="flex items-center gap-2 shrink-0">
-                                        <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                        <span>Copia Riferimento Accesso</span>
-                                    </span>
-                                    <span class="font-mono-code text-[10px] text-stone-300 bg-stone-800 px-2 py-0.5 rounded-md truncate max-w-[180px]">
-                                        ${route.gpsCoords}
-                                    </span>
-                                </button>
-                            </div>
-
-                            ${!isFalesia ? `
-                            <!-- Schizzo / Topo Vettoriale Interattivo -->
-                            <div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">Schizzo Parete (Tocca le soste)</h2>
-                                    <span class="text-[11px] text-orange-700 font-semibold">Interattivo</span>
-                                </div>
-
-                                <div class="bg-stone-900 rounded-2xl p-3 border border-stone-800 shadow-inner">
-                                    <svg viewBox="0 0 260 235" class="w-full h-56 select-none">
-                                        <defs>
-                                            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stop-color="#1c1917" />
-                                                <stop offset="100%" stop-color="#292524" />
-                                            </linearGradient>
-                                            <linearGradient id="rockGrad" x1="0" y1="0" x2="1" y2="1">
-                                                <stop offset="0%" stop-color="#57534e" />
-                                                <stop offset="60%" stop-color="#44403c" />
-                                                <stop offset="100%" stop-color="#292524" />
-                                            </linearGradient>
-                                        </defs>
-                                        <rect width="260" height="235" rx="12" fill="url(#skyGrad)" />
-                                        <polygon points="25,225 55,140 85,75 135,15 185,20 215,95 240,225" fill="url(#rockGrad)" stroke="#78716c" stroke-width="1.2" />
-                                        <polyline points="95,180 125,130 140,85 160,25" fill="none" stroke="#292524" stroke-width="1.5" opacity="0.6" />
-                                        <polyline points="170,190 165,120 180,60" fill="none" stroke="#78716c" stroke-width="1" opacity="0.35" />
-
-                                        <polyline
-                                            points="${polylinePoints}"
-                                            fill="none"
-                                            stroke="#f97316"
-                                            stroke-width="3"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-dasharray="5,3"
-                                        />
-
-                                        ${route.svgPath.map((pt, idx) => {
-                                            const isAttacco = idx === 0;
-                                            const isSelected = !isAttacco && state.expandedPitchIndex === pt.pitchIndex;
-                                            if (isAttacco) {
-                                                return `
-                                                    <g>
-                                                        <circle cx="${pt.x}" cy="${pt.y}" r="5" fill="#fafaf9" stroke="#ea580c" stroke-width="2" />
-                                                        <text x="${pt.x - 18}" y="${pt.y + 14}" fill="#d6d3d1" font-size="9" font-weight="600">${pt.label}</text>
-                                                    </g>
-                                                `;
-                                            }
-                                            return `
-                                                <g onclick="focusPitchFromSvg(${pt.pitchIndex})" class="cursor-pointer">
-                                                    <circle
-                                                        cx="${pt.x}"
-                                                        cy="${pt.y}"
-                                                        r="${isSelected ? '9' : '7'}"
-                                                        fill="${isSelected ? '#ea580c' : '#1c1917'}"
-                                                        stroke="${isSelected ? '#ffffff' : '#fb923c'}"
-                                                        stroke-width="2"
-                                                    />
-                                                    <text
-                                                        x="${pt.x + 11}"
-                                                        y="${pt.y + 3}"
-                                                        fill="${isSelected ? '#fdba74' : '#fafaf9'}"
-                                                        font-size="10"
-                                                        font-weight="700"
-                                                    >${pt.label}</text>
-                                                </g>
-                                            `;
-                                        }).join('')}
-                                    </svg>
-                                </div>
-                            </div>
-                            ` : ''}
+                    <!-- Intestazione Scheda -->
+                    <div class="bg-white rounded-3xl p-5 sm:p-6 border border-stone-200 shadow-2xs mb-5">
+                        <div class="flex flex-wrap items-center gap-2 mb-2">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-orange-700 bg-orange-50 px-2.5 py-0.5 rounded-lg">
+                                ${route.sector}
+                            </span>
+                            <span class="font-mono-code text-xs font-extrabold px-2.5 py-0.5 rounded-lg border ${getGradeBadgeColor(route.gradeMax)}">
+                                Max ${route.gradeMax} (${route.gradeObbl} obbl.)
+                            </span>
                         </div>
 
-                        <!-- Colonna Destra (7 col su Desktop): Avvicinamento, Tiri/Vie, Discesa -->
-                        <div class="lg:col-span-7 space-y-5">
-                            <!-- Avvicinamento -->
-                            <div>
-                                <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">1. Avvicinamento</h2>
-                                <div class="bg-white rounded-2xl p-4 border border-stone-200 text-xs sm:text-sm text-stone-700 leading-relaxed">
-                                    ${route.approach}
+                        <h1 class="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight mb-1">${route.name}</h1>
+                        <p class="text-xs text-stone-500 mb-4">Apritori / Attrezzatori: <strong class="text-stone-700">${route.openers}</strong></p>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                            <div class="bg-stone-50 p-3 rounded-2xl border border-stone-200/70">
+                                <div class="text-[10px] font-bold uppercase text-stone-400">Sviluppo</div>
+                                <div class="font-extrabold text-stone-900 mt-0.5">${route.length}</div>
+                            </div>
+                            <div class="bg-stone-50 p-3 rounded-2xl border border-stone-200/70">
+                                <div class="text-[10px] font-bold uppercase text-stone-400">Esposizione</div>
+                                <div class="font-extrabold text-stone-900 mt-0.5">${route.exposure}</div>
+                            </div>
+                            <div class="bg-stone-50 p-3 rounded-2xl border border-stone-200/70">
+                                <div class="text-[10px] font-bold uppercase text-stone-400">${isCrag ? 'Stagione' : 'Tempo Salita'}</div>
+                                <div class="font-extrabold text-stone-900 mt-0.5">${route.climbTime}</div>
+                            </div>
+                            <div class="bg-stone-50 p-3 rounded-2xl border border-stone-200/70">
+                                <div class="text-[10px] font-bold uppercase text-stone-400">${isCrag ? 'Quota / Avv.' : 'Discesa'}</div>
+                                <div class="font-extrabold text-stone-900 mt-0.5">${route.descentTime}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layout a 2 Colonne su Desktop -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                        <!-- Colonna Sinistra (5 col): Foto, Schizzo Interattivo, Avvicinamento & Materiale -->
+                        <div class="lg:col-span-5 space-y-4">
+                            ${route.photoUrl ? `
+                                <div class="bg-white rounded-3xl p-3 border border-stone-200 shadow-2xs">
+                                    <div onclick="openPhotoLightbox('${route.photoUrl}', '${(route.photoCaption || '').replace(/'/g, "\\'")}')" class="relative cursor-zoom-in group overflow-hidden rounded-2xl">
+                                        <img src="${route.photoUrl}" alt="${route.name}" class="w-full h-auto object-cover group-hover:scale-[1.02] transition duration-300" />
+                                        <span class="absolute bottom-2 right-2 bg-stone-900/80 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg">
+                                            🔍 Ingrandisci
+                                        </span>
+                                    </div>
+                                    ${route.photoCaption ? `<p class="text-[11px] text-stone-500 mt-2 px-1">${route.photoCaption}</p>` : ''}
+                                </div>
+                            ` : ''}
+
+                            ${!isCrag && route.svgPath ? `
+                                <div class="bg-stone-900 text-white rounded-3xl p-4 shadow-xs">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-bold text-orange-400">Schizzo Soste Interattivo</span>
+                                        <span class="text-[10px] text-stone-400">Tocca una sosta per aprire il tiro</span>
+                                    </div>
+                                    <svg viewBox="0 0 240 230" class="w-full h-auto bg-stone-800/80 rounded-2xl border border-stone-700">
+                                        <polygon points="15,220 45,35 195,20 225,220" fill="#292524" stroke="#44403c" stroke-width="1.5" />
+                                        <polyline
+                                            points="${route.svgPath.map(p => `${p.x},${p.y}`).join(' ')}"
+                                            fill="none"
+                                            stroke="#f97316"
+                                            stroke-width="2.5"
+                                            stroke-dasharray="5,3"
+                                        />
+                                        ${route.svgPath.map(pt => `
+                                            <g onclick="${pt.pitchIndex !== undefined ? `togglePitchAccordion(${pt.pitchIndex})` : ''}" class="${pt.pitchIndex !== undefined ? 'cursor-pointer' : ''}">
+                                                <circle cx="${pt.x}" cy="${pt.y}" r="6" fill="${pt.pitchIndex === state.expandedPitchIndex ? '#ea580c' : '#1c1917'}" stroke="#fb923c" stroke-width="2" />
+                                                <text x="${pt.x + 10}" y="${pt.y + 3}" fill="#fafaf9" font-size="9" font-weight="700">${pt.label}</text>
+                                            </g>
+                                        `).join('')}
+                                    </svg>
+                                </div>
+                            ` : ''}
+
+                            <!-- Avvicinamento, Materiale e Discesa -->
+                            <div class="bg-white rounded-3xl p-5 border border-stone-200 space-y-3.5 text-xs sm:text-sm">
+                                <div>
+                                    <div class="text-[11px] font-bold uppercase text-stone-400 mb-1">🥾 Avvicinamento</div>
+                                    <p class="text-stone-700 leading-relaxed">${route.approach}</p>
+                                    <div class="mt-2 flex items-center justify-between gap-2 bg-stone-50 px-3 py-2 rounded-xl border border-stone-200/80">
+                                        <span class="font-mono-code text-[11px] text-stone-700 truncate">${route.gpsCoords}</span>
+                                        <button onclick="copyToClipboard('${route.gpsCoords.replace(/'/g, "\\'")}', 'Coordinate GPS copiate!')" class="shrink-0 text-[11px] font-bold text-orange-700 hover:underline">
+                                            Copia
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="pt-3 border-t border-stone-100">
+                                    <div class="text-[11px] font-bold uppercase text-stone-400 mb-1">🧗 Chiodatura e Materiale</div>
+                                    <p class="text-stone-700">${route.protectionType} — ${route.gear}</p>
+                                </div>
+
+                                <div class="pt-3 border-t border-stone-100">
+                                    <div class="text-[11px] font-bold uppercase text-stone-400 mb-1">⬇️ Discesa / Calata</div>
+                                    <p class="text-stone-700 leading-relaxed">${route.descent}</p>
                                 </div>
                             </div>
+                        </div>
 
-                            ${!isFalesia ? `
-                            <!-- Relazione Tiro per Tiro (Multipitch) -->
-                            <div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">2. Relazione Tiro per Tiro</h2>
-                                    <span class="text-[11px] text-stone-400">Spunta i tiri saliti</span>
+                        <!-- Colonna Destra (7 col): Relazione Tiro per Tiro oppure Tabella Vie Falesia -->
+                        <div class="lg:col-span-7">
+                            ${isCrag ? `
+                                <div class="bg-white rounded-3xl p-5 border border-stone-200 shadow-2xs">
+                                    <h2 class="text-base font-extrabold text-stone-900 mb-3">Elenco Vie della Falesia (${(route.cragRoutes || []).length})</h2>
+                                    ${(route.cragRoutes || []).length === 0 ? `
+                                        <p class="text-xs text-stone-500">Nessun singolo tiro tabellato per questa area.</p>
+                                    ` : `
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full text-left border-collapse text-xs">
+                                                <thead>
+                                                    <tr class="border-b border-stone-200 text-[10px] font-bold uppercase text-stone-400">
+                                                        <th class="py-2 pr-2">Via</th>
+                                                        <th class="py-2 px-2">Grado</th>
+                                                        <th class="py-2 px-2">Metri</th>
+                                                        <th class="py-2 pl-2 text-right">Bellezza</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="divide-y divide-stone-100">
+                                                    ${route.cragRoutes.map(cr => `
+                                                        <tr class="hover:bg-stone-50">
+                                                            <td class="py-2.5 pr-2">
+                                                                <div class="font-bold text-stone-900">${cr.name}</div>
+                                                                ${cr.sectorTag ? `<div class="text-[10px] text-stone-400">${cr.sectorTag}</div>` : ''}
+                                                            </td>
+                                                            <td class="py-2.5 px-2">
+                                                                <span class="font-mono-code font-bold px-2 py-0.5 rounded border ${getGradeBadgeColor(cr.grade)}">${cr.grade}</span>
+                                                            </td>
+                                                            <td class="py-2.5 px-2 text-stone-500">${cr.meters || '-'}</td>
+                                                            <td class="py-2.5 pl-2 text-right font-mono-code text-amber-600 font-bold">${cr.stars || ''}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    `}
                                 </div>
-
+                            ` : `
                                 <div class="space-y-2.5">
-                                    ${route.pitches.map((pitch, idx) => {
+                                    <div class="flex items-center justify-between mb-1">
+                                        <h2 class="text-base font-extrabold text-stone-900">Relazione Tiro per Tiro (${route.pitches.length})</h2>
+                                        <span class="text-[11px] text-stone-500">Spunta i tiri saliti</span>
+                                    </div>
+
+                                    ${route.pitches.map((p, idx) => {
                                         const isExpanded = state.expandedPitchIndex === idx;
                                         const isPitchDone = !!state.checkedPitches[`${route.id}_${idx}`];
-                                        const pGradeClass = getGradeBadgeColor(pitch.grade);
-
                                         return `
-                                            <div
-                                                id="pitch-card-${idx}"
-                                                class="bg-white rounded-2xl border transition overflow-hidden ${
-                                                    isExpanded ? 'border-orange-400 shadow-xs' : 'border-stone-200'
-                                                }"
-                                            >
+                                            <div class="bg-white rounded-2xl border ${isPitchDone ? 'border-emerald-300 bg-emerald-50/20' : 'border-stone-200'} overflow-hidden shadow-2xs">
                                                 <div
                                                     onclick="togglePitchAccordion(${idx})"
-                                                    class="p-3.5 flex items-center justify-between gap-2 cursor-pointer select-none ${
-                                                        isPitchDone ? 'bg-emerald-50/40' : ''
-                                                    }"
+                                                    class="p-3.5 sm:p-4 flex items-center justify-between gap-2 cursor-pointer hover:bg-stone-50/70 transition"
                                                 >
                                                     <div class="flex items-center gap-2.5">
                                                         <button
                                                             onclick="togglePitchChecked('${route.id}', ${idx}, event)"
-                                                            title="Spunta tiro completato"
-                                                            class="w-5 h-5 rounded-md border flex items-center justify-center transition shrink-0 ${
+                                                            class="w-6 h-6 rounded-lg border flex items-center justify-center text-xs font-bold transition ${
                                                                 isPitchDone
                                                                     ? 'bg-emerald-600 border-emerald-600 text-white'
-                                                                    : 'border-stone-300 bg-white hover:border-orange-500'
+                                                                    : 'bg-white border-stone-300 text-transparent hover:border-emerald-500'
                                                             }"
                                                         >
-                                                            ${isPitchDone ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>' : ''}
+                                                            ✓
                                                         </button>
-
-                                                        <span class="font-mono-code text-xs sm:text-sm font-extrabold text-stone-900">${pitch.num}</span>
-                                                        <span class="font-mono-code text-xs font-bold px-2 py-0.5 rounded border ${pGradeClass}">${pitch.grade}</span>
-                                                        <span class="text-xs font-medium text-stone-500">${pitch.length} • ${pitch.bolts}</span>
+                                                        <span class="font-extrabold text-sm text-stone-900">${p.num}</span>
+                                                        <span class="font-mono-code text-xs font-extrabold px-2 py-0.5 rounded-lg border ${getGradeBadgeColor(p.grade)}">${p.grade}</span>
+                                                        <span class="text-xs font-semibold text-stone-500">${p.length}</span>
                                                     </div>
-
-                                                    <svg class="w-4 h-4 text-stone-400 transition-transform ${isExpanded ? 'rotate-180 text-orange-600' : ''}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                                    </svg>
+                                                    <span class="text-xs text-stone-400 font-bold">${isExpanded ? '▲' : '▼'}</span>
                                                 </div>
-
                                                 ${isExpanded ? `
-                                                    <div class="px-4 pb-4 pt-2 text-xs sm:text-sm text-stone-700 leading-relaxed border-t border-stone-100 bg-stone-50/50">
-                                                        ${pitch.desc}
+                                                    <div class="px-4 pb-4 pt-1 border-t border-stone-100 text-xs sm:text-sm text-stone-700 leading-relaxed">
+                                                        <div class="text-[11px] font-semibold text-stone-400 mb-1">Protezioni: ${p.bolts}</div>
+                                                        <p>${p.desc}</p>
                                                     </div>
                                                 ` : ''}
                                             </div>
                                         `;
                                     }).join('')}
                                 </div>
-                            </div>
-                            ` : `
-                            <!-- Elenco Monotiri della Falesia -->
-                            <div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">2. Elenco Vie della Falesia</h2>
-                                    <span class="text-[11px] text-stone-400">${route.cragRoutes.length} tiri</span>
-                                </div>
-
-                                ${route.cragRoutes.length === 0 ? `
-                                    <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-xs text-rose-900">
-                                        Area dismessa con divieto di accesso da parte della proprietà della cava.
-                                    </div>
-                                ` : `
-                                    <div class="bg-white rounded-2xl border border-stone-200 overflow-hidden divide-y divide-stone-100">
-                                        ${route.cragRoutes.map((cr, idx) => `
-                                            <div class="px-4 py-3 flex items-center justify-between gap-2 text-xs sm:text-sm">
-                                                <div>
-                                                    ${cr.sectorTag ? `<span class="text-[10px] font-bold uppercase text-orange-700 block">${cr.sectorTag}</span>` : ''}
-                                                    <span class="font-semibold text-stone-900">${idx + 1}. ${cr.name}</span>
-                                                    ${cr.meters && cr.meters !== '-' ? `<span class="text-stone-400 ml-1">(${cr.meters})</span>` : ''}
-                                                </div>
-                                                <div class="flex items-center gap-2 shrink-0">
-                                                    ${cr.stars ? `<span class="text-xs text-amber-500 font-bold tracking-tighter">${cr.stars}</span>` : ''}
-                                                    <span class="font-mono-code text-xs font-bold px-2.5 py-0.5 rounded bg-stone-100 text-stone-800 border border-stone-200">
-                                                        ${cr.grade}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                `}
-                            </div>
                             `}
-
-                            <!-- Discesa -->
-                            <div>
-                                <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">3. Discesa / Calata</h2>
-                                <div class="bg-amber-50/70 rounded-2xl p-4 border border-amber-200/80 text-xs sm:text-sm text-stone-800 leading-relaxed">
-                                    ${route.descent}
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        function getFilteredRoutes() {
-            return routesData.filter(route => {
-                if (state.selectedSectorId !== 'all' && route.sectorId !== state.selectedSectorId) {
-                    return false;
-                }
-
-                if (state.onlyCompleted) {
-                    return state.completedRoutes.includes(route.id);
-                }
-
-                if (state.searchQuery.trim() !== '') {
-                    const q = state.searchQuery.toLowerCase();
-                    const matchName = route.name.toLowerCase().includes(q);
-                    const matchSector = route.sector.toLowerCase().includes(q);
-                    const matchGrade = route.gradeMax.toLowerCase().includes(q) || route.gradeObbl.toLowerCase().includes(q);
-                    const matchCrag = route.cragRoutes && route.cragRoutes.some(c => c.name.toLowerCase().includes(q));
-                    if (!matchName && !matchSector && !matchGrade && !matchCrag) return false;
-                }
-
-                if (state.activeFilter === 'multipitch') {
-                    return route.type === 'multipitch';
-                }
-                if (state.activeFilter === 'falesia') {
-                    return route.type === 'falesia';
-                }
-                if (state.activeFilter === 'easy') {
-                    return route.difficultyLevel === 'facile';
-                }
-                if (state.activeFilter === 'trad') {
-                    return route.protectionCategory === 'trad';
-                }
-
-                return true;
-            });
-        }
-
-        function updateSearch(val) {
-            state.searchQuery = val;
-            const listContainer = document.getElementById('routes-list-wrapper');
-            if (listContainer) {
-                listContainer.innerHTML = generateRoutesCardsHTML();
-            }
-        }
-
-        function setFilter(filterKey) {
-            state.activeFilter = filterKey;
-            state.onlyCompleted = false;
-            render();
-        }
-
-        function setSectorFilter(sectorId) {
-            state.selectedSectorId = sectorId;
-            state.onlyCompleted = false;
-            render();
-        }
-
-        function openSectorRoutes(sectorId) {
-            state.selectedSectorId = sectorId;
-            state.onlyCompleted = false;
-            state.view = 'routes';
-            render();
-        }
-
-        function openIntroChapter(chapterId) {
-            state.selectedIntroId = chapterId;
-            state.view = 'intro';
-            render();
-        }
-
-        function toggleOnlyCompleted() {
-            state.onlyCompleted = !state.onlyCompleted;
-            render();
-        }
-
-        function openRouteDetail(routeId) {
-            state.selectedRouteId = routeId;
-            state.view = 'detail';
-            state.expandedPitchIndex = 0;
-            render();
-        }
-
-        function navigateTo(viewName) {
-            state.view = viewName;
-            if (viewName === 'intro') {
-                state.selectedIntroId = null;
-            }
-            if (viewName !== 'detail') {
-                state.selectedRouteId = null;
-            }
-            render();
-        }
-
-        function toggleRouteCompleted(routeId) {
-            const idx = state.completedRoutes.indexOf(routeId);
-            if (idx > -1) {
-                state.completedRoutes.splice(idx, 1);
-                showToast('Via rimossa dalle salite completate');
-            } else {
-                state.completedRoutes.push(routeId);
-                showToast('Complimenti! Via segnata come salita');
-            }
-            saveState();
-            render();
-        }
-
-        function togglePitchAccordion(idx) {
-            state.expandedPitchIndex = state.expandedPitchIndex === idx ? -1 : idx;
-            render();
-        }
-
-        function focusPitchFromSvg(pitchIdx) {
-            state.expandedPitchIndex = pitchIdx;
-            render();
-            setTimeout(() => {
-                const el = document.getElementById(`pitch-card-${pitchIdx}`);
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 60);
-        }
-
-        function togglePitchChecked(routeId, pitchIdx, event) {
-            event.stopPropagation();
-            const key = `${routeId}_${pitchIdx}`;
-            if (state.checkedPitches[key]) {
-                delete state.checkedPitches[key];
-            } else {
-                state.checkedPitches[key] = true;
-            }
-            saveState();
-            render();
-        }
-
-        function copyGpsCoords(coords) {
-            const tempInput = document.createElement('input');
-            tempInput.value = coords;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            showToast(`Coordinate GPS copiate: ${coords}`);
-        }
-
-        function openPhotoLightbox(imgUrl, caption) {
-            const box = document.getElementById('photo-lightbox');
-            const img = document.getElementById('lightbox-img');
-            const cap = document.getElementById('lightbox-caption');
-            if (!box || !img || !cap) return;
-            img.src = imgUrl;
-            cap.textContent = caption || '';
-            box.classList.remove('hidden');
-        }
-
-        function closePhotoLightbox() {
-            const box = document.getElementById('photo-lightbox');
-            if (box) box.classList.add('hidden');
-        }
-
-        function updateBottomNavUI() {
-            const navHome = document.getElementById('nav-home');
-            const navIntro = document.getElementById('nav-intro');
-            const navRoutes = document.getElementById('nav-routes');
-
-            const activeCls = 'flex flex-col items-center gap-0.5 text-orange-600 font-semibold text-xs px-3 py-1.5 rounded-xl transition';
-            const inactiveCls = 'flex flex-col items-center gap-0.5 text-stone-500 hover:text-stone-800 font-medium text-xs px-3 py-1.5 rounded-xl transition';
-
-            if (navHome) navHome.className = state.view === 'home' ? activeCls : inactiveCls;
-            if (navIntro) navIntro.className = state.view === 'intro' ? activeCls : inactiveCls;
-            if (navRoutes) navRoutes.className = (state.view === 'routes' || state.view === 'detail') ? activeCls : inactiveCls;
-
-            const dHome = document.getElementById('desk-nav-home');
-            const dIntro = document.getElementById('desk-nav-intro');
-            const dRoutes = document.getElementById('desk-nav-routes');
-
-            const dActive = 'px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-800 text-orange-400 transition';
-            const dInactive = 'px-3.5 py-2 rounded-xl text-xs font-semibold text-stone-300 hover:text-white hover:bg-stone-800/60 transition';
-
-            if (dHome) dHome.className = state.view === 'home' ? dActive : dInactive;
-            if (dIntro) dIntro.className = state.view === 'intro' ? dActive : dInactive;
-            if (dRoutes) dRoutes.className = (state.view === 'routes' || state.view === 'detail') ? dActive : dInactive;
-        }
-
         // ==========================================
-        // SALVATAGGIO OFFLINE (PWA + DOWNLOAD HTML)
+        // 10. RENDERING PRINCIPALE & SUPPORTO OFFLINE
         // ==========================================
+        function render() {
+            const container = document.getElementById('app-scroll-container');
+            if (!container) return;
+
+            updateNavActiveState();
+
+            if (state.view === 'home') {
+                container.innerHTML = renderHomeScreen();
+                setTimeout(initMartaniMap, 20);
+            } else if (state.view === 'intro') {
+                container.innerHTML = renderIntroScreen();
+            } else if (state.view === 'routes') {
+                container.innerHTML = renderRoutesListView();
+            } else if (state.view === 'detail') {
+                container.innerHTML = renderDetailView();
+            }
+        }
+
         function setupOfflineSupport() {
-            // 1. Registra Web App Manifest dinamico per installazione su Home Screen
-            try {
-                const manifest = {
-                    name: 'Arrampicare nei Monti Martani',
-                    short_name: 'Monti Martani',
-                    start_url: './index.html',
-                    display: 'standalone',
-                    background_color: '#fafaf9',
-                    theme_color: '#1c1917',
-                    icons: [
-                        {
-                            src: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23ea580c%22/><text y=%22.9em%22 font-size=%2275%22 x=%2212%22>⛰️</text></svg>',
-                            sizes: '192x192',
-                            type: 'image/svg+xml'
-                        }
-                    ]
-                };
-                const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-                const manifestLink = document.createElement('link');
-                manifestLink.rel = 'manifest';
-                manifestLink.href = URL.createObjectURL(manifestBlob);
-                document.head.appendChild(manifestLink);
-            } catch (e) {}
+            const updateOnlineIndicator = () => {
+                const label = document.getElementById('offline-label');
+                const dot = document.getElementById('offline-dot');
+                if (!label || !dot) return;
+                if (navigator.onLine) {
+                    label.textContent = 'Pronta Offline';
+                    dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                } else {
+                    label.textContent = 'Modalità Offline';
+                    dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                }
+            };
 
-            // 2. Service Worker per cache automatica su GitHub Pages / HTTPS
-            if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+            window.addEventListener('online', updateOnlineIndicator);
+            window.addEventListener('offline', updateOnlineIndicator);
+            updateOnlineIndicator();
+
+            if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
                 const swCode = `
-                    const CACHE_NAME = 'martani-guida-v2-1';
-                    self.addEventListener('install', (event) => {
+                    const CACHE_NAME = 'martani-guida-v21';
+                    self.addEventListener('install', e => {
+                        e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./'])));
                         self.skipWaiting();
-                        event.waitUntil(
-                            caches.open(CACHE_NAME).then((cache) => {
-                                return cache.addAll(['./', './index.html']).catch(() => {});
-                            })
-                        );
                     });
-                    self.addEventListener('activate', (event) => {
-                        event.waitUntil(self.clients.claim());
-                    });
-                    self.addEventListener('fetch', (event) => {
-                        if (event.request.method !== 'GET') return;
-                        event.respondWith(
-                            caches.match(event.request).then((cached) => {
-                                const networkFetch = fetch(event.request).then((response) => {
-                                    if (response && response.status === 200) {
-                                        const copy = response.clone();
-                                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-                                    }
-                                    return response;
-                                }).catch(() => cached);
-                                return cached || networkFetch;
-                            })
+                    self.addEventListener('fetch', e => {
+                        e.respondWith(
+                            caches.match(e.request).then(cached => cached || fetch(e.request).then(resp => {
+                                const copy = resp.clone();
+                                caches.open(CACHE_NAME).then(c => c.put(e.request, copy));
+                                return resp;
+                            }).catch(() => cached))
                         );
                     });
                 `;
-                const swBlob = new Blob([swCode], { type: 'application/javascript' });
-                navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
             }
-
-            // 3. Indicatore stato rete in tempo reale
-            const updateOnlineStatus = () => {
-                const dot = document.getElementById('offline-dot');
-                const label = document.getElementById('offline-label');
-                if (!dot || !label) return;
-                if (navigator.onLine) {
-                    dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
-                    label.textContent = 'Pronta Offline';
-                } else {
-                    dot.className = 'w-2 h-2 rounded-full bg-amber-400';
-                    label.textContent = 'Modalità Offline';
-                }
-            };
-            window.addEventListener('online', updateOnlineStatus);
-            window.addEventListener('offline', updateOnlineStatus);
-            updateOnlineStatus();
         }
 
         function downloadOfflineCopy() {
@@ -2401,41 +2384,17 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'Guida_Monti_Martani_Offline.html';
+                a.download = 'arrampicare-monti-martani-offline.html';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-                showToast('Guida salvata! Aprila in qualsiasi momento anche senza campo.');
+                showToast('Copia offline scaricata sul dispositivo!');
             } catch (err) {
-                showToast('Usa "Salva pagina" dal menu del browser per l\'uso offline.');
+                showToast('Usa Salva Pagina del browser per salvare offline');
             }
         }
 
-        // ==========================================
-        // RENDER PRINCIPALE
-        // ==========================================
-        function render() {
-            const container = document.getElementById('app-scroll-container');
-            if (!container) return;
-
-            if (state.view === 'home') {
-                container.innerHTML = renderHomeScreen();
-            } else if (state.view === 'intro') {
-                container.innerHTML = renderIntroScreen();
-            } else if (state.view === 'detail') {
-                container.innerHTML = renderDetailView();
-            } else {
-                container.innerHTML = renderRoutesListView();
-            }
-
-            updateBottomNavUI();
-            window.scrollTo({ top: 0, behavior: 'instant' });
-        }
-
-        // ==========================================
-        // INIZIALIZZAZIONE
-        // ==========================================
         window.onload = function() {
             updateCompletedCounter();
             setupOfflineSupport();
