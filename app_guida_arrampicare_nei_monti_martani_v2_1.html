@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monti Martani Multipitch — Guida Open Source</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #e7e5e4; /* Stone 200 */
+            color: #1c1917; /* Stone 900 */
+        }
+        .font-mono-code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Nasconde scrollbar mantenendo lo scorrimento fluido */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Simulazione cornice smartphone su schermi desktop */
+        @media (min-width: 640px) {
+            .phone-shell {
+                width: 412px;
+                height: 850px;
+                max-height: 92vh;
+                border-radius: 42px;
+                border: 10px solid #1c1917;
+                box-shadow: 0 25px 60px -15px rgba(28, 25, 23, 0.35), 0 0 0 2px #44403c;
+                overflow: hidden;
+                position: relative;
+            }
+        }
+        @media (max-width: 639px) {
+            .phone-shell {
+                width: 100%;
+                min-height: 100vh;
+            }
+        }
+        /* Animazioni morbide */
+        .fade-in {
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="sm:min-h-screen sm:flex sm:flex-col sm:items-center sm:justify-center sm:p-4 selection:bg-orange-200 selection:text-stone-900">
+
+    <!-- Contenitore Principale (Smartphone Frame su Desktop / Fullscreen su Mobile) -->
+    <div id="app-frame" class="phone-shell bg-stone-50 flex flex-col">
+        
+        <!-- Notch / Status Bar simulata su desktop -->
+        <div class="hidden sm:flex items-center justify-between px-6 pt-2.5 pb-1.5 bg-white text-[11px] font-semibold text-stone-700 select-none border-b border-stone-100 shrink-0">
+            <span>09:41</span>
+            <div class="w-24 h-4 bg-stone-900 rounded-full"></div>
+            <div class="flex items-center gap-1.5">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-500" title="Offline Cache Attiva"></span>
+                <span>OFFLINE</span>
+            </div>
+        </div>
+
+        <!-- Area Scorrevole dell'App -->
+        <div id="app-scroll-container" class="flex-1 overflow-y-auto no-scrollbar relative bg-[#fafaf9]">
+            <!-- Il contenuto dinamico viene renderizzato qui via JS -->
+        </div>
+
+        <!-- Barra Navigazione Inferiore Stile App (3 Tab: Home/Mappa, Introduzione, Elenco Vie) -->
+        <nav class="bg-white border-t border-stone-200 px-3 py-2 flex items-center justify-around shrink-0 z-20">
+            <button onclick="navigateTo('home')" id="nav-home" class="flex flex-col items-center gap-0.5 text-orange-600 font-semibold text-xs px-3 py-1.5 rounded-xl transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                </svg>
+                <span>Home / Mappa</span>
+            </button>
+
+            <button onclick="navigateTo('intro')" id="nav-intro" class="flex flex-col items-center gap-0.5 text-stone-500 hover:text-stone-800 font-medium text-xs px-3 py-1.5 rounded-xl transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <span>Introduzione</span>
+            </button>
+
+            <button onclick="navigateTo('routes')" id="nav-routes" class="flex flex-col items-center gap-0.5 text-stone-500 hover:text-stone-800 font-medium text-xs px-3 py-1.5 rounded-xl transition relative">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                <span>Elenco (<span id="completed-counter">0</span>/<span id="total-counter">24</span>)</span>
+            </button>
+        </nav>
+
+        <!-- Lightbox Visualizzatore Foto a Schermo Intero -->
+        <div id="photo-lightbox" onclick="closePhotoLightbox()" class="hidden fixed sm:absolute inset-0 bg-stone-950/95 z-50 flex flex-col justify-between p-4 fade-in">
+            <div class="flex items-center justify-between text-white">
+                <span class="text-xs font-bold text-orange-400 uppercase tracking-wider">Foto / Schizzo Parete</span>
+                <button onclick="closePhotoLightbox()" class="px-3 py-1.5 bg-stone-800 hover:bg-stone-700 rounded-xl text-xs font-bold">
+                    ✕ Chiudi
+                </button>
+            </div>
+            <div class="flex-1 flex items-center justify-center my-3 overflow-hidden">
+                <img id="lightbox-img" src="" alt="Schizzo parete" class="max-w-full max-h-full rounded-2xl object-contain shadow-2xl border border-stone-800" />
+            </div>
+            <p id="lightbox-caption" class="text-xs text-stone-300 text-center pb-2 leading-relaxed"></p>
+        </div>
+
+        <!-- Toast / Messaggio Feedback Rapido (sostituisce alert) -->
+        <div id="toast-box" class="pointer-events-none fixed sm:absolute bottom-16 left-4 right-4 bg-stone-900 text-white text-xs font-medium px-4 py-3 rounded-xl shadow-lg opacity-0 transition-opacity duration-200 z-50 flex items-center justify-between">
+            <span id="toast-message">Messaggio</span>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================
+        // DATI REALI: ARRAMPICARE NEI MONTI MARTANI v2.1
+        // ==========================================
+        const sectorsData = [
+            {
+                id: 'penna-rocca',
+                code: '2',
+                name: 'Penna della Rocca (707 m)',
+                shortName: 'Penna della Rocca',
+                exposure: 'Sud-Ovest / Est',
+                approachTime: '15–20 min',
+                parkingName: 'Santuario Madonna dell’Ulivo',
+                parkingGps: 'Santuario Madonna dell’Ulivo (Terni / Cesi)',
+                routesCount: 13
+            },
+            {
+                id: 'colle-zannuto',
+                code: '3',
+                name: 'Colle Zannuto & Antro del Drago',
+                shortName: 'Colle Zannuto',
+                exposure: 'Ovest / Sud-Ovest',
+                approachTime: '15–30 min',
+                parkingName: 'Via Vocabolo S. Biagio / Cesi',
+                parkingGps: '42°36\'29.77"N, 12°35\'50.03"E',
+                routesCount: 3
+            },
+            {
+                id: 'monte-eolo',
+                code: '4',
+                name: 'Monte Eolo, S. Erasmo & Penne S. Andrea',
+                shortName: 'Monte Eolo / Cesi',
+                exposure: 'Sud / Sud-Est',
+                approachTime: '5–15 min',
+                parkingName: 'Eremo S. Erasmo / Strada S. Erasmo (Cesi)',
+                parkingGps: 'Cesi (TR) — Eremo di Sant\'Erasmo',
+                routesCount: 10
+            }
+        ];
+
+        const introChapters = [
+            {
+                id: 'premessa',
+                icon: '📖',
+                title: '1. Premessa, Licenza e Crediti',
+                subtitle: 'Appunti di arrampicata v. 2.1 — Pubblico Dominio CC0',
+                content: [
+                    'Questo opuscolo nasce dall\'esigenza di raccogliere e divulgare le informazioni aggiornate sulle opportunità di arrampicata sportiva e alpinistica offerte dai Monti Martani, a nord di Terni.',
+                    'La sezione meridionale dei Martani, compresa tra Rocca San Zenone e Cesi, presenta sul versante occidentale numerose pareti rocciose ideali per l\'arrampicata. La roccia, un calcare grigio compatto e spesso lavorato a "goccia", garantisce un\'esperienza di scalata tecnica e divertente.',
+                    'Un ringraziamento speciale va a Bruno Spina, Pino Calandrella, Stefano Cudini, Carlo Capuano, Daniele Ceccarini, Marco Principi, Andrea Leonardi e Alessandro Pasquantonio per il prezioso contributo storico e fotografico.',
+                    'Licenza & Contatti: Opera soggetta a licenza Creative Commons CC0 Pubblico Dominio. Per suggerimenti, correzioni e aggiornamenti sullo stato degli itinerari: lorenzoditullio@gmail.com.'
+                ]
+            },
+            {
+                id: 'monti-martani',
+                icon: '⛰️',
+                title: '1.1 Monti Martani — Geografia e Roccia',
+                subtitle: 'Il massiccio calcareo tra Conca Ternana, Tevere e Valle Umbra',
+                content: [
+                    'La catena dei Monti Martani si sviluppa con direttrice prevalente nord-sud per circa 45 chilometri nelle province di Terni e Perugia, delimitata a est dalla Valle Umbra e dalla ValSerra, a ovest dalla valle del Tevere e a sud dalla Conca Ternana.',
+                    'Nella porzione meridionale, cime come il Monte di Torre Maggiore, la Penna della Rocca e il Colle Zannuto espongono speroni e placche calcaree ben esposte al sole, ideali sia per l\'arrampicata sportiva monotiro che per vie multipitch.',
+                    'L\'origine calcarea rende l\'intero comprensorio un importante distretto carsico, ricco di grotte e inghiottitoi esplorati dagli speleologi.'
+                ]
+            },
+            {
+                id: 'storia',
+                icon: '⛏️',
+                title: '1.2 Cenni di Storia Alpinistica',
+                subtitle: 'Dai pionieri del CAI Terni alle vie plaisir moderne',
+                content: [
+                    'L\'esplorazione alpinistica dei Monti Martani ha avuto inizio sulla parete est della Penna della Rocca, oggi nota come "Austeri" in memoria di Orlando Austeri che vi perse la vita nel 1926.',
+                    'Dagli anni \'60 gli scalatori del CAI di Terni iniziarono a tracciare i primi itinerari, seguiti negli anni \'70 e \'80 da Silvano Lepri e Paolo Nobili con vie classiche fino al VI grado su tutte le pareti del gruppo.',
+                    'Negli anni 2000 l\'attività è proseguita con Stefano Zavka, Fausto Sanna, Carlo e Gabriele Capuano. Dal 2015, in collaborazione con Carlo Capuano e diversi amici, sono stati aperti nuovi itinerari di tipo "plaisir" privilegiando roccia solida e chiodatura sistematica a fix.'
+                ]
+            },
+            {
+                id: 'curiosita',
+                icon: '🦅',
+                title: '1.3 Curiosità, Aneddoti e Tutela',
+                subtitle: 'Lo scoiattolo di Monte Eolo, il falchetto e il chiodo fantasma',
+                content: [
+                    'Esercitazioni di volo (Monte Eolo): Un giovane climber impegnato sulle rocce di Monte Eolo si vide planare direttamente sui capelli un piccolo scoiattolo in volo imprevisto!',
+                    'Uno speciale compagno di scalata (Colle Zannuto): Invitiamo tutti i climber a evitare schiamazzi inutili per non disturbare il magnifico falchetto che nidifica sulle rocce sommitali dell\'Antro del Drago.',
+                    'Il chiodo fantasma (Penna della Rocca): Sul settore destro della parete, il forte scalatore ternano Bocci superò uno strapiombo giallo ritenuto inviolato trovando però un vecchio chiodo artigianale oltre il passaggio. Anni dopo un ripetitore trovò la fessura vuota con un ciuffo di fiori: l\'enigma dell\'autore resta tuttora avvolto nel mistero.'
+                ]
+            }
+        ];
+
+        const routesData = [
+            // --- 2. PENNA DELLA ROCCA ---
+            {
+                id: 'cresta-persichetti',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.1 Penna della Rocca — La Rocca',
+                name: 'Cresta di Rocca Persichetti (Via Normale)',
+                openers: 'Itinerario classico di cresta',
+                gradeMax: 'II',
+                gradeObbl: 'F+',
+                difficultyLevel: 'facile',
+                length: 'ca. 200 m',
+                pitchesCount: 1,
+                protectionType: 'Non attrezzata (terreno alpinistico)',
+                protectionCategory: 'trad',
+                exposure: 'Ovest',
+                climbTime: '45 min',
+                descentTime: '20 min a piedi',
+                gear: 'Cordino, eventuali protezioni veloci, casco',
+                gpsCoords: 'Santuario Madonna dell’Ulivo',
+                summary: 'Risale integralmente la cresta ovest della Rocca fino alla vetta con brevi tratti di arrampicata e alcuni passaggi esposti.',
+                approach: 'Dalla strada pedonale che conduce al Santuario della Madonna dell\'Ulivo si devia a sinistra seguendo una traccia con bolli rossi, superando un muretto a secco fino al filo di cresta.',
+                descent: 'Dalla vetta attraversare la Rocca e scendere nel canalone di destra seguendo tracce di sentiero fino alla base della falesia e poi al Santuario.',
+                svgPath: [
+                    { x: 40, y: 205, label: 'Attacco' },
+                    { x: 185, y: 40, label: 'Vetta Rocca', pitchIndex: 0 }
+                ],
+                pitches: [
+                    { num: 'Cresta', grade: 'F+ (II)', length: '200 m', bolts: 'Non attrezzata', desc: 'Si prosegue sul filo della cresta ovest superando successivi saltini e paretine fino alla cima (45 minuti).' }
+                ]
+            },
+            {
+                id: 'assalto-rocca',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.1 Penna della Rocca — La Rocca',
+                name: 'Assalto alla Rocca',
+                openers: 'Silvano Lepri e Conti (1979)',
+                gradeMax: 'IV+',
+                gradeObbl: 'AD+',
+                difficultyLevel: 'facile',
+                length: '90 m',
+                pitchesCount: 2,
+                protectionType: 'L1 a fix + terreno alpinistico',
+                protectionCategory: 'trad',
+                exposure: 'Sud-Ovest',
+                climbTime: '1h 15m',
+                descentTime: '15 min a piedi',
+                gear: 'NDA (Normale Dotazione Alpinistica), cordini per alberi',
+                gpsCoords: 'Santuario Madonna dell’Ulivo',
+                summary: 'Via storica ideale per chi inizia ad arrampicare da capocordata su terreno alpinistico con possibilità di varianti.',
+                approach: 'Dal Santuario Madonna dell\'Ulivo salire a sinistra nel sottobosco dopo il muretto, proseguendo sul ghiaione verso sinistra fino al margine sinistro della falesia della Rocca (15 min).',
+                descent: 'Entrare nella Rocca e imboccare il canalone di destra seguendo tracce di sentiero fino alla base della parete (circa 15 minuti).',
+                svgPath: [
+                    { x: 65, y: 205, label: 'Attacco' },
+                    { x: 95, y: 125, label: 'S1', pitchIndex: 0 },
+                    { x: 135, y: 45, label: 'S2', pitchIndex: 1 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: 'III', length: '40 m', bolts: 'Fix', desc: 'Salire dritti per placche su roccia molto buona fino a un terrazzino. Deviare a destra su rocce appoggiate e poi a sinistra superando gradoni fino a un terrazzo erboso (sosta su alberello).' },
+                    { num: 'L2', grade: 'IV+', length: '30 m', bolts: 'Alpinistica', desc: 'Superare la paretina di fronte leggermente a destra e proseguire per ampi terrazzi fino alla Rocca (variante diretta di V).' }
+                ]
+            },
+            {
+                id: 'innominata',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.1 Penna della Rocca — La Rocca',
+                name: 'Innominata',
+                openers: 'Carlo Catalano (Anni \'80)',
+                gradeMax: '5c',
+                gradeObbl: 'III+',
+                difficultyLevel: 'facile',
+                length: '90 m',
+                pitchesCount: 2,
+                protectionType: 'Fix sullo spigolo + NDA',
+                protectionCategory: 'trad',
+                exposure: 'Sud-Ovest',
+                climbTime: '1h 15m',
+                descentTime: '15 min a piedi',
+                gear: 'NDA (Normale Dotazione Alpinistica)',
+                gpsCoords: 'Santuario Madonna dell’Ulivo',
+                summary: 'Itinerario classico che attacca lo spigolo destro della falesia della Rocca proseguendo poi su placche appoggiate fino in cima.',
+                approach: 'Come per la Falesia della Rocca (15 minuti dal Santuario Madonna dell\'Ulivo), portandosi sullo spigolo destro.',
+                descent: 'Dalla cima della Rocca scendere lungo il canalone di destra fino alla base.',
+                svgPath: [
+                    { x: 165, y: 205, label: 'Attacco' },
+                    { x: 160, y: 120, label: 'S1', pitchIndex: 0 },
+                    { x: 145, y: 45, label: 'S2', pitchIndex: 1 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '5c', length: '35 m', bolts: 'Fix', desc: 'Salire lo spigolo destro della falesia (primo tiro attrezzato).' },
+                    { num: 'L2', grade: 'III+', length: '55 m', bolts: 'NDA', desc: 'Proseguire su placche appoggiate fino alla cima della Rocca.' }
+                ]
+            },
+            {
+                id: 'falesia-rocca',
+                type: 'falesia',
+                sectorId: 'penna-rocca',
+                sector: '2.1.4 Penna della Rocca — Falesia',
+                name: 'Falesia della Rocca (11 vie)',
+                openers: 'Valorizzata da Alessandro Quadriglia',
+                gradeMax: '6b+',
+                gradeObbl: '5a',
+                difficultyLevel: 'facile',
+                length: '11 vie',
+                pitchesCount: 11,
+                protectionType: 'Fix acciaio inox',
+                protectionCategory: 'sport',
+                exposure: 'Sud-Est',
+                climbTime: 'Primavera - Autunno',
+                descentTime: '400 m s.l.m.',
+                gear: 'Corda singola, 10-12 rinvii',
+                gpsCoords: 'Santuario Madonna dell’Ulivo (15 min)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=La+Rocca+-+Panoramica+delle+vie+(images/la-rocca.jpg)',
+                photoCaption: 'La Rocca: panoramica delle vie e mappa accesso dal Santuario Madonna dell’Ulivo',
+                summary: 'Falesia situata sotto la rocca diruta che domina la conca ternana, riattrezzata in ottica sportiva con ottima chiodatura.',
+                approach: 'Dal Santuario Madonna dell\'Ulivo salire a sinistra nel sottobosco dopo il muretto e seguire il ghiaione verso sinistra fino alla base (15 min).',
+                descent: 'Calata sportiva in moulinette dagli anelli di sosta.',
+                cragRoutes: [
+                    { name: 'Cactus', grade: '6a', meters: '-', stars: '+++' },
+                    { name: 'Assalto alla rocca', grade: '5c', meters: '-', stars: '+++' },
+                    { name: 'Olio bollente', grade: '6a+', meters: '-', stars: '+++' },
+                    { name: 'Parla porco cane', grade: '6b', meters: '-', stars: '++++' },
+                    { name: 'Giulia', grade: '6a+', meters: '-', stars: '+++' },
+                    { name: 'Mitra', grade: '5c', meters: '-', stars: '+++' },
+                    { name: 'Non sarà un’avventura', grade: '6b', meters: '-', stars: '++++' },
+                    { name: 'Clessidre senza tempo', grade: '6a+', meters: '-', stars: '++++' },
+                    { name: 'Zazzà', grade: '6b+', meters: '-', stars: '++++' },
+                    { name: 'Viaggio in prima classe', grade: '6b+', meters: '-', stars: '++++' },
+                    { name: 'Lo spigolo L1', grade: '5a', meters: '-', stars: '+++' },
+                    { name: 'Lo spigolo L2', grade: '5c', meters: '-', stars: '+++' }
+                ]
+            },
+            {
+                id: 'ali-angelo',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.2 Penna della Rocca — Parete Sud-Ovest',
+                name: 'Le Ali dell’Angelo (Itinerario 4)',
+                openers: 'Lorenzo Di Tullio e Carlo Capuano (2016, restyling 2018)',
+                gradeMax: '6a',
+                gradeObbl: '5b',
+                difficultyLevel: 'facile',
+                length: '100 m',
+                pitchesCount: 3,
+                protectionType: 'Fix + qualche chiodo (S1)',
+                protectionCategory: 'sport',
+                exposure: 'Sud-Ovest',
+                climbTime: '1h 45m',
+                descentTime: '20 min (doppie)',
+                gear: '14 rinvii, mezze corde o corda da 60m',
+                gpsCoords: 'Santuario Madonna dell’Ulivo (15 min)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Penna+della+Rocca+SO+-+It.+4+Ali+dell%27Angelo+(P.+Calandrella)',
+                photoCaption: 'Penna della Rocca parete sud-ovest (it. 4) e secondo tiro delle Ali dell’Angelo — foto di Pino Calandrella',
+                summary: 'Sale il netto diedro obliquo che incide lo scudo della parete sud-ovest. ATTENZIONE: non seguire i fix color oro a destra di L1 (roccia friabile).',
+                approach: 'Dal Santuario Madonna dell\'Ulivo salire a sinistra nel sottobosco dopo il muretto, salire il ghiaione verso sinistra, costeggiare il bosco e deviare a destra verso le pareti (15 min).',
+                descent: 'In doppia lungo la via (con una doppia da 60 m dalla terza sosta si arriva direttamente a terra).',
+                svgPath: [
+                    { x: 75, y: 205, label: 'Attacco (Chiodo)' },
+                    { x: 95, y: 150, label: 'S1', pitchIndex: 0 },
+                    { x: 115, y: 95, label: 'S2', pitchIndex: 1 },
+                    { x: 130, y: 40, label: 'S3', pitchIndex: 2 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '5c', length: '40 m', bolts: 'Chiodo + Fix', desc: 'Attacco con chiodo come prima protezione; salire la placca a sinistra, aggirare lo spigolo a destra e traversare fino al diedro risalendolo fino alla sosta. Non seguire i fix oro a destra.' },
+                    { num: 'L2', grade: '6a', length: '30 m', bolts: 'Fix', desc: 'Proseguire lungo il diedro accennato, deviare leggermente a destra per uscire dallo strapiombo e continuare su placche appoggiate fino in sosta.' },
+                    { num: 'L3', grade: '5a', length: '30 m', bolts: 'Fix', desc: 'Proseguire dritti per placche appoggiate fino a un diedrino al termine del quale si trova la sosta su comoda cengia.' }
+                ]
+            },
+            {
+                id: 'tommaso-flavio',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.2 Penna della Rocca — Parete Sud-Ovest',
+                name: 'Tommaso Flavio (Itinerario 5)',
+                openers: 'Carlo Capuano, Lorenzo Di Tullio e altri (2015)',
+                gradeMax: '6b',
+                gradeObbl: '5c',
+                difficultyLevel: 'medio',
+                length: '105 m',
+                pitchesCount: 4,
+                protectionType: 'Fix + qualche chiodo (S1)',
+                protectionCategory: 'sport',
+                exposure: 'Sud-Ovest',
+                climbTime: '2h 00m',
+                descentTime: '25 min (doppie)',
+                gear: '14 rinvii, due corde da 60m',
+                gpsCoords: 'Santuario Madonna dell’Ulivo (15 min)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Panoramica+Parete+SO+-+It.+5+Tommaso+Flavio',
+                photoCaption: 'Penna della Rocca parete sud-ovest (itinerario 5) e Carlo Capuano in apertura sull’ultimo tiro',
+                summary: 'Supera le placche compatte e i piccoli tetti della porzione centrale della parete sud-ovest con bella arrampicata su roccia buona.',
+                approach: 'Come per Le Ali dell\'Angelo (15 minuti dal Santuario Madonna dell\'Ulivo), nella porzione centrale della parete sud-ovest.',
+                descent: 'In corda doppia lungo la via (soste attrezzate con anello).',
+                svgPath: [
+                    { x: 105, y: 205, label: 'Attacco' },
+                    { x: 125, y: 165, label: 'S1', pitchIndex: 0 },
+                    { x: 145, y: 125, label: 'S2', pitchIndex: 1 },
+                    { x: 135, y: 80, label: 'S3', pitchIndex: 2 },
+                    { x: 150, y: 38, label: 'S4', pitchIndex: 3 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '6a', length: '15 m', bolts: 'Fix', desc: 'Attacco su piccola rampa obliqua verso destra, superare lo spigolo accennato e proseguire in placca fino a una fessura che porta al terrazzo di sosta (variante 6a a sinistra).' },
+                    { num: 'L2', grade: '6b', length: '20 m', bolts: 'Fix', desc: 'Proseguire lungo la rampa verso destra, poi per un piccolo diedro strapiombante fino a superare il tetto sopra il quale si trova la sosta.' },
+                    { num: 'L3', grade: '5b', length: '40 m', bolts: 'Fix', desc: 'Salire verticalmente e poi deviare a sinistra per piccoli salti più facili.' },
+                    { num: 'L4', grade: '5c', length: '30 m', bolts: 'Fix', desc: 'Salire la placca sopra la sosta, deviare verso destra e poi dritti per un diedro.' }
+                ]
+            },
+            {
+                id: 'zagara-ernesto',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.2 Penna della Rocca — Parete Sud-Ovest',
+                name: 'La Zagara di Ernesto',
+                openers: 'A. Pasquantonio, M. Principi, A. Leonardi e altri (2025)',
+                gradeMax: '6b+',
+                gradeObbl: '6a',
+                difficultyLevel: 'medio',
+                length: '100 m',
+                pitchesCount: 3,
+                protectionType: 'Interamente attrezzata a fix (S1)',
+                protectionCategory: 'sport',
+                exposure: 'Sud-Ovest',
+                climbTime: '2h 00m',
+                descentTime: '20 min (doppie)',
+                gear: '14 rinvii',
+                gpsCoords: 'A destra di Tommaso Flavio',
+                summary: 'Recente itinerario sportivo aperto nel 2025 immediatamente a destra della Tommaso Flavio, caratterizzato da un lungo traverso e una pancia tecnica.',
+                approach: 'Stesso avvicinamento della parete sud-ovest (15 min dal Santuario Madonna dell\'Ulivo), attacco subito a destra di Tommaso Flavio.',
+                descent: 'In corda doppia lungo la via.',
+                svgPath: [
+                    { x: 120, y: 205, label: 'Attacco' },
+                    { x: 165, y: 165, label: 'S1', pitchIndex: 0 },
+                    { x: 175, y: 105, label: 'S2', pitchIndex: 1 },
+                    { x: 170, y: 45, label: 'S3', pitchIndex: 2 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '5c+', length: '15 m', bolts: 'Fix', desc: 'Lungo traverso verso il lato destro fino alla prima sosta.' },
+                    { num: 'L2', grade: '6b+', length: '45 m', bolts: 'Fix', desc: 'Prosegue su placca compatta e verticale per poi superare una pancia fino alla sosta.' },
+                    { num: 'L3', grade: '6a', length: '40 m', bolts: 'Fix', desc: 'Ultimo tiro tecnico su calcare grigio fino alla sosta finale.' }
+                ]
+            },
+            {
+                id: 'ravanata-finanziere',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.2 Penna della Rocca — Parete Sud-Ovest',
+                name: 'Ravanata del Finanziere (Itinerario 6)',
+                openers: 'Lorenzo Di Tullio e Carlo Capuano (2018)',
+                gradeMax: '6a+',
+                gradeObbl: '5c',
+                difficultyLevel: 'facile',
+                length: '200 m',
+                pitchesCount: 8,
+                protectionType: 'Fix sui primi 2 tiri, poi alpinistica (S1/R1)',
+                protectionCategory: 'trad',
+                exposure: 'Sud-Ovest',
+                climbTime: '3h 30m',
+                descentTime: '40 min',
+                gear: 'NDA (friend/cordini per clessidre e alberi), 12 rinvii',
+                gpsCoords: 'Sperone tra parete SO e parete Austeri',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Primo+tiro+Ravanata+del+Finanziere+(P.+Calandrella)',
+                photoCaption: 'Itinerario 6 sulla panoramica Sud-Ovest e primo tiro della Ravanata del Finanziere — foto di Pino Calandrella',
+                summary: 'La via più lunga della parete: primi due tiri sportivi a fix e parte alta d\'avventura fino in vetta alla Penna della Rocca.',
+                approach: 'Come per la parete sud-ovest, poco a destra della Tommaso Flavio prima dello sperone che divide dalla parete Austeri.',
+                descent: 'Possibile calata di 50 m da S2, doppia da S5 fino al terrazzo delle doppie di Austeri, oppure proseguire fino in cima scendendo per la cresta verso la forcella con la Rocca.',
+                svgPath: [
+                    { x: 140, y: 210, label: 'Attacco' },
+                    { x: 155, y: 185, label: 'S1', pitchIndex: 0 },
+                    { x: 165, y: 160, label: 'S2', pitchIndex: 1 },
+                    { x: 160, y: 135, label: 'S3', pitchIndex: 2 },
+                    { x: 155, y: 110, label: 'S4', pitchIndex: 3 },
+                    { x: 165, y: 85, label: 'S5', pitchIndex: 4 },
+                    { x: 155, y: 60, label: 'S6', pitchIndex: 5 },
+                    { x: 145, y: 38, label: 'S7', pitchIndex: 6 },
+                    { x: 140, y: 18, label: 'Cima', pitchIndex: 7 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '6a+', length: '30 m', bolts: 'Fix', desc: 'Placca articolata piegando leggermente a destra verso una zona di roccia gialla, poi dritti fino al terrazzo erboso.' },
+                    { num: 'L2', grade: '5c+', length: '40 m', bolts: 'Fix', desc: 'Piegare a destra, superare un tettino e proseguire per diedro obliquo fino alla sosta (da qui calata di 50 m a terra).' },
+                    { num: 'L3', grade: 'IV', length: '20 m', bolts: 'Clessidre', desc: 'Lungo la fessura e poi dritti per rampette fino a sosta su clessidre.' },
+                    { num: 'L4', grade: 'II', length: '40 m', bolts: 'Alpinistica', desc: 'Dritti per paretine puntando all\'evidente placca.' },
+                    { num: 'L5', grade: '5c / III', length: '40 m', bolts: '3 Fix + cordone', desc: 'Salire la placca compatta (3 fix) fino a un terrazzo, poi 10 m a destra fino a sosta con cordone blu.' },
+                    { num: 'L6', grade: 'III', length: '30 m', bolts: 'Fix', desc: 'Lungo lo spigolo fino a una forcella con sosta a fix.' },
+                    { num: 'L7', grade: 'II', length: '60 m', bolts: 'Albero', desc: 'Cresta verso un boschetto sospeso superandolo a sinistra fino a sostare su albero.' },
+                    { num: 'L8', grade: 'III', length: '40 m', bolts: 'Clessidra', desc: 'Dritti per placche articolate fino a una clessidra con cordone sotto la vetta.' }
+                ]
+            },
+            {
+                id: 'via-placche',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.3 Penna della Rocca — Parete Austeri',
+                name: 'Via delle Placche (Itinerario 7)',
+                openers: 'S. Lepri, P. Nobili, Catalano, Fabbretti, Baroncini, Pierbattisti (1979-85)',
+                gradeMax: 'VI',
+                gradeObbl: 'TD / R2',
+                difficultyLevel: 'medio',
+                length: '110 m',
+                pitchesCount: 3,
+                protectionType: 'Chiodi tradizionali + alcuni fix (R2)',
+                protectionCategory: 'trad',
+                exposure: 'Est',
+                climbTime: '2h 30m',
+                descentTime: '30 min',
+                gear: 'NDA (friend/nut, cordini), corde da 60m',
+                gpsCoords: 'Parete Austeri — Margine sinistro',
+                summary: 'Considerata la più impegnativa tra le classiche della zona, si snoda sul margine sinistro verticale della parete Austeri.',
+                approach: 'Dal Santuario Madonna dell\'Ulivo prendere il sentiero nel sottobosco e, prima del ghiaione, svoltare a destra sul sentiero CAI in piano. Oltrepassato lo sperone ("coda di rondine"), salire a sinistra per tracce fino alla parete (20 min).',
+                descent: 'Consigliabile scendere dalla seconda sosta con una doppia da 60 m (oppure traversare a destra verso S3 della Via Austeri).',
+                svgPath: [
+                    { x: 65, y: 205, label: 'Attacco' },
+                    { x: 75, y: 130, label: 'S1', pitchIndex: 0 },
+                    { x: 60, y: 75, label: 'S2', pitchIndex: 1 },
+                    { x: 80, y: 30, label: 'S3', pitchIndex: 2 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: 'VI', length: '35 m', bolts: '3 Fix + 3 chiodi', desc: 'Placca appoggiata (1 fix poco visibile), superare lo strapiombo a sinistra (2 fix), poi spigolo fino a terrazzo erboso e camino/placca fino a sosta sotto un tetto.' },
+                    { num: 'L2', grade: 'V+', length: '20 m', bolts: '1 Fix + 3 chiodi', desc: 'Traverso a sinistra per circa 10 m (1 fix) fino a una fessura, risalirla fino alla sosta su esile cengia.' },
+                    { num: 'L3', grade: 'III+ / II+', length: '50 m', bolts: 'Alpinistica', desc: 'Sconsigliato proseguire dritti su roccia mediocre; consigliato traversare a destra per diedro-rampa fino a S3 di Via Austeri.' }
+                ]
+            },
+            {
+                id: 'via-austeri',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.3 Penna della Rocca — Parete Austeri',
+                name: 'Via Austeri — Parete Est (Itinerario 8)',
+                openers: 'Silvano Lepri e Paolo Nobili (1976, rettifica C. Capuano)',
+                gradeMax: 'V+',
+                gradeObbl: 'D+ / R2',
+                difficultyLevel: 'facile',
+                length: '110 m',
+                pitchesCount: 4,
+                protectionType: 'Chiodi classici + soste a 2 fix (R2)',
+                protectionCategory: 'trad',
+                exposure: 'Est',
+                climbTime: '2h 15m',
+                descentTime: '30 min',
+                gear: 'NDA (friend medi/piccoli, cordini)',
+                gpsCoords: 'Targa commemorativa Orlando Austeri',
+                summary: 'Storica linea al centro della parete est dedicata a Orlando Austeri (targa e croce all\'attacco). Soste attrezzate a fix.',
+                approach: 'Come per la Parete Austeri (20 minuti dal Santuario Madonna dell\'Ulivo), fino alla croce e alla targa commemorativa alla base.',
+                descent: 'Dal terrazzo finale effettuare una doppia di 30 m nel canalone opposto (calata su albero 5 m sotto l\'ultima sosta) e scendere per tracce alla base.',
+                svgPath: [
+                    { x: 110, y: 205, label: 'Attacco (Targa)' },
+                    { x: 115, y: 155, label: 'S1', pitchIndex: 0 },
+                    { x: 105, y: 105, label: 'S2', pitchIndex: 1 },
+                    { x: 115, y: 60, label: 'S3', pitchIndex: 2 },
+                    { x: 120, y: 25, label: 'S4 Terrazzo', pitchIndex: 3 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: 'III+', length: '20 m', bolts: '2 chiodi', desc: 'Attacco dritti sopra la targa commemorativa su rocce articolate, piccolo diedro uscendo a destra fino a un terrazzino.' },
+                    { num: 'L2', grade: 'V+', length: '35 m', bolts: 'Chiodi + clessidra', desc: 'Lungo lame (chiodo), diedro a sinistra fino a chiodo con cordino azzurro, leggero strapiombo a sinistra e dritti fino al tettino che nasconde la sosta.' },
+                    { num: 'L3', grade: 'IV', length: '30 m', bolts: 'Chiodi + 2 Fix', desc: 'Fessura obliqua a destra poi diedro a sinistra (chiodi), canale facile, pilastrino a destra fino a masso con cavo d\'acciaio e sosta su 2 fix.' },
+                    { num: 'L4', grade: 'III-', length: '20 m', bolts: '2 Fix', desc: 'Tenersi a destra tra arbusti aggirando una parete strapiombante a sinistra fino al comodissimo terrazzo finale.' }
+                ]
+            },
+            {
+                id: 'via-gea',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.3 Penna della Rocca — Parete Austeri',
+                name: 'GEA (Itinerario 9)',
+                openers: 'Carlo Capuano e altri (2011)',
+                gradeMax: '6a+',
+                gradeObbl: '5c',
+                difficultyLevel: 'medio',
+                length: '110 m',
+                pitchesCount: 4,
+                protectionType: 'Mista: Fix + chiodi e clessidre (S2/R2)',
+                protectionCategory: 'trad',
+                exposure: 'Est',
+                climbTime: '2h 15m',
+                descentTime: '30 min',
+                gear: 'NDA (friend fino al #2, cordini), 10 rinvii',
+                gpsCoords: 'Parete Austeri — Centro-destra',
+                summary: 'Dedicata a Giulio, Elia e Anita. Condivide L1 con la Austeri per poi salire autonomamente a destra su un secondo tiro di roccia fantastica.',
+                approach: 'Come per la Parete Austeri (20 minuti dal Santuario Madonna dell\'Ulivo), attacco sopra la targa Austeri o poco a destra.',
+                descent: 'Dal terrazzo finale doppia di 30 m su albero nel canalone opposto (5 m sotto l\'ultima sosta) e rientro per sentiero.',
+                svgPath: [
+                    { x: 115, y: 205, label: 'Attacco' },
+                    { x: 120, y: 155, label: 'S1', pitchIndex: 0 },
+                    { x: 140, y: 100, label: 'S2', pitchIndex: 1 },
+                    { x: 145, y: 60, label: 'S3', pitchIndex: 2 },
+                    { x: 130, y: 25, label: 'S4 Terrazzo', pitchIndex: 3 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: 'III+', length: '20 m', bolts: 'Chiodo + cordone', desc: 'Lama-fessura sopra o poco a destra della targa fino al terrazzino di sosta in comune con Austeri.' },
+                    { num: 'L2', grade: '6a+', length: '40 m', bolts: 'Fix + trad', desc: 'Diedro e poi leggermente a destra puntando a un evidente tetto, placca verticale e secondo strapiombo fino in sosta.' },
+                    { num: 'L3', grade: '5b', length: '20 m', bolts: 'Fix azzurro', desc: 'Verso destra in placca e dritti fino a un piccolo tetto protetto da uno spit azzurro, superandolo a destra.' },
+                    { num: 'L4', grade: 'III', length: '30 m', bolts: 'Clessidra', desc: 'Diedro-camino con cordone rosso su clessidra, terrazzo e ultimo salto roccioso fino al terrazzo delle doppie.' }
+                ]
+            },
+            {
+                id: 'fashion-v',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.3 Penna della Rocca — Parete Austeri',
+                name: 'Fashion V (Itinerario 10)',
+                openers: 'Carlo Capuano e altri (2010)',
+                gradeMax: 'VI+',
+                gradeObbl: 'TD+',
+                difficultyLevel: 'medio',
+                length: '110 m',
+                pitchesCount: 3,
+                protectionType: 'Classica con fix sul passaggio chiave',
+                protectionCategory: 'trad',
+                exposure: 'Est',
+                climbTime: '2h 30m',
+                descentTime: '30 min',
+                gear: 'NDA (friend, nut, cordini)',
+                gpsCoords: 'Parete Austeri — Destra della targa',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Primo+tiro+di+Fashion+V+(P.+Calandrella)',
+                photoCaption: 'Parete Austeri (itinerario 10) e primo tiro di Fashion V — foto di Pino Calandrella',
+                summary: 'Ripercorre la prima parte del "Naso dell\'Indiano" (Lepri-Nobili 1978) per poi deviare a sinistra su una placca verticale tecnica.',
+                approach: 'Come per la Parete Austeri (20 minuti dal Santuario Madonna dell\'Ulivo), attacco presso una clessidra con cordino poco a destra della targa Austeri.',
+                descent: 'Dal terrazzo finale doppia di 30 m su albero nel canalone opposto e discesa per tracce di sentiero.',
+                svgPath: [
+                    { x: 145, y: 205, label: 'Attacco' },
+                    { x: 155, y: 140, label: 'S1', pitchIndex: 0 },
+                    { x: 165, y: 80, label: 'S2', pitchIndex: 1 },
+                    { x: 140, y: 25, label: 'S3 Terrazzo', pitchIndex: 2 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: 'IV', length: '40 m', bolts: 'Clessidra + trad', desc: 'Placche facili fino a una placca verticale nera chiusa da un tettino a sinistra; non andare a destra verso la catena ma proseguire per salti fino alla sosta.' },
+                    { num: 'L2', grade: 'VI+', length: '30 m', bolts: 'Chiodi + Fix', desc: 'Placca verticale leggermente a sinistra (chiodi), poi a destra sul grande masso sporgente (Naso dell\'Indiano) e in verticale fino alla fessura in alto a sinistra (sosta su albero).' },
+                    { num: 'L3', grade: 'III', length: '40 m', bolts: 'Alpinistica', desc: 'A destra per facile placca fino a una cengia, superare la paretina sopra (attenzione roccia poco solida) fino al terrazzo delle doppie.' }
+                ]
+            },
+            {
+                id: 'dente-cinghiale',
+                type: 'multipitch',
+                sectorId: 'penna-rocca',
+                sector: '2.4 Penna della Rocca — Parete Est',
+                name: 'Dente del Cinghiale',
+                openers: 'Itinerario classico di cresta/sperone',
+                gradeMax: 'IV',
+                gradeObbl: 'AD+',
+                difficultyLevel: 'facile',
+                length: '150 m',
+                pitchesCount: 5,
+                protectionType: 'Alpinistica (soste da attrezzare su spuntoni/alberi)',
+                protectionCategory: 'trad',
+                exposure: 'Est',
+                climbTime: '2h 30m',
+                descentTime: '45 min a piedi',
+                gear: 'NDA, cordini lunghi per spuntoni e alberi, 2 corde 50/60m',
+                gpsCoords: 'Spigolo destro Parete Austeri (bollo rosso)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Parete+Est+Penna+della+Rocca+-+Dente+del+Cinghiale+(B.+Spina)',
+                photoCaption: 'Parete est Penna della Rocca — Dente del Cinghiale, foto di Bruno Spina',
+                summary: 'Itinerario d\'ambiente lungo lo sperone est fino alla vetta della Penna della Rocca. Consigliati tiri da 30 m per evitare attriti.',
+                approach: 'Raggiunta la base della Parete Austeri (20 min), proseguire sotto la parete aggirando lo spigolo destro e salire per tracce fino allo spiazzo con bollo rosso (25-30 min).',
+                descent: 'Percorrere la cresta sommitale fino alla sella con la cima della Penna della Rocca, scendere a destra nel boschetto verso il versante ovest e aggirare lo spigolone fino alla base.',
+                svgPath: [
+                    { x: 185, y: 205, label: 'Attacco (Bollo)' },
+                    { x: 180, y: 165, label: 'S1', pitchIndex: 0 },
+                    { x: 175, y: 130, label: 'S2 Selletta', pitchIndex: 1 },
+                    { x: 170, y: 95, label: 'S3', pitchIndex: 2 },
+                    { x: 165, y: 60, label: 'S4 Tetto', pitchIndex: 3 },
+                    { x: 155, y: 22, label: 'Vetta', pitchIndex: 4 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: 'III', length: '30 m', bolts: 'Spuntoni', desc: 'Attacco sull\'evidente crestina formata da grandi blocchi (bollo rosso alla base), sosta su spuntoni.' },
+                    { num: 'L2', grade: 'III', length: '30 m', bolts: 'Spuntoni', desc: 'Proseguire per via intuitiva fino a una selletta (possibile via di fuga a destra verso il ghiaione).' },
+                    { num: 'L3', grade: 'III', length: '30 m', bolts: 'Alberi', desc: 'Proseguire sull\'accennato filo di cresta passando tra diversi alberelli.' },
+                    { num: 'L4', grade: 'IV', length: '30 m', bolts: '2 chiodi', desc: 'Saliscendi poi placchetta solcata da una bella fessura fino a sosta su alberello e spuntone sotto un tetto evidente.' },
+                    { num: 'L5', grade: 'IV', length: '30 m', bolts: '2 chiodi', desc: 'Affrontare il tetto da destra, rimontarlo sulla verticale della sosta e proseguire in placca e canale erboso fino alla vetta.' }
+                ]
+            },
+
+            // --- 3. COLLE ZANNUTO ---
+            {
+                id: 'falesia-colle-zannuto',
+                type: 'falesia',
+                sectorId: 'colle-zannuto',
+                sector: '3.1 Colle Zannuto — Falesia',
+                name: 'Falesia di Colle Zannuto (15 vie)',
+                openers: 'Andrea Di Bari e altri',
+                gradeMax: '8b',
+                gradeObbl: '6b',
+                difficultyLevel: 'difficile',
+                length: '15 vie',
+                pitchesCount: 15,
+                protectionType: 'Fix acciaio inox (anelli chiusi, manovra richiesta)',
+                protectionCategory: 'sport',
+                exposure: 'Ovest / Bosco',
+                climbTime: 'Estate',
+                descentTime: '700 m s.l.m.',
+                gear: 'Corda da 70/80m, 15 rinvii',
+                gpsCoords: '42°36\'29.77"N, 12°35\'50.03"E',
+                summary: 'La falesia più bella della zona per qualità del calcare e lunghezza dei tiri, immersa in un ambiente selvaggio sopra Cesi.',
+                approach: 'Da Cesi salire la sterrata via Vocabolo S. Biagio (consigliato 4x4), al casolare a sinistra e al cartello CAI n.3 a destra. Parcheggiare a 550m s.l.m., seguire il sentiero n.3 per 15 min fino a quota 700m, entrare nel bosco a destra superando un muretto e scendere nel canale con corde fisse.',
+                descent: 'Soste con anello chiuso di calata: manovra in sosta richiesta.',
+                cragRoutes: [
+                    { name: 'Old boy', grade: '7b', meters: '-', stars: '' },
+                    { name: 'Match point', grade: 'Progetto', meters: '-', stars: '' },
+                    { name: 'La bocca del lupo', grade: '7b/7b+', meters: '-', stars: '' },
+                    { name: 'La rabbia giovane', grade: '8b', meters: '-', stars: '' },
+                    { name: 'La fontana della vergine', grade: '7b', meters: '-', stars: '' },
+                    { name: 'Gomorra', grade: '7c', meters: '-', stars: '' },
+                    { name: 'Inception', grade: '8a+', meters: '-', stars: '' },
+                    { name: 'Ferro 3', grade: '6c', meters: '-', stars: '' },
+                    { name: 'Bud guy', grade: '6c+', meters: '-', stars: '' },
+                    { name: 'Japon', grade: '6b+', meters: '-', stars: '' },
+                    { name: '2046', grade: '7a+', meters: '-', stars: '' },
+                    { name: 'Nostalghia', grade: '6b+', meters: '-', stars: '' },
+                    { name: 'Fizcarraldo', grade: '6c+', meters: '-', stars: '' },
+                    { name: 'Sorgo rosso', grade: '7a+', meters: '-', stars: '' },
+                    { name: 'Delitto perfetto', grade: '6b', meters: '-', stars: '' }
+                ]
+            },
+            {
+                id: 'umbri-dispersi',
+                type: 'multipitch',
+                sectorId: 'colle-zannuto',
+                sector: '3.1.2 Colle Zannuto — Parete Principale',
+                name: 'Cercando gli Umbri Dispersi',
+                openers: 'Carlo e Gianni Pagliochini, Silvano Lepri, Pierbattisti (1986)',
+                gradeMax: 'V+',
+                gradeObbl: 'TD',
+                difficultyLevel: 'medio',
+                length: '130 m',
+                pitchesCount: 3,
+                protectionType: 'Via d\'avventura (chiodi e alberi)',
+                protectionCategory: 'trad',
+                exposure: 'Ovest',
+                climbTime: '2h 30m',
+                descentTime: '40 min a piedi',
+                gear: 'NDA, chiodi e martello indispensabili, GPS consigliato',
+                gpsCoords: '42°36\'21.276"N, 12°36\'24.408"E',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Tracciato+e+Mappa+Accesso+-+Cercando+gli+Umbri+Dispersi',
+                photoCaption: 'Tracciato della via, mappa di avvicinamento/discesa e Carlo Capuano sul primo tiro',
+                summary: 'Itinerario selvaggio e d\'avventura riservato a cordate esperte. Avvicinamento intricato nel sottobosco e roccia da verificare.',
+                approach: 'Da Cesi percorrere via della Lince poi a sinistra in strada di Lione fino al primo tornante. Seguire il sentiero verso ovest e tagliare a destra verso la parete (usare GPS). Attacco sulla cima di un piccolo gendarme.',
+                descent: 'Proseguire per rocce facili verso nord fino alla cima di Colle Zannuto, poi sentiero a destra fino a Fonte Regne e discesa nel fosso "Valle di Licino" fino alla strada (40 min).',
+                svgPath: [
+                    { x: 95, y: 205, label: 'Attacco (Gendarme)' },
+                    { x: 125, y: 145, label: 'S1 Albero', pitchIndex: 0 },
+                    { x: 115, y: 85, label: 'S2 Albero', pitchIndex: 1 },
+                    { x: 135, y: 30, label: 'S3 Cima', pitchIndex: 2 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: 'V', length: '40 m', bolts: '2 chiodi + albero', desc: 'A destra di un diedro-canale salire un caminetto giallastro, attraversare il canale e salire una rampa obliqua a destra sotto un tettino (2 chiodi), cengia erbosa e placche fino a sosta su alberello.' },
+                    { num: 'L2', grade: 'V+', length: '40 m', bolts: 'Alpinistica', desc: 'Diedri e fessure piegando leggermente a sinistra, poi fessura verticale verso zona appoggiata e diedri fino a sosta su alberello a destra.' },
+                    { num: 'L3', grade: 'IV', length: '50 m', bolts: 'Albero', desc: 'Diedri verticali (attenzione ai sassi instabili), piegare nel canale a sinistra fino alla cima della parete (sosta su albero).' }
+                ]
+            },
+            {
+                id: 'antro-drago',
+                type: 'falesia',
+                sectorId: 'colle-zannuto',
+                sector: '3.3 Colle Zannuto — Cava di Cesi',
+                name: 'Falesia Antro del Drago (Accesso Vietato)',
+                openers: 'Area storica abbandonata',
+                gradeMax: 'N.D.',
+                gradeObbl: 'N.D.',
+                difficultyLevel: 'facile',
+                length: '10 vie (dismessa)',
+                pitchesCount: 0,
+                protectionType: 'Vecchia chiodatura da verificare',
+                protectionCategory: 'trad',
+                exposure: 'Ovest',
+                climbTime: 'Accesso Vietato',
+                descentTime: '700 m s.l.m.',
+                gear: 'Divieto di accesso imposto dalla proprietà della cava',
+                gpsCoords: 'Sopra cava dismessa S.S. 79 Ternana',
+                summary: 'Falesia situata sopra la cava di Cesi dentro una grande caverna giallo-arancio. Attualmente abbandonata con divieto di accesso.',
+                approach: 'Area soggetta a divieto di accesso da parte dei responsabili della cava.',
+                descent: 'Non praticabile.',
+                cragRoutes: []
+            },
+
+            // --- 4. MONTE EOLO / SANT'ERASMO / PENNE DI SANT'ANDREA ---
+            {
+                id: 'falesia-sant-erasmo',
+                type: 'falesia',
+                sectorId: 'monte-eolo',
+                sector: '4.1 Monte Eolo — Eremo di Sant’Erasmo',
+                name: 'Falesia di Sant’Erasmo (6 Settori)',
+                openers: 'Attrezzata nel 2010 da climber di San Gemini',
+                gradeMax: '8a+',
+                gradeObbl: '5a',
+                difficultyLevel: 'facile',
+                length: '59 vie (6 settori)',
+                pitchesCount: 59,
+                protectionType: 'Fix acciaio inox',
+                protectionCategory: 'sport',
+                exposure: 'Sud-Est (molto ombreggiata nel bosco)',
+                climbTime: 'Primavera - Autunno',
+                descentTime: '700 m s.l.m.',
+                gear: 'Corda singola da 60/70m, 12 rinvii',
+                gpsCoords: 'Eremo di S. Erasmo (4 km sopra Cesi)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Panoramica+Falesia+Sant%27Erasmo+(S.+Cudini)',
+                photoCaption: 'Cartello descrittivo e panoramica della falesia di Sant’Erasmo — foto di Stefano Cudini',
+                summary: 'Sito immerso nel verde della Rocchetta di Cesi con ottime zone d\'ombra, diviso nei settori Torre Alta, Torre Bassa, Diavoli e Santi, Sasso Est, Mezzogiorno e Sasso Nuovo.',
+                approach: 'Da Cesi salire per 4 km fino al parcheggio dell\'Eremo di S. Erasmo. Oltrepassare la chiesa verso sinistra nel bosco fino ai ruderi delle Torri, poi scendere ripidamente a sinistra fino alle pareti (15 min).',
+                descent: 'Calata sportiva dagli anelli di sosta.',
+                cragRoutes: [
+                    { sectorTag: 'Torre Alta', name: 'Metto la staffa', grade: '6a', meters: '10m', stars: '++' },
+                    { sectorTag: 'Torre Alta', name: 'La vita è tutta un paranco', grade: '5c+', meters: '12m', stars: '+++' },
+                    { sectorTag: 'Torre Alta', name: 'Tourkana', grade: '5c+', meters: '13m', stars: '++' },
+                    { sectorTag: 'Torre Alta', name: 'Mimmo creatore di vie', grade: '5c+', meters: '15m', stars: '+++' },
+                    { sectorTag: 'Torre Alta', name: 'Vino e partimo', grade: '6a', meters: '15m', stars: '+++' },
+                    { sectorTag: 'Torre Alta', name: 'Giardinaggio estremo', grade: '6b', meters: '15m', stars: '+++' },
+                    { sectorTag: 'Torre Alta', name: 'La libertà dei servi', grade: '6a+', meters: '12m', stars: '++' },
+                    { sectorTag: 'Torre Alta', name: 'Annina, gatta sbarazzina', grade: '6b', meters: '20m', stars: '' },
+                    { sectorTag: 'Torre Bassa', name: 'Professione canaro', grade: '6a', meters: '10m', stars: '++' },
+                    { sectorTag: 'Torre Bassa', name: 'Odio puro e duraturo', grade: '5b', meters: '12m', stars: '+++' },
+                    { sectorTag: 'Torre Bassa', name: 'Regine guerriere', grade: '5b', meters: '12m', stars: '+++' },
+                    { sectorTag: 'Torre Bassa', name: 'Alta quota', grade: '7a', meters: '-', stars: '' },
+                    { sectorTag: 'Torre Bassa', name: 'Zozzi d’intelletto', grade: '6c', meters: '15m', stars: '' },
+                    { sectorTag: 'Torre Bassa', name: 'Sottopanza de cavallo', grade: '6c', meters: '15m', stars: '' },
+                    { sectorTag: 'Torre Bassa', name: 'La traccia di un sogno', grade: '6b', meters: '15m', stars: '' },
+                    { sectorTag: 'Torre Bassa', name: 'Efficiente efficace', grade: '6a+', meters: '10m', stars: '+++' },
+                    { sectorTag: 'Torre Bassa', name: 'Sognatore di navi', grade: '6c', meters: '12m', stars: '' },
+                    { sectorTag: 'Torre Bassa', name: 'Tommina', grade: '6a+', meters: '12m', stars: '+++' },
+                    { sectorTag: 'Diavoli e Santi', name: 'Mani di pietra', grade: '5c', meters: '16m', stars: '+++' },
+                    { sectorTag: 'Diavoli e Santi', name: 'Strani sintomi', grade: '6a+', meters: '14m', stars: '+++' },
+                    { sectorTag: 'Diavoli e Santi', name: 'Spacciatrice di gatti', grade: '6a', meters: '14m', stars: '++++' },
+                    { sectorTag: 'Diavoli e Santi', name: 'Mappina', grade: '5a', meters: '24m', stars: '+++' },
+                    { sectorTag: 'Diavoli e Santi', name: 'Aldo e Nella nel vento', grade: '6a', meters: '24m', stars: '+++' },
+                    { sectorTag: 'Diavoli e Santi', name: 'Lacrima gialla', grade: '8a+', meters: '24m', stars: '' },
+                    { sectorTag: 'Diavoli e Santi', name: 'Una minestra di quinoa', grade: '7c', meters: '24m', stars: '+++' },
+                    { sectorTag: 'Diavoli e Santi', name: 'L\'anello di Sandokan', grade: '6b+', meters: '16m', stars: '++++' },
+                    { sectorTag: 'Diavoli e Santi', name: 'Un libro per Anna L1+L2', grade: '7a+', meters: '32m', stars: '+++++' },
+                    { sectorTag: 'Diavoli e Santi', name: 'Per sempre amici', grade: '6c+', meters: '20m', stars: '+++++' },
+                    { sectorTag: 'Diavoli e Santi', name: 'Sifu Enrico', grade: '7b+', meters: '22m', stars: '+++++' },
+                    { sectorTag: 'Diavoli e Santi', name: 'Super Nico', grade: '6b', meters: '14m', stars: '++++' },
+                    { sectorTag: 'Sasso Est', name: 'Clara Blanca Alba', grade: '6a+', meters: '15m', stars: '++' },
+                    { sectorTag: 'Sasso Est', name: 'Troverò una grotta', grade: '6b', meters: '20m', stars: '+++' },
+                    { sectorTag: 'Sasso Est', name: 'Esploratori degli abissi', grade: '6b', meters: '22m', stars: '' },
+                    { sectorTag: 'Mezzogiorno', name: 'La principessa delle terre arnolfe', grade: '6a+', meters: '26m', stars: '++++' },
+                    { sectorTag: 'Mezzogiorno', name: 'Il tiranno colpisce ancora', grade: '6a', meters: '26m', stars: '++++' },
+                    { sectorTag: 'Mezzogiorno', name: 'Una supposta per Gheddafi', grade: '6b+', meters: '26m', stars: '+++++' },
+                    { sectorTag: 'Sasso Nuovo', name: 'Terra d’asparago', grade: '6a', meters: '12m', stars: '+++' },
+                    { sectorTag: 'Sasso Nuovo', name: 'Timo di Sant\'Erasmo', grade: '6a', meters: '12m', stars: '+++' },
+                    { sectorTag: 'Sasso Nuovo', name: 'Amore da lontano', grade: '6b', meters: '10m', stars: '++' }
+                ]
+            },
+            {
+                id: 'concatenamento-sant-erasmo',
+                type: 'multipitch',
+                sectorId: 'monte-eolo',
+                sector: '4.2 Monte Eolo — Sant’Erasmo',
+                name: 'Concatenamento Multipitch di Sant’Erasmo',
+                openers: 'Combinazione tiri della falesia',
+                gradeMax: '6a',
+                gradeObbl: '5b',
+                difficultyLevel: 'facile',
+                length: '65 m',
+                pitchesCount: 4,
+                protectionType: 'Fix acciaio inox',
+                protectionCategory: 'sport',
+                exposure: 'Sud-Est',
+                climbTime: '1h 15m',
+                descentTime: '10 min a piedi',
+                gear: '12 rinvii, corda singola da 60m',
+                gpsCoords: 'Scaletta a pioli — Falesia Sant’Erasmo',
+                summary: 'Combinazione di tiri della falesia che permette di raggiungere direttamente i ruderi posti sulla sommità dell\'altopiano di Sant\'Erasmo.',
+                approach: 'Come per la falesia di Sant\'Erasmo (15 min dall\'Eremo), attaccando direttamente dalla scaletta a pioli fissata in parete.',
+                descent: 'Dall\'uscita presso i ruderi delle Torri si rientra comodamente a piedi verso l\'Eremo di Sant\'Erasmo in 10 minuti.',
+                svgPath: [
+                    { x: 90, y: 205, label: 'Attacco (Scaletta)' },
+                    { x: 105, y: 160, label: 'S1', pitchIndex: 0 },
+                    { x: 115, y: 115, label: 'S2', pitchIndex: 1 },
+                    { x: 125, y: 70, label: 'S3', pitchIndex: 2 },
+                    { x: 135, y: 30, label: 'Ruderi', pitchIndex: 3 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '5c', length: '15 m', bolts: 'Fix', desc: 'Si attacca dalla scaletta a pioli; si può salire sia la via di destra che quella di sinistra.' },
+                    { num: 'L2', grade: '5b', length: '15 m', bolts: 'Fix', desc: 'Secondo tiro su calcare articolato.' },
+                    { num: 'L3', grade: '5b / 6a', length: '15 m', bolts: 'Fix', desc: 'Si può scegliere tra due vie simili adiacenti.' },
+                    { num: 'L4', grade: '6a', length: '20 m', bolts: 'Fix', desc: 'Ultimo tiro fino all\'uscita presso i ruderi sull\'altopiano.' }
+                ]
+            },
+            {
+                id: 'falesia-sant-andrea',
+                type: 'falesia',
+                sectorId: 'monte-eolo',
+                sector: '4.3.1 & 4.3.4 Penne di Sant’Andrea (Cesi)',
+                name: 'Falesia e Pilastri di Sant’Andrea (27 vie)',
+                openers: 'Settori storici e recenti sopra Cesi',
+                gradeMax: '7a',
+                gradeObbl: '4b',
+                difficultyLevel: 'facile',
+                length: '27 vie (2 settori)',
+                pitchesCount: 27,
+                protectionType: 'Fix acciaio inox',
+                protectionCategory: 'sport',
+                exposure: 'Sud',
+                climbTime: 'Inverno - Primavera - Autunno',
+                descentTime: '400 m s.l.m.',
+                gear: 'Corda singola 60m, 12 rinvii',
+                gpsCoords: 'Strada per S. Erasmo sopra Cesi (curva a gomito)',
+                summary: 'Calcare grigio compatto con grip eccezionale in una piccola gola sopra Cesi. Include la falesia principale (17 vie) e i Pilastri a sinistra di Rock n\' Roll (10 vie).',
+                approach: 'Da Cesi imboccare la strada per S. Erasmo; dopo una curva a gomito a sinistra parcheggiare presso un casottino e seguire il sentiero a destra per pochi minuti.',
+                descent: 'Calata sportiva dagli anelli di sosta.',
+                cragRoutes: [
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'La pazienza di Federica', grade: '4c', meters: '30m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Riccioli al vento', grade: '6a+', meters: '30m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'O dente o ganassa', grade: '6b+', meters: '30m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Khan', grade: '5c', meters: '13m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Arbusto tosto', grade: '6b+', meters: '-', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Vena bagnata', grade: '6b', meters: '15m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'La bionda celtica', grade: '7a', meters: '15m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Arrosto misto', grade: '6b', meters: '15m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Suprema armonia', grade: '6a', meters: '12m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Mimmo Tse Tong', grade: '6b+', meters: '12m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Principina', grade: '6b', meters: '10m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Ispuligidenie', grade: '5c', meters: '15m', stars: '++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Altai', grade: '5c', meters: '13m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'L\'ululato di Artù', grade: '5b', meters: '15m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Il deserto del Gobi', grade: '6a', meters: '15m', stars: '+++' },
+                    { sectorTag: 'Falesia Sant\'Andrea', name: 'La neve del 2012', grade: '6a', meters: '14m', stars: '+++' },
+                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Ryoby', grade: '5c', meters: '-', stars: '' },
+                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Yocesity', grade: '5c', meters: '-', stars: '' },
+                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'North Face', grade: '6b+', meters: '-', stars: '' },
+                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Lolly pop', grade: '6a+', meters: '-', stars: '' },
+                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Emma', grade: '5c', meters: '-', stars: '' },
+                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Scorpio', grade: '4b', meters: '-', stars: '' },
+                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Mecarozzi', grade: '5c', meters: '-', stars: '' },
+                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Pandevia', grade: '6a', meters: '-', stars: '' },
+                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Viagra', grade: '6b+/6c', meters: '-', stars: '' },
+                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Spigolo nord', grade: '6b', meters: '-', stars: '' }
+                ]
+            },
+            {
+                id: 'rock-n-roll',
+                type: 'multipitch',
+                sectorId: 'monte-eolo',
+                sector: '4.3.2 Monte Eolo — Penne di Sant’Andrea',
+                name: 'Rock n’ Roll',
+                openers: 'Marco Biagiola e Stefano Laurenti (2018)',
+                gradeMax: '6b+',
+                gradeObbl: '6a',
+                difficultyLevel: 'medio',
+                length: '110 m',
+                pitchesCount: 5,
+                protectionType: 'Interamente attrezzata a fix (S1)',
+                protectionCategory: 'sport',
+                exposure: 'Sud',
+                climbTime: '2h 00m',
+                descentTime: '20 min (doppie)',
+                gear: '14 rinvii, due corde da 60m',
+                gpsCoords: 'Sentiero Falesia Sant’Andrea (freccia a destra)',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Tracciato+Rock+n%27+Roll+(P.+Calandrella)',
+                photoCaption: 'Tracciato della via Rock n’ Roll e secondo tiro — foto di Pino Calandrella',
+                summary: 'Bella via plaisir chiodata dal basso che segue diverse fessure e diedri regalando una scalata tecnica e divertente.',
+                approach: 'Dal casottino sulla strada per S. Erasmo seguire il sentiero per la falesia di Sant\'Andrea fino a una freccia verso destra che porta sotto l\'attacco.',
+                descent: 'In corda doppia lungo la via.',
+                svgPath: [
+                    { x: 80, y: 210, label: 'Attacco' },
+                    { x: 95, y: 175, label: 'S1', pitchIndex: 0 },
+                    { x: 85, y: 135, label: 'S2', pitchIndex: 1 },
+                    { x: 115, y: 100, label: 'S3', pitchIndex: 2 },
+                    { x: 130, y: 65, label: 'S4', pitchIndex: 3 },
+                    { x: 140, y: 30, label: 'S5', pitchIndex: 4 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '6a+', length: '20 m', bolts: 'Fix', desc: 'Salire dritti sulla placca poco a sinistra di uno spigolo che si aggira poco prima del terrazzo di sosta.' },
+                    { num: 'L2', grade: '6a', length: '25 m', bolts: 'Fix', desc: 'Seguire il diedro-fessura sulla sinistra fino al suo termine.' },
+                    { num: 'L3', grade: '6b', length: '25 m', bolts: 'Fix', desc: 'Traversare per circa 10 m verso destra fino a prendere una fessura, seguirla e al suo termine traversare verso sinistra.' },
+                    { num: 'L4', grade: '4c', length: '20 m', bolts: 'Fix', desc: 'Aggirare sulla destra la placca iniziale e per facili rampe arrivare alla sosta.' },
+                    { num: 'L5', grade: '6b+', length: '20 m', bolts: 'Fix', desc: 'Salire la larga fessura sulla destra per poi proseguire in un diedro e per paretine fino alla sosta.' }
+                ]
+            },
+            {
+                id: 'frida-calo',
+                type: 'multipitch',
+                sectorId: 'monte-eolo',
+                sector: '4.3.3 Monte Eolo — Penne di Sant’Andrea',
+                name: 'Frida “Calo”',
+                openers: 'Carlo Capuano e Alessandro Pasquantonio (ottobre 2024)',
+                gradeMax: '6b+',
+                gradeObbl: '6a',
+                difficultyLevel: 'medio',
+                length: '80 m',
+                pitchesCount: 3,
+                protectionType: 'Fix acciaio inox',
+                protectionCategory: 'sport',
+                exposure: 'Sud',
+                climbTime: '1h 30m',
+                descentTime: '15 min (a piedi o 3 doppie)',
+                gear: '12 rinvii',
+                gpsCoords: 'A sinistra di Rock n’ Roll',
+                summary: 'Itinerario recente aperto nell\'ottobre 2024 immediatamente a sinistra di Rock n\' Roll con un bellissimo terzo tiro su placca.',
+                approach: 'Come per Rock n\' Roll, l\'attacco è situato subito alla sua sinistra.',
+                descent: 'Dalla sosta finale è possibile proseguire a piedi lungo il sentiero fino alla strada principale oppure effettuare 3 calate in doppia.',
+                svgPath: [
+                    { x: 65, y: 205, label: 'Attacco' },
+                    { x: 60, y: 145, label: 'S1', pitchIndex: 0 },
+                    { x: 65, y: 90, label: 'S2', pitchIndex: 1 },
+                    { x: 75, y: 35, label: 'S3', pitchIndex: 2 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '6b', length: '25 m', bolts: 'Fix', desc: 'Si parte subito su placca; dopo una decina di metri si affronta un diedro al termine del quale (passaggio erboso) si trova la sosta.' },
+                    { num: 'L2', grade: '5c', length: '25 m', bolts: 'Fix', desc: 'Tiro di raccordo su roccia da ripulire leggermente.' },
+                    { num: 'L3', grade: '6b+', length: '30 m', bolts: 'Fix', desc: 'Affrontare la parete a sinistra su una bellissima placca, per poi deviare a destra a metà tiro seguendo una piccola fessura fino in sosta.' }
+                ]
+            },
+            {
+                id: 'die-gartenroute',
+                type: 'multipitch',
+                sectorId: 'monte-eolo',
+                sector: '4.3.5 Monte Eolo — Penne di Sant’Andrea',
+                name: 'Die Gartenroute (Itinerario 15)',
+                openers: 'Approccio al pilastro superiore',
+                gradeMax: '5a',
+                gradeObbl: '5a',
+                difficultyLevel: 'facile',
+                length: '45 m',
+                pitchesCount: 1,
+                protectionType: 'Interamente attrezzata a fix (S1)',
+                protectionCategory: 'sport',
+                exposure: 'Sud',
+                climbTime: '30 min',
+                descentTime: '10 min (corda fissa + cengia)',
+                gear: '14 rinvii',
+                gpsCoords: 'Destra Falesia S. Andrea (dopo "La neve del 2012")',
+                summary: 'Interessante tiro di approccio alla parte alta del pilastro; conduce in prossimità dell\'attacco di Akuna Matata.',
+                approach: 'Come per la falesia di Sant\'Andrea, subito dopo l\'ultima via "La neve del 2012" (targhetta alla base).',
+                descent: 'Spostarsi alla base dello spigolo dove è fissata una corda fissa e traversare su piccola cengia verso destra fino al sentiero principale (oppure proseguire su Akuna Matata).',
+                svgPath: [
+                    { x: 105, y: 205, label: 'Attacco (Targhetta)' },
+                    { x: 125, y: 120, label: 'S1 Pilastro', pitchIndex: 0 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '5a', length: '45 m', bolts: 'Fix', desc: 'Salire due tratti verticali interrotti da una cengia fino a una crestina (possibile sosta intermedia), poi per facili rocce spostandosi a destra verso la sosta.' }
+                ]
+            },
+            {
+                id: 'akuna-matata',
+                type: 'multipitch',
+                sectorId: 'monte-eolo',
+                sector: '4.3.6 Monte Eolo — Penne di Sant’Andrea',
+                name: 'Akuna Matata (Itinerario 16)',
+                openers: 'Marco Principi e Francesco Novelli (2019)',
+                gradeMax: '6a+',
+                gradeObbl: '5a',
+                difficultyLevel: 'facile',
+                length: '135 m',
+                pitchesCount: 5,
+                protectionType: 'Fix (L3 distanziati, integrabili) (S1)',
+                protectionCategory: 'sport',
+                exposure: 'Sud',
+                climbTime: '2h 15m',
+                descentTime: '20 min (doppie o sentiero CAI 674/c)',
+                gear: '14 rinvii, qualche friend medio per L3',
+                gpsCoords: 'A monte di Die Gartenroute',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Tracciato+Die+Gartenroute+(15)+e+Akuna+Matata+(16)',
+                photoCaption: 'Tracciato di Die Gartenroute (15), Akuna Matata (16) e il grande anello di ferro degli anni \'80 — foto Pino Calandrella',
+                summary: 'Ripercorre in parte la storica "Via dell\'Anello" (Lepri-Nobili 1981) salendo direttamente il placcone monolitico superiore.',
+                approach: 'A monte di Die Gartenroute (raggiungibile salendo Die Gartenroute oppure dal sentiero principale tramite la cengia con corda fissa).',
+                descent: 'In doppia sulla via (corde da 60 m saltando L5) fino alla corda fissa, oppure a piedi verso la falesia Le Due Torri e il sentiero CAI 674/c Andrea Sabatini (20 min).',
+                svgPath: [
+                    { x: 115, y: 205, label: 'Attacco' },
+                    { x: 115, y: 170, label: 'S1', pitchIndex: 0 },
+                    { x: 105, y: 135, label: 'S2', pitchIndex: 1 },
+                    { x: 100, y: 95, label: 'S3', pitchIndex: 2 },
+                    { x: 115, y: 55, label: 'S4 (Anello)', pitchIndex: 3 },
+                    { x: 125, y: 22, label: 'Cima', pitchIndex: 4 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '4a', length: '30 m', bolts: 'Fix', desc: 'Salire la facile placca ammanigliata fino alla base del pilastro su una cengia.' },
+                    { num: 'L2', grade: '5b', length: '25 m', bolts: 'Fix', desc: 'Salire verso sinistra seguendo piccole cenge fino alla placca, poi per caminetto fino al terrazzo di sosta.' },
+                    { num: 'L3', grade: '6a+', length: '30 m', bolts: 'Fix + friend', desc: 'Dritti sulle sovrastanti placche poi leggermente a sinistra per un diedro fino a comodo terrazzo (chiodatura più lunga, integrabile a friend).' },
+                    { num: 'L4', grade: '5b', length: '30 m', bolts: 'Fix + grande anello', desc: 'Diedro fessurato a destra poi paretine verticali incontrando il grande anello di ferro degli anni \'80 fino a sosta a fix.' },
+                    { num: 'L5', grade: 'III', length: '20 m', bolts: 'Alpinistica', desc: 'Proseguire per saltini fino alla cima.' }
+                ]
+            },
+            {
+                id: 'via-zaer',
+                type: 'multipitch',
+                sectorId: 'monte-eolo',
+                sector: '4.3.7 Monte Eolo — Penne di Sant’Andrea',
+                name: 'ZAER',
+                openers: 'Marco Principi, Alessandro Pasquantonio e Andrea Leonardi (2024)',
+                gradeMax: '5c',
+                gradeObbl: '5b',
+                difficultyLevel: 'facile',
+                length: '45 m',
+                pitchesCount: 2,
+                protectionType: 'Fix acciaio inox (S1)',
+                protectionCategory: 'sport',
+                exposure: 'Sud',
+                climbTime: '1h 00m',
+                descentTime: '20 min (come Akuna Matata)',
+                gear: '12 rinvii',
+                gpsCoords: 'A sinistra del 2° tiro di Akuna Matata',
+                summary: 'Sfrutta la bellissima parete di placca alla sinistra di Akuna Matata, partendo dai primi 3 spit del secondo tiro di quest\'ultima.',
+                approach: 'Come per Akuna Matata (raggiungere S1 di Akuna Matata).',
+                descent: 'Vedere discesa di Akuna Matata (doppie o sentiero CAI 674/c).',
+                svgPath: [
+                    { x: 110, y: 205, label: 'Attacco (S1 Akuna)' },
+                    { x: 80, y: 135, label: 'S1 Terrazzino', pitchIndex: 0 },
+                    { x: 75, y: 60, label: 'S2', pitchIndex: 1 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '5b', length: '15 m', bolts: 'Fix', desc: 'Sfrutta i primi 3 spit di L2 di Akuna Matata per poi deviare a sinistra in un traverso che termina su un comodo terrazzino.' },
+                    { num: 'L2', grade: '5c', length: '30 m', bolts: 'Fix', desc: 'Tiro di placca su ottima roccia che continua verticalmente fino a un diedro oltre il quale si scorge la sosta.' }
+                ]
+            },
+            {
+                id: 'canti-bosco',
+                type: 'multipitch',
+                sectorId: 'monte-eolo',
+                sector: '4.3.7 Monte Eolo — Penne di Sant’Andrea',
+                name: 'Canti nel Bosco',
+                openers: 'Settore destro Akuna Matata',
+                gradeMax: '5c',
+                gradeObbl: '5b',
+                difficultyLevel: 'facile',
+                length: '75 m',
+                pitchesCount: 3,
+                protectionType: 'Fix acciaio inox',
+                protectionCategory: 'sport',
+                exposure: 'Sud',
+                climbTime: '1h 15m',
+                descentTime: '20 min (doppie)',
+                gear: '12 rinvii',
+                gpsCoords: 'A destra di Akuna Matata',
+                summary: 'Via plaisir di tre lunghezze situata immediatamente sulla destra di Akuna Matata.',
+                approach: 'Come per Akuna Matata, attaccando sulla destra della stessa.',
+                descent: 'In corda doppia lungo la via.',
+                svgPath: [
+                    { x: 135, y: 205, label: 'Attacco' },
+                    { x: 140, y: 150, label: 'S1', pitchIndex: 0 },
+                    { x: 145, y: 95, label: 'S2', pitchIndex: 1 },
+                    { x: 145, y: 40, label: 'S3', pitchIndex: 2 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '5b', length: '25 m', bolts: 'Fix', desc: 'Prima lunghezza su calcare articolato.' },
+                    { num: 'L2', grade: '5c', length: '25 m', bolts: 'Fix', desc: 'Seconda lunghezza su placca lavorata.' },
+                    { num: 'L3', grade: '5c', length: '25 m', bolts: 'Fix', desc: 'Terza lunghezza fino alla sosta di calata.' }
+                ]
+            },
+            {
+                id: 'qualche-volta',
+                type: 'multipitch',
+                sectorId: 'monte-eolo',
+                sector: '4.3.8 Monte Eolo — Penne di Sant’Andrea',
+                name: 'Qualche Volta',
+                openers: 'Settore destro Akuna Matata',
+                gradeMax: '6a',
+                gradeObbl: '5b',
+                difficultyLevel: 'facile',
+                length: '75 m',
+                pitchesCount: 3,
+                protectionType: 'Fix acciaio inox',
+                protectionCategory: 'sport',
+                exposure: 'Sud',
+                climbTime: '1h 15m',
+                descentTime: '20 min (doppie)',
+                gear: '12 rinvii',
+                gpsCoords: 'A destra di Canti nel Bosco',
+                summary: 'Itinerario sportivo di tre tiri subito a destra di Canti nel Bosco.',
+                approach: 'Come per Akuna Matata, attaccando a destra di Canti nel Bosco.',
+                descent: 'In corda doppia lungo la via.',
+                svgPath: [
+                    { x: 155, y: 205, label: 'Attacco' },
+                    { x: 160, y: 150, label: 'S1', pitchIndex: 0 },
+                    { x: 165, y: 95, label: 'S2', pitchIndex: 1 },
+                    { x: 165, y: 40, label: 'S3', pitchIndex: 2 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '5b', length: '25 m', bolts: 'Fix', desc: 'Primo tiro fino alla prima sosta attrezzata.' },
+                    { num: 'L2', grade: '6a', length: '25 m', bolts: 'Fix', desc: 'Secondo tiro continuo su calcare compatto.' },
+                    { num: 'L3', grade: '6a', length: '25 m', bolts: 'Fix', desc: 'Terzo tiro fino alla sosta finale.' }
+                ]
+            },
+            {
+                id: 'terza-via',
+                type: 'multipitch',
+                sectorId: 'monte-eolo',
+                sector: '4.3.9 Monte Eolo — Penne di Sant’Andrea',
+                name: 'La Terza Via',
+                openers: 'Settore destro pilastro superiore',
+                gradeMax: '6b+',
+                gradeObbl: '5c',
+                difficultyLevel: 'medio',
+                length: '100 m',
+                pitchesCount: 4,
+                protectionType: 'Fix acciaio inox',
+                protectionCategory: 'sport',
+                exposure: 'Sud',
+                climbTime: '1h 45m',
+                descentTime: '25 min (doppie su Akuna Matata)',
+                gear: '12 rinvii, due corde da 60m',
+                gpsCoords: 'A destra di Qualche Volta',
+                photoUrl: 'https://placehold.co/800x520/292524/fb923c?text=Tracciato+La+Terza+Via+con+indicazione+calate',
+                photoCaption: 'Tracciato della Terza Via con indicazione delle calate in doppia',
+                summary: 'Quattro lunghezze di ottima arrampicata che culminano sulla cresta sommitale con rientro sulle calate di Akuna Matata.',
+                approach: 'Come per Akuna Matata, sul lato destro del pilastro superiore.',
+                descent: 'Seguire la facile cresta fino a raggiungere le doppie di Akuna Matata (corde da 60 m) fino alla corda fissa e al sentiero principale.',
+                svgPath: [
+                    { x: 175, y: 205, label: 'Attacco' },
+                    { x: 180, y: 160, label: 'S1', pitchIndex: 0 },
+                    { x: 185, y: 115, label: 'S2', pitchIndex: 1 },
+                    { x: 180, y: 70, label: 'S3', pitchIndex: 2 },
+                    { x: 165, y: 30, label: 'Cresta', pitchIndex: 3 }
+                ],
+                pitches: [
+                    { num: 'L1', grade: '5c', length: '25 m', bolts: 'Fix', desc: 'Prima lunghezza di riscaldamento su calcare grigio.' },
+                    { num: 'L2', grade: '6b+', length: '25 m', bolts: 'Fix', desc: 'Tiro chiave della via con passaggi tecnici su placca/muro.' },
+                    { num: 'L3', grade: '6a', length: '25 m', bolts: 'Fix', desc: 'Terza lunghezza continua.' },
+                    { num: 'L4', grade: '5c', length: '25 m', bolts: 'Fix', desc: 'Quarta lunghezza fino alla facile cresta sommitale.' }
+                ]
+            },
+            {
+                id: 'falesia-due-torri',
+                type: 'falesia',
+                sectorId: 'monte-eolo',
+                sector: '4.4 Monte Eolo — Osservatorio / S. Erasmo',
+                name: 'Falesia Le Due Torri (8 vie)',
+                openers: 'Luigi Martino e Federico Nullo',
+                gradeMax: '8a+',
+                gradeObbl: '5b',
+                difficultyLevel: 'facile',
+                length: '8 vie',
+                pitchesCount: 8,
+                protectionType: 'Fix acciaio inox',
+                protectionCategory: 'sport',
+                exposure: 'Sud-Est',
+                climbTime: 'Inverno - Primavera - Autunno',
+                descentTime: '580 m s.l.m.',
+                gear: 'Corda singola 60m, 10 rinvii',
+                gpsCoords: 'Parcheggio Osservatorio Astronomico (Voc. S. Erasmo)',
+                summary: 'Piccola falesia ben esposta nei pressi dell\'Osservatorio Astronomico sopra Cesi con tiri dal 5b fino all\'8a+.',
+                approach: 'Da Terni Nord verso Cesi, poi Strada della Pittura, via di Terra Maiura (cartello giallo OSSERVATORIO) e Vocabolo S. Erasmo per 2,7 km fino all\'Osservatorio. Scendere a sud lasciando l\'osservatorio a destra, seguire gli omini e la freccia sull\'albero verso sud-est fino alla bacheca alla base (10 min).',
+                descent: 'Calata sportiva dagli anelli di sosta.',
+                cragRoutes: [
+                    { name: 'Habanero', grade: '5c+', meters: '10 m', stars: '+++' },
+                    { name: 'Morbidis e Gnomis', grade: '5b', meters: '14 m', stars: '++' },
+                    { name: 'Tienilo duro', grade: '7b+', meters: '14 m', stars: '' },
+                    { name: 'La forza del muschio', grade: '7c+/8a+', meters: '20 m', stars: '+++' },
+                    { name: 'I 4 e la liberazione', grade: '7b', meters: '16 m', stars: '++' },
+                    { name: 'Federico spaccacaviglie', grade: '6b+/6c', meters: '18 m', stars: '++++' },
+                    { name: 'La via del di dietro', grade: '6a+', meters: '18 m', stars: '+++' },
+                    { name: 'Fifty/fifty', grade: '6a', meters: '15 m', stars: '+++' }
+                ]
+            }
+        ];
+
+        // ==========================================
+        // STATO APPLICAZIONE (CON PERSISTENZA LOCALE)
+        // ==========================================
+        let state = {
+            view: 'home', // 'home' | 'intro' | 'routes' | 'detail'
+            selectedIntroId: null,
+            selectedSectorId: 'all',
+            selectedRouteId: null,
+            searchQuery: '',
+            activeFilter: 'all',
+            onlyCompleted: false,
+            expandedPitchIndex: 0,
+            completedRoutes: JSON.parse(localStorage.getItem('martani_v21_completed') || '[]'),
+            checkedPitches: JSON.parse(localStorage.getItem('martani_v21_pitches') || '{}')
+        };
+
+        function saveState() {
+            localStorage.setItem('martani_v21_completed', JSON.stringify(state.completedRoutes));
+            localStorage.setItem('martani_v21_pitches', JSON.stringify(state.checkedPitches));
+            updateCompletedCounter();
+        }
+
+        function updateCompletedCounter() {
+            const counterEl = document.getElementById('completed-counter');
+            const totalEl = document.getElementById('total-counter');
+            if (counterEl) counterEl.textContent = state.completedRoutes.length;
+            if (totalEl) totalEl.textContent = routesData.length;
+        }
+
+        function showToast(msg) {
+            const box = document.getElementById('toast-box');
+            const msgEl = document.getElementById('toast-message');
+            if (!box || !msgEl) return;
+            msgEl.textContent = msg;
+            box.classList.remove('opacity-0');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => {
+                box.classList.add('opacity-0');
+            }, 2400);
+        }
+
+        function getGradeBadgeColor(grade) {
+            if (!grade) return 'bg-stone-100 text-stone-800 border-stone-200';
+            const g = grade.toLowerCase();
+            if (g.includes('ii') || g.includes('iii') || g.includes('iv') || g.startsWith('4') || g.startsWith('5')) {
+                return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+            }
+            if (g.startsWith('6a') || g.startsWith('6b') || g.startsWith('v')) {
+                return 'bg-amber-100 text-amber-800 border-amber-200';
+            }
+            return 'bg-rose-100 text-rose-800 border-rose-200';
+        }
+
+        // ==========================================
+        // 1. SCHERMATA INIZIALE (HOME / MAPPA SETTORI)
+        // ==========================================
+        function renderHomeScreen() {
+            const multipitchCount = routesData.filter(r => r.type === 'multipitch').length;
+            const cragsCount = routesData.filter(r => r.type === 'falesia').length;
+
+            return `
+                <div class="fade-in pb-6">
+                    <!-- Hero / Copertina Guida -->
+                    <header class="bg-stone-900 text-white px-5 pt-5 pb-6 rounded-b-3xl shadow-md">
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-stone-800 text-orange-400 px-2.5 py-1 rounded-full border border-stone-700">
+                                <span>⛰️</span> Monti Martani • Terni / Cesi
+                            </span>
+                            <span class="font-mono-code text-[10px] font-semibold text-stone-300 bg-stone-800 px-2 py-0.5 rounded border border-stone-700">
+                                v. 2.1 • CC0
+                            </span>
+                        </div>
+
+                        <h1 class="text-2xl font-extrabold tracking-tight leading-tight mb-1.5">
+                            Arrampicare nei Monti Martani
+                        </h1>
+                        <p class="text-xs text-stone-300 leading-relaxed mb-4">
+                            Appunti di arrampicata sportiva e alpinistica: <strong class="text-white">${multipitchCount} vie multipitch</strong> e <strong class="text-white">${cragsCount} falesie</strong> tra Penna della Rocca, Colle Zannuto e Monte Eolo.
+                        </p>
+
+                        <!-- Pulsante Primario Esplora Tutte -->
+                        <button
+                            onclick="openSectorRoutes('all')"
+                            class="w-full py-3 px-4 bg-orange-600 hover:bg-orange-500 active:scale-[0.99] text-white font-bold text-xs rounded-2xl shadow-sm flex items-center justify-between transition"
+                        >
+                            <span>Esplora tutte le vie e falesie (${routesData.length})</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </button>
+                    </header>
+
+                    <!-- Accesso Rapido alla Parte Introduttiva -->
+                    <section class="px-4 pt-5">
+                        <div class="flex items-center justify-between mb-2.5">
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">1. Parte Introduttiva</h2>
+                            <button onclick="navigateTo('intro')" class="text-xs font-bold text-orange-700 hover:underline">
+                                Leggi tutto →
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2.5">
+                            ${introChapters.map(ch => `
+                                <button
+                                    onclick="openIntroChapter('${ch.id}')"
+                                    class="bg-white hover:border-orange-400 active:scale-[0.98] text-left p-3 rounded-2xl border border-stone-200/90 shadow-2xs transition flex flex-col justify-between"
+                                >
+                                    <span class="text-lg mb-1.5 block">${ch.icon}</span>
+                                    <div>
+                                        <div class="text-xs font-bold text-stone-900 leading-snug mb-0.5">${ch.title}</div>
+                                        <div class="text-[10px] text-stone-500 line-clamp-1">${ch.subtitle}</div>
+                                    </div>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </section>
+
+                    <!-- Mappa Schematica Interattiva dei Settori -->
+                    <section class="px-4 pt-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">Mappa Schematica Settori</h2>
+                            <span class="text-[11px] font-semibold text-orange-700">Tocca un settore</span>
+                        </div>
+
+                        <div class="bg-[#efeae1] rounded-3xl p-3 border border-stone-300/90 shadow-xs overflow-hidden">
+                            <svg viewBox="0 0 340 245" class="w-full h-auto select-none">
+                                <defs>
+                                    <linearGradient id="martaniRidge" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#e7e0d2" />
+                                        <stop offset="100%" stop-color="#d6cec0" />
+                                    </linearGradient>
+                                </defs>
+                                <rect width="340" height="245" rx="16" fill="url(#martaniRidge)" />
+
+                                <!-- Curve di livello stilizzate -->
+                                <path d="M -10,45 Q 90,30 165,75 T 350,65" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
+                                <path d="M -10,95 Q 110,80 185,125 T 350,115" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
+                                <path d="M -10,145 Q 120,135 200,175 T 350,165" fill="none" stroke="#c8bfb0" stroke-width="1.2" />
+
+                                <!-- Dorsale Monti Martani -->
+                                <polyline points="25,40 105,65 185,105 265,135 320,155" fill="none" stroke="#a89f91" stroke-width="3" stroke-linecap="round" />
+                                <text x="32" y="28" fill="#78716c" font-size="8.5" font-weight="700" letter-spacing="0.06em">VERSO MONTE TORRE MAGGIORE</text>
+                                <text x="200" y="232" fill="#78716c" font-size="8.5" font-weight="700" letter-spacing="0.06em">CONCA TERNANA / S.S. 79</text>
+
+                                <!-- Sentieri di avvicinamento tratteggiati -->
+                                <path d="M 55,195 Q 65,140 72,85" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
+                                <path d="M 165,205 Q 175,165 182,122" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
+                                <path d="M 275,205 Q 272,175 268,148" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3" />
+
+                                <!-- Parcheggi / Punti di accesso -->
+                                <g>
+                                    <rect x="36" y="192" width="38" height="16" rx="5" fill="#1d4ed8" />
+                                    <text x="55" y="203" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Eremo</text>
+                                </g>
+                                <g>
+                                    <rect x="145" y="200" width="42" height="16" rx="5" fill="#1d4ed8" />
+                                    <text x="166" y="211" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Cesi P</text>
+                                </g>
+                                <g>
+                                    <rect x="252" y="200" width="48" height="16" rx="5" fill="#1d4ed8" />
+                                    <text x="276" y="211" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="800">Ulivo P</text>
+                                </g>
+
+                                <!-- Nodo Cliccabile Settore 4: Monte Eolo / Sant'Erasmo -->
+                                <g onclick="openSectorRoutes('monte-eolo')" class="cursor-pointer">
+                                    <circle cx="72" cy="75" r="24" fill="#ea580c" fill-opacity="0.18" />
+                                    <circle cx="72" cy="75" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
+                                    <text x="72" y="79" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">4</text>
+                                    <rect x="16" y="95" width="112" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
+                                    <text x="72" y="106" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Monte Eolo / S. Erasmo</text>
+                                    <text x="72" y="116" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">10 schede (Multi + Falesie)</text>
+                                </g>
+
+                                <!-- Nodo Cliccabile Settore 3: Colle Zannuto -->
+                                <g onclick="openSectorRoutes('colle-zannuto')" class="cursor-pointer">
+                                    <circle cx="182" cy="112" r="24" fill="#ea580c" fill-opacity="0.18" />
+                                    <circle cx="182" cy="112" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
+                                    <text x="182" y="116" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">3</text>
+                                    <rect x="130" y="132" width="104" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
+                                    <text x="182" y="143" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Colle Zannuto</text>
+                                    <text x="182" y="153" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">3 schede • 700 m</text>
+                                </g>
+
+                                <!-- Nodo Cliccabile Settore 2: Penna della Rocca -->
+                                <g onclick="openSectorRoutes('penna-rocca')" class="cursor-pointer">
+                                    <circle cx="268" cy="140" r="24" fill="#ea580c" fill-opacity="0.18" />
+                                    <circle cx="268" cy="140" r="15" fill="#ea580c" stroke="#ffffff" stroke-width="2.2" />
+                                    <text x="268" y="144" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">2</text>
+                                    <rect x="212" y="160" width="112" height="26" rx="7" fill="#1c1917" fill-opacity="0.9" />
+                                    <text x="268" y="171" text-anchor="middle" fill="#ffffff" font-size="8.5" font-weight="700">Penna della Rocca</text>
+                                    <text x="268" y="181" text-anchor="middle" fill="#fdba74" font-size="7.5" font-weight="600">13 schede • 707 m</text>
+                                </g>
+                            </svg>
+
+                            <!-- Legenda Mappa -->
+                            <div class="flex items-center justify-between px-2 pt-2 text-[10px] font-semibold text-stone-600">
+                                <span class="flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-orange-600 inline-block"></span> Capitoli / Settori
+                                </span>
+                                <span class="flex items-center gap-1.5">
+                                    <span class="w-3 h-0.5 border-t-2 border-dashed border-amber-700 inline-block"></span> Sentieri CAI
+                                </span>
+                                <span class="flex items-center gap-1.5">
+                                    <span class="px-1.5 py-0.2 rounded bg-blue-700 text-white text-[9px]">P</span> Parcheggi
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Lista Rapida Settori sotto la mappa -->
+                        <div class="mt-3 space-y-2">
+                            ${sectorsData.map(sec => {
+                                const count = routesData.filter(r => r.sectorId === sec.id).length;
+                                return `
+                                    <button
+                                        onclick="openSectorRoutes('${sec.id}')"
+                                        class="w-full bg-white hover:border-orange-400 active:scale-[0.99] p-3 rounded-2xl border border-stone-200 flex items-center justify-between transition text-left"
+                                    >
+                                        <div class="flex items-center gap-3">
+                                            <span class="w-8 h-8 rounded-xl bg-orange-100 text-orange-700 font-extrabold text-xs flex items-center justify-center shrink-0">
+                                                ${sec.code}
+                                            </span>
+                                            <div>
+                                                <div class="text-xs font-bold text-stone-900">${sec.name}</div>
+                                                <div class="text-[11px] text-stone-500">Esp. ${sec.exposure} • Avv. ${sec.approachTime}</div>
+                                            </div>
+                                        </div>
+                                        <span class="text-xs font-bold text-stone-700 bg-stone-100 px-2.5 py-1 rounded-lg shrink-0">
+                                            ${count} schede →
+                                        </span>
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+                    </section>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 2. SCHERMATA PARTE INTRODUTTIVA
+        // ==========================================
+        function renderIntroScreen() {
+            const activeChapter = state.selectedIntroId
+                ? introChapters.find(c => c.id === state.selectedIntroId)
+                : null;
+
+            if (activeChapter) {
+                return `
+                    <div class="fade-in pb-8">
+                        <div class="bg-white px-4 py-3 border-b border-stone-200 sticky top-0 z-10 flex items-center justify-between">
+                            <button onclick="state.selectedIntroId = null; render();" class="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 bg-stone-100 hover:bg-stone-200 px-3 py-2 rounded-xl transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                                </svg>
+                                <span>Indice Introduzione</span>
+                            </button>
+                            <span class="text-[11px] font-semibold text-stone-400">Capitolo 1</span>
+                        </div>
+
+                        <div class="px-5 pt-5">
+                            <div class="text-3xl mb-2">${activeChapter.icon}</div>
+                            <h1 class="text-xl font-extrabold text-stone-900 leading-tight mb-1">
+                                ${activeChapter.title}
+                            </h1>
+                            <p class="text-xs font-medium text-orange-700 mb-5">
+                                ${activeChapter.subtitle}
+                            </p>
+
+                            <div class="space-y-3.5 text-xs text-stone-700 leading-relaxed bg-white p-4 rounded-2xl border border-stone-200 shadow-2xs">
+                                ${activeChapter.content.map(paragraph => `<p>${paragraph}</p>`).join('')}
+                            </div>
+
+                            ${activeChapter.id === 'premessa' ? `
+                                <div class="mt-4 bg-stone-900 text-white rounded-2xl p-4 space-y-2.5">
+                                    <div class="text-xs font-bold text-orange-400 uppercase tracking-wider">Bibliografia & Fonti Storiche</div>
+                                    <ul class="text-xs text-stone-300 space-y-1.5 list-disc pl-4">
+                                        <li><em>Al di là delle ciminiere - Salite su roccia nel ternano</em> (CAI Terni, 1988)</li>
+                                        <li><em>Arrampicate nel ternano</em> di Silvano Lepri (1988)</li>
+                                        <li>Archivio storico montimartani.it, climbook.com e falesia.it</li>
+                                    </ul>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="fade-in pb-8">
+                    <header class="bg-white px-5 pt-5 pb-4 border-b border-stone-200 sticky top-0 z-10">
+                        <div class="text-[11px] font-bold uppercase tracking-wider text-orange-700 mb-0.5">Guida Generale</div>
+                        <h1 class="text-xl font-extrabold text-stone-900">1. Introduzione ai Martani</h1>
+                        <p class="text-xs text-stone-500 mt-0.5">Storia, geologia, aneddoti e crediti dell'opera</p>
+                    </header>
+
+                    <div class="px-4 pt-4 space-y-3">
+                        ${introChapters.map(ch => `
+                            <article
+                                onclick="openIntroChapter('${ch.id}')"
+                                class="bg-white hover:border-orange-400 active:scale-[0.99] p-4 rounded-2xl border border-stone-200 shadow-2xs transition cursor-pointer"
+                            >
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl shrink-0 mt-0.5">${ch.icon}</span>
+                                    <div class="flex-1">
+                                        <h2 class="text-sm font-bold text-stone-900 mb-0.5">${ch.title}</h2>
+                                        <p class="text-xs text-stone-500 mb-2">${ch.subtitle}</p>
+                                        <p class="text-xs text-stone-600 line-clamp-2 leading-relaxed">
+                                            ${ch.content[0]}
+                                        </p>
+                                        <div class="mt-2.5 text-[11px] font-bold text-orange-700">
+                                            Leggi capitolo completo →
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 3. ELENCO VIE & FALESIE FILTRABILE
+        // ==========================================
+        function renderRoutesListView() {
+            const filters = [
+                { key: 'all', label: 'Tutti' },
+                { key: 'multipitch', label: 'Multipitch' },
+                { key: 'falesia', label: 'Falesie' },
+                { key: 'easy', label: 'Max 6a' },
+                { key: 'trad', label: 'Classiche / Trad' }
+            ];
+
+            return `
+                <div class="fade-in pb-6">
+                    <!-- Header Elenco Vie -->
+                    <header class="bg-white px-4 pt-4 pb-3.5 border-b border-stone-200 sticky top-0 z-10">
+                        <div class="flex items-center justify-between mb-2.5">
+                            <button onclick="navigateTo('home')" class="inline-flex items-center gap-1 text-xs font-bold text-stone-700 bg-stone-100 hover:bg-stone-200 px-2.5 py-1.5 rounded-xl transition">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                                </svg>
+                                <span>Mappa Settori</span>
+                            </button>
+
+                            <button
+                                onclick="toggleOnlyCompleted()"
+                                class="text-xs font-bold px-2.5 py-1.5 rounded-xl border transition ${
+                                    state.onlyCompleted
+                                        ? 'bg-emerald-600 text-white border-emerald-600'
+                                        : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+                                }"
+                            >
+                                ✓ Salite (${state.completedRoutes.length})
+                            </button>
+                        </div>
+
+                        <!-- Selettore Rapido Settore -->
+                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar mb-2.5">
+                            <button
+                                onclick="setSectorFilter('all')"
+                                class="px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap border transition ${
+                                    state.selectedSectorId === 'all'
+                                        ? 'bg-orange-600 text-white border-orange-600'
+                                        : 'bg-stone-100 text-stone-600 border-stone-200'
+                                }"
+                            >
+                                Tutti i settori
+                            </button>
+                            ${sectorsData.map(sec => `
+                                <button
+                                    onclick="setSectorFilter('${sec.id}')"
+                                    class="px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap border transition ${
+                                        state.selectedSectorId === sec.id
+                                            ? 'bg-orange-600 text-white border-orange-600'
+                                            : 'bg-stone-100 text-stone-600 border-stone-200'
+                                    }"
+                                >
+                                    Sett. ${sec.code}: ${sec.shortName}
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <!-- Barra di Ricerca -->
+                        <div class="relative mb-2.5">
+                            <svg class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <input
+                                type="text"
+                                value="${state.searchQuery}"
+                                oninput="updateSearch(this.value)"
+                                placeholder="Cerca nome via o grado (es. 6b, Diedro)..."
+                                class="w-full pl-9 pr-4 py-2 bg-stone-100 hover:bg-stone-200/70 focus:bg-white text-xs text-stone-900 placeholder-stone-400 rounded-xl border border-stone-200 focus:border-orange-500 focus:outline-hidden transition"
+                            />
+                        </div>
+
+                        <!-- Filtri Rapidi a Pillola -->
+                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+                            ${filters.map(f => {
+                                const isActive = state.activeFilter === f.key && !state.onlyCompleted;
+                                return `
+                                    <button
+                                        onclick="setFilter('${f.key}')"
+                                        class="px-2.5 py-1 rounded-full text-[11px] font-semibold whitespace-nowrap transition border ${
+                                            isActive
+                                                ? 'bg-stone-900 text-white border-stone-900 shadow-2xs'
+                                                : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-100'
+                                        }"
+                                    >
+                                        ${f.label}
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+                    </header>
+
+                    <!-- Intestazione Lista -->
+                    <div class="px-4 pt-3.5 pb-2 flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-stone-400">
+                            ${state.onlyCompleted ? 'Le tue vie salite' : 'Itinerari selezionati'}
+                        </span>
+                        <span class="text-xs font-medium text-stone-500">
+                            Tocca per relazione tiri
+                        </span>
+                    </div>
+
+                    <!-- Lista Schede Vie -->
+                    <div id="routes-list-wrapper" class="px-4 space-y-3">
+                        ${generateRoutesCardsHTML()}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateRoutesCardsHTML() {
+            const filtered = getFilteredRoutes();
+
+            if (filtered.length === 0) {
+                return `
+                    <div class="bg-white rounded-2xl p-8 text-center border border-stone-200 mt-2">
+                        <p class="text-sm font-semibold text-stone-700 mb-1">Nessuna via trovata</p>
+                        <p class="text-xs text-stone-500 mb-4">Prova a reimpostare il filtro settore o la difficoltà.</p>
+                        <button onclick="state.selectedSectorId='all'; state.activeFilter='all'; state.onlyCompleted=false; state.searchQuery=''; render();" class="px-4 py-2 bg-stone-900 text-white text-xs font-semibold rounded-xl">
+                            Mostra tutte le vie
+                        </button>
+                    </div>
+                `;
+            }
+
+            return filtered.map(route => {
+                const isDone = state.completedRoutes.includes(route.id);
+                const isFalesia = route.type === 'falesia';
+                const gradeClass = isFalesia
+                    ? 'bg-sky-100 text-sky-900 border-sky-200'
+                    : getGradeBadgeColor(route.gradeMax);
+
+                return `
+                    <article
+                        onclick="openRouteDetail('${route.id}')"
+                        class="bg-white rounded-2xl p-4 border border-stone-200/90 hover:border-orange-400 shadow-2xs active:scale-[0.99] transition cursor-pointer relative group"
+                    >
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div>
+                                <div class="text-[11px] font-semibold text-orange-700 mb-0.5">${route.sector}</div>
+                                <h2 class="text-base font-bold text-stone-900 group-hover:text-orange-700 transition leading-snug">
+                                    ${route.name}
+                                </h2>
+                            </div>
+                            ${isDone ? `
+                                <span class="shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-lg">
+                                    ✓ Salita
+                                </span>
+                            ` : `
+                                <span class="shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${
+                                    isFalesia ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'bg-orange-50 text-orange-700 border border-orange-200'
+                                }">
+                                    ${isFalesia ? 'Falesia' : 'Multipitch'}
+                                </span>
+                            `}
+                        </div>
+
+                        <!-- Tag Metadati Principali -->
+                        <div class="flex flex-wrap items-center gap-1.5 mt-2.5">
+                            <span class="font-mono-code text-xs font-bold px-2 py-0.5 rounded-md border ${gradeClass}">
+                                ${isFalesia ? `Gradi ${route.gradeObbl}–${route.gradeMax}` : `${route.gradeMax} (${route.gradeObbl} obbl.)`}
+                            </span>
+                            <span class="text-xs font-semibold text-stone-700 bg-stone-100 px-2 py-0.5 rounded-md">
+                                ${isFalesia ? route.length : `${route.length} • ${route.pitchesCount} tiri`}
+                            </span>
+                            <span class="text-xs font-medium text-stone-600 bg-stone-100 px-2 py-0.5 rounded-md">
+                                Esp. ${route.exposure}
+                            </span>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // 4. SCHEDA DETTAGLIO SINGOLA VIA O FALESIA
+        // ==========================================
+        function renderDetailView() {
+            const route = routesData.find(r => r.id === state.selectedRouteId);
+            if (!route) return renderRoutesListView();
+
+            const isDone = state.completedRoutes.includes(route.id);
+            const isFalesia = route.type === 'falesia';
+            const gradeClass = isFalesia
+                ? 'bg-sky-100 text-sky-900 border-sky-200'
+                : getGradeBadgeColor(route.gradeMax);
+
+            // Costruzione punti polilinea SVG per lo schizzo (solo multipitch)
+            const polylinePoints = !isFalesia && route.svgPath
+                ? route.svgPath.map(p => `${p.x},${p.y}`).join(' ')
+                : '';
+
+            return `
+                <div class="fade-in pb-8">
+                    <!-- Top Bar Dettaglio -->
+                    <div class="bg-white/95 backdrop-blur-xs px-4 py-3 border-b border-stone-200 sticky top-0 z-20 flex items-center justify-between gap-2">
+                        <button onclick="navigateTo('routes')" class="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-3 py-2 rounded-xl transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                            </svg>
+                            <span>Elenco</span>
+                        </button>
+
+                        <button
+                            onclick="toggleRouteCompleted('${route.id}')"
+                            class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl border transition ${
+                                isDone
+                                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
+                                    : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                            }"
+                        >
+                            <span>${isDone ? '✓ Visitata / Salita' : 'Segna come salita'}</span>
+                        </button>
+                    </div>
+
+                    <!-- Intestazione Via / Falesia -->
+                    <div class="px-4 pt-5 pb-4 bg-white border-b border-stone-200">
+                        <div class="text-xs font-semibold text-orange-700 mb-1">${route.sector}</div>
+                        <h1 class="text-xl font-extrabold text-stone-900 tracking-tight leading-tight mb-1">
+                            ${route.name}
+                        </h1>
+                        ${route.openers ? `<div class="text-[11px] font-medium text-stone-500 mb-2.5">Apritori / Chiodatura: <span class="text-stone-700 font-semibold">${route.openers}</span></div>` : ''}
+                        <p class="text-xs text-stone-600 leading-relaxed mb-4">
+                            ${route.summary}
+                        </p>
+
+                        <!-- Box Foto / Schizzo Originale del Documento (cliccabile per ingrandire) -->
+                        ${route.photoUrl ? `
+                            <div class="mb-4">
+                                <div
+                                    onclick="openPhotoLightbox('${route.photoUrl}', '${(route.photoCaption || route.name).replace(/'/g, "\\'")}')"
+                                    class="relative rounded-2xl overflow-hidden border border-stone-200 bg-stone-900 cursor-zoom-in group shadow-2xs"
+                                >
+                                    <img
+                                        src="${route.photoUrl}"
+                                        alt="${route.photoCaption || route.name}"
+                                        onerror="this.src='https://placehold.co/800x500/292524/fb923c?text=Inserisci+foto+qui+(images/...)'"
+                                        class="w-full h-44 object-cover group-hover:opacity-95 transition"
+                                    />
+                                    <span class="absolute bottom-2.5 right-2.5 bg-stone-950/85 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg border border-stone-700">
+                                        🔍 Tocca per ingrandire
+                                    </span>
+                                </div>
+                                ${route.photoCaption ? `
+                                    <p class="text-[11px] text-stone-500 mt-1.5 italic leading-snug">
+                                        ${route.photoCaption}
+                                    </p>
+                                ` : ''}
+                            </div>
+                        ` : ''}
+
+                        <!-- Griglia Proprietà -->
+                        <div class="bg-stone-50 rounded-2xl border border-stone-200/90 divide-y divide-stone-200/70 text-xs overflow-hidden">
+                            <div class="grid grid-cols-2 divide-x divide-stone-200/70">
+                                <div class="p-3">
+                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Range Difficoltà' : 'Difficoltà Max / Obbl.'}</div>
+                                    <div class="font-mono-code font-bold text-stone-900">
+                                        <span class="px-1.5 py-0.5 rounded border ${gradeClass}">${route.gradeMax}</span>
+                                        <span class="text-stone-600 ml-1">${isFalesia ? `(da ${route.gradeObbl})` : `(${route.gradeObbl} obbl.)`}</span>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Numero Vie' : 'Sviluppo e Tiri'}</div>
+                                    <div class="font-bold text-stone-900">${isFalesia ? route.length : `${route.length} • ${route.pitchesCount} tiri`}</div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 divide-x divide-stone-200/70">
+                                <div class="p-3">
+                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">Chiodatura</div>
+                                    <div class="font-semibold text-stone-800">${route.protectionType}</div>
+                                </div>
+                                <div class="p-3">
+                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">Esposizione</div>
+                                    <div class="font-semibold text-stone-800">${route.exposure}</div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 divide-x divide-stone-200/70">
+                                <div class="p-3">
+                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Periodo Consigliato' : 'Tempo Salita'}</div>
+                                    <div class="font-semibold text-stone-800">${route.climbTime}</div>
+                                </div>
+                                <div class="p-3">
+                                    <div class="text-[11px] text-stone-400 font-medium mb-0.5">${isFalesia ? 'Quota' : 'Tempo Discesa'}</div>
+                                    <div class="font-semibold text-stone-800">${route.descentTime}</div>
+                                </div>
+                            </div>
+
+                            <div class="p-3">
+                                <div class="text-[11px] text-stone-400 font-medium mb-0.5">Materiale e Note</div>
+                                <div class="font-medium text-stone-800">${route.gear}</div>
+                            </div>
+                        </div>
+
+                        <!-- Pulsante GPS / Accesso -->
+                        <button
+                            onclick="copyGpsCoords('${route.gpsCoords}')"
+                            class="mt-3 w-full py-2.5 px-3.5 bg-stone-900 hover:bg-stone-800 active:scale-[0.99] text-white rounded-xl text-xs font-semibold flex items-center justify-between transition"
+                        >
+                            <span class="flex items-center gap-2 shrink-0">
+                                <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span>Riferimento Accesso</span>
+                            </span>
+                            <span class="font-mono-code text-[10px] text-stone-300 bg-stone-800 px-2 py-0.5 rounded-md truncate max-w-[175px]">
+                                ${route.gpsCoords}
+                            </span>
+                        </button>
+                    </div>
+
+                    ${!isFalesia ? `
+                    <!-- Schizzo / Topo Vettoriale Interattivo (Solo Multipitch) -->
+                    <div class="px-4 pt-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">Schizzo Parete (Tocca le soste)</h2>
+                            <span class="text-[11px] text-orange-700 font-semibold">Interattivo</span>
+                        </div>
+
+                        <div class="bg-stone-900 rounded-2xl p-3 border border-stone-800 shadow-inner">
+                            <svg viewBox="0 0 260 235" class="w-full h-52 select-none">
+                                <defs>
+                                    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#1c1917" />
+                                        <stop offset="100%" stop-color="#292524" />
+                                    </linearGradient>
+                                    <linearGradient id="rockGrad" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#57534e" />
+                                        <stop offset="60%" stop-color="#44403c" />
+                                        <stop offset="100%" stop-color="#292524" />
+                                    </linearGradient>
+                                </defs>
+                                <rect width="260" height="235" rx="12" fill="url(#skyGrad)" />
+                                <polygon points="25,225 55,140 85,75 135,15 185,20 215,95 240,225" fill="url(#rockGrad)" stroke="#78716c" stroke-width="1.2" />
+                                <polyline points="95,180 125,130 140,85 160,25" fill="none" stroke="#292524" stroke-width="1.5" opacity="0.6" />
+                                <polyline points="170,190 165,120 180,60" fill="none" stroke="#78716c" stroke-width="1" opacity="0.35" />
+
+                                <polyline
+                                    points="${polylinePoints}"
+                                    fill="none"
+                                    stroke="#f97316"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-dasharray="5,3"
+                                />
+
+                                ${route.svgPath.map((pt, idx) => {
+                                    const isAttacco = idx === 0;
+                                    const isSelected = !isAttacco && state.expandedPitchIndex === pt.pitchIndex;
+                                    if (isAttacco) {
+                                        return `
+                                            <g>
+                                                <circle cx="${pt.x}" cy="${pt.y}" r="5" fill="#fafaf9" stroke="#ea580c" stroke-width="2" />
+                                                <text x="${pt.x - 18}" y="${pt.y + 14}" fill="#d6d3d1" font-size="9" font-weight="600">${pt.label}</text>
+                                            </g>
+                                        `;
+                                    }
+                                    return `
+                                        <g onclick="focusPitchFromSvg(${pt.pitchIndex})" class="cursor-pointer">
+                                            <circle
+                                                cx="${pt.x}"
+                                                cy="${pt.y}"
+                                                r="${isSelected ? '9' : '7'}"
+                                                fill="${isSelected ? '#ea580c' : '#1c1917'}"
+                                                stroke="${isSelected ? '#ffffff' : '#fb923c'}"
+                                                stroke-width="2"
+                                            />
+                                            <text
+                                                x="${pt.x + 11}"
+                                                y="${pt.y + 3}"
+                                                fill="${isSelected ? '#fdba74' : '#fafaf9'}"
+                                                font-size="10"
+                                                font-weight="700"
+                                            >${pt.label}</text>
+                                        </g>
+                                    `;
+                                }).join('')}
+                            </svg>
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <!-- Avvicinamento -->
+                    <div class="px-4 pt-5">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">1. Avvicinamento</h2>
+                        <div class="bg-white rounded-2xl p-3.5 border border-stone-200 text-xs text-stone-700 leading-relaxed">
+                            ${route.approach}
+                        </div>
+                    </div>
+
+                    ${!isFalesia ? `
+                    <!-- Relazione Tiro per Tiro (Multipitch) -->
+                    <div class="px-4 pt-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">2. Relazione Tiro per Tiro</h2>
+                            <span class="text-[11px] text-stone-400">Spunta i tiri saliti</span>
+                        </div>
+
+                        <div class="space-y-2">
+                            ${route.pitches.map((pitch, idx) => {
+                                const isExpanded = state.expandedPitchIndex === idx;
+                                const isPitchDone = !!state.checkedPitches[`${route.id}_${idx}`];
+                                const pGradeClass = getGradeBadgeColor(pitch.grade);
+
+                                return `
+                                    <div
+                                        id="pitch-card-${idx}"
+                                        class="bg-white rounded-2xl border transition overflow-hidden ${
+                                            isExpanded ? 'border-orange-400 shadow-xs' : 'border-stone-200'
+                                        }"
+                                    >
+                                        <div
+                                            onclick="togglePitchAccordion(${idx})"
+                                            class="p-3 flex items-center justify-between gap-2 cursor-pointer select-none ${
+                                                isPitchDone ? 'bg-emerald-50/40' : ''
+                                            }"
+                                        >
+                                            <div class="flex items-center gap-2.5">
+                                                <button
+                                                    onclick="togglePitchChecked('${route.id}', ${idx}, event)"
+                                                    title="Spunta tiro completato"
+                                                    class="w-5 h-5 rounded-md border flex items-center justify-center transition shrink-0 ${
+                                                        isPitchDone
+                                                            ? 'bg-emerald-600 border-emerald-600 text-white'
+                                                            : 'border-stone-300 bg-white hover:border-orange-500'
+                                                    }"
+                                                >
+                                                    ${isPitchDone ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>' : ''}
+                                                </button>
+
+                                                <span class="font-mono-code text-xs font-extrabold text-stone-900">${pitch.num}</span>
+                                                <span class="font-mono-code text-xs font-bold px-2 py-0.5 rounded border ${pGradeClass}">${pitch.grade}</span>
+                                                <span class="text-xs font-medium text-stone-500">${pitch.length} • ${pitch.bolts}</span>
+                                            </div>
+
+                                            <svg class="w-4 h-4 text-stone-400 transition-transform ${isExpanded ? 'rotate-180 text-orange-600' : ''}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+
+                                        ${isExpanded ? `
+                                            <div class="px-3.5 pb-3.5 pt-1 text-xs text-stone-700 leading-relaxed border-t border-stone-100 bg-stone-50/50">
+                                                ${pitch.desc}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                    ` : `
+                    <!-- Elenco Monotiri della Falesia -->
+                    <div class="px-4 pt-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500">2. Elenco Vie della Falesia</h2>
+                            <span class="text-[11px] text-stone-400">${route.cragRoutes.length} tiri</span>
+                        </div>
+
+                        ${route.cragRoutes.length === 0 ? `
+                            <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-xs text-rose-900">
+                                Area dismessa con divieto di accesso da parte della proprietà della cava.
+                            </div>
+                        ` : `
+                            <div class="bg-white rounded-2xl border border-stone-200 overflow-hidden divide-y divide-stone-100">
+                                ${route.cragRoutes.map((cr, idx) => `
+                                    <div class="px-3.5 py-2.5 flex items-center justify-between gap-2 text-xs">
+                                        <div>
+                                            ${cr.sectorTag ? `<span class="text-[10px] font-bold uppercase text-orange-700 block">${cr.sectorTag}</span>` : ''}
+                                            <span class="font-semibold text-stone-900">${idx + 1}. ${cr.name}</span>
+                                            ${cr.meters && cr.meters !== '-' ? `<span class="text-stone-400 ml-1">(${cr.meters})</span>` : ''}
+                                        </div>
+                                        <div class="flex items-center gap-2 shrink-0">
+                                            ${cr.stars ? `<span class="text-[11px] text-amber-500 font-bold tracking-tighter">${cr.stars}</span>` : ''}
+                                            <span class="font-mono-code font-bold px-2 py-0.5 rounded bg-stone-100 text-stone-800 border border-stone-200">
+                                                ${cr.grade}
+                                            </span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `}
+                    </div>
+                    `}
+
+                    <!-- Discesa -->
+                    <div class="px-4 pt-5">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">3. Discesa / Calata</h2>
+                        <div class="bg-amber-50/70 rounded-2xl p-3.5 border border-amber-200/80 text-xs text-stone-800 leading-relaxed">
+                            ${route.descent}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // LOGICA DI FILTRO, NAVIGAZIONE E AZIONI
+        // ==========================================
+        function getFilteredRoutes() {
+            return routesData.filter(route => {
+                if (state.selectedSectorId !== 'all' && route.sectorId !== state.selectedSectorId) {
+                    return false;
+                }
+
+                if (state.onlyCompleted) {
+                    return state.completedRoutes.includes(route.id);
+                }
+
+                if (state.searchQuery.trim() !== '') {
+                    const q = state.searchQuery.toLowerCase();
+                    const matchName = route.name.toLowerCase().includes(q);
+                    const matchSector = route.sector.toLowerCase().includes(q);
+                    const matchGrade = route.gradeMax.toLowerCase().includes(q) || route.gradeObbl.toLowerCase().includes(q);
+                    const matchCrag = route.cragRoutes && route.cragRoutes.some(c => c.name.toLowerCase().includes(q));
+                    if (!matchName && !matchSector && !matchGrade && !matchCrag) return false;
+                }
+
+                if (state.activeFilter === 'multipitch') {
+                    return route.type === 'multipitch';
+                }
+                if (state.activeFilter === 'falesia') {
+                    return route.type === 'falesia';
+                }
+                if (state.activeFilter === 'easy') {
+                    return route.difficultyLevel === 'facile';
+                }
+                if (state.activeFilter === 'trad') {
+                    return route.protectionCategory === 'trad';
+                }
+
+                return true;
+            });
+        }
+
+        function updateSearch(val) {
+            state.searchQuery = val;
+            const listContainer = document.getElementById('routes-list-wrapper');
+            if (listContainer) {
+                listContainer.innerHTML = generateRoutesCardsHTML();
+            }
+        }
+
+        function setFilter(filterKey) {
+            state.activeFilter = filterKey;
+            state.onlyCompleted = false;
+            render();
+        }
+
+        function setSectorFilter(sectorId) {
+            state.selectedSectorId = sectorId;
+            state.onlyCompleted = false;
+            render();
+        }
+
+        function openSectorRoutes(sectorId) {
+            state.selectedSectorId = sectorId;
+            state.onlyCompleted = false;
+            state.view = 'routes';
+            render();
+        }
+
+        function openIntroChapter(chapterId) {
+            state.selectedIntroId = chapterId;
+            state.view = 'intro';
+            render();
+        }
+
+        function toggleOnlyCompleted() {
+            state.onlyCompleted = !state.onlyCompleted;
+            render();
+        }
+
+        function openRouteDetail(routeId) {
+            state.selectedRouteId = routeId;
+            state.view = 'detail';
+            state.expandedPitchIndex = 0;
+            render();
+        }
+
+        function navigateTo(viewName) {
+            state.view = viewName;
+            if (viewName === 'intro') {
+                state.selectedIntroId = null;
+            }
+            if (viewName !== 'detail') {
+                state.selectedRouteId = null;
+            }
+            render();
+        }
+
+        function toggleRouteCompleted(routeId) {
+            const idx = state.completedRoutes.indexOf(routeId);
+            if (idx > -1) {
+                state.completedRoutes.splice(idx, 1);
+                showToast('Via rimossa dalle salite completate');
+            } else {
+                state.completedRoutes.push(routeId);
+                showToast('Complimenti! Via segnata come salita');
+            }
+            saveState();
+            render();
+        }
+
+        function togglePitchAccordion(idx) {
+            state.expandedPitchIndex = state.expandedPitchIndex === idx ? -1 : idx;
+            render();
+        }
+
+        function focusPitchFromSvg(pitchIdx) {
+            state.expandedPitchIndex = pitchIdx;
+            render();
+            setTimeout(() => {
+                const el = document.getElementById(`pitch-card-${pitchIdx}`);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 60);
+        }
+
+        function togglePitchChecked(routeId, pitchIdx, event) {
+            event.stopPropagation();
+            const key = `${routeId}_${pitchIdx}`;
+            if (state.checkedPitches[key]) {
+                delete state.checkedPitches[key];
+            } else {
+                state.checkedPitches[key] = true;
+            }
+            saveState();
+            render();
+        }
+
+        function copyGpsCoords(coords) {
+            const tempInput = document.createElement('input');
+            tempInput.value = coords;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast(`Coordinate GPS copiate: ${coords}`);
+        }
+
+        function openPhotoLightbox(imgUrl, caption) {
+            const box = document.getElementById('photo-lightbox');
+            const img = document.getElementById('lightbox-img');
+            const cap = document.getElementById('lightbox-caption');
+            if (!box || !img || !cap) return;
+            img.src = imgUrl;
+            cap.textContent = caption || '';
+            box.classList.remove('hidden');
+        }
+
+        function closePhotoLightbox() {
+            const box = document.getElementById('photo-lightbox');
+            if (box) box.classList.add('hidden');
+        }
+
+        function updateBottomNavUI() {
+            const navHome = document.getElementById('nav-home');
+            const navIntro = document.getElementById('nav-intro');
+            const navRoutes = document.getElementById('nav-routes');
+
+            const activeCls = 'flex flex-col items-center gap-0.5 text-orange-600 font-semibold text-xs px-3 py-1.5 rounded-xl transition';
+            const inactiveCls = 'flex flex-col items-center gap-0.5 text-stone-500 hover:text-stone-800 font-medium text-xs px-3 py-1.5 rounded-xl transition';
+
+            if (navHome) navHome.className = state.view === 'home' ? activeCls : inactiveCls;
+            if (navIntro) navIntro.className = state.view === 'intro' ? activeCls : inactiveCls;
+            if (navRoutes) navRoutes.className = (state.view === 'routes' || state.view === 'detail') ? activeCls : inactiveCls;
+        }
+
+        // ==========================================
+        // RENDER PRINCIPALE
+        // ==========================================
+        function render() {
+            const container = document.getElementById('app-scroll-container');
+            if (!container) return;
+
+            if (state.view === 'home') {
+                container.innerHTML = renderHomeScreen();
+            } else if (state.view === 'intro') {
+                container.innerHTML = renderIntroScreen();
+            } else if (state.view === 'detail') {
+                container.innerHTML = renderDetailView();
+            } else {
+                container.innerHTML = renderRoutesListView();
+            }
+
+            updateBottomNavUI();
+            container.scrollTop = 0;
+        }
+
+        // ==========================================
+        // INIZIALIZZAZIONE
+        // ==========================================
+        window.onload = function() {
+            updateCompletedCounter();
+            render();
+        };
+    </script>
+</body>
+</html>
