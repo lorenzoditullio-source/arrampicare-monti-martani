@@ -262,1148 +262,2710 @@
         ];
 
         const introChapters = [
+    {
+        "id": "premessa",
+        "icon": "📖",
+        "title": "1. Premessa, Licenza e Crediti",
+        "subtitle": "Appunti di arrampicata v. 2.1 — Pubblico Dominio CC0",
+        "content": [
+            "Questo opuscolo nasce dall'esigenza di raccogliere e divulgare le informazioni aggiornate sulle opportunità di arrampicata sportiva e alpinistica offerte dai Monti Martani, a nord di Terni.",
+            "La sezione meridionale dei Martani, compresa tra Rocca San Zenone e Cesi, presenta sul versante occidentale numerose pareti rocciose ideali per l'arrampicata. La roccia, un calcare grigio compatto e spesso lavorato a \"goccia\", garantisce un'esperienza di scalata tecnica e divertente. L'esposizione prevalentemente soleggiata rende inoltre l'arrampicata piacevole anche durante i mesi invernali.",
+            "Un ringraziamento va a tutti coloro che hanno contribuito con materiale fotografico e informazioni, in particolare Bruno Spina, Pino Calandrella, Stefano Cudini, Carlo Capuano, Daniele Ceccarini, Marco Principi, Andrea Leonardi e Alessandro Pasquantonio.",
+            "Licenza & Contatti: Quest'opera è soggetta alla licenza Creative Commons CC0 pubblico dominio. L'arrampicata è uno sport pericoloso e potenzialmente mortale; l'autore non si assume responsabilità per eventuali inesattezze. Per suggerimenti e aggiornamenti: lorenzoditullio@gmail.com."
+        ],
+        "images": [
             {
-                id: 'premessa',
-                icon: '📖',
-                title: '1. Premessa, Licenza e Crediti',
-                subtitle: 'Appunti di arrampicata v. 2.1 — Pubblico Dominio CC0',
-                content: [
-                    'Questo opuscolo nasce dall\'esigenza di raccogliere e divulgare le informazioni aggiornate sulle opportunità di arrampicata sportiva e alpinistica offerte dai Monti Martani, a nord di Terni.',
-                    'La sezione meridionale dei Martani, compresa tra Rocca San Zenone e Cesi, presenta sul versante occidentale numerose pareti rocciose ideali per l\'arrampicata. La roccia, un calcare grigio compatto e spesso lavorato a "goccia", garantisce un\'esperienza di scalata tecnica e divertente. L\'esposizione prevalentemente soleggiata rende inoltre l\'arrampicata piacevole anche durante i mesi invernali.',
-                    'Un ringraziamento va a tutti coloro che hanno contribuito con materiale fotografico e informazioni, in particolare Bruno Spina, Pino Calandrella, Stefano Cudini, Carlo Capuano, Daniele Ceccarini, Marco Principi, Andrea Leonardi e Alessandro Pasquantonio.',
-                    'Licenza & Contatti: Quest\'opera è soggetta alla licenza Creative Commons CC0 pubblico dominio. L\'arrampicata è uno sport pericoloso e potenzialmente mortale; l\'autore non si assume responsabilità per eventuali inesattezze. Per suggerimenti e aggiornamenti: lorenzoditullio@gmail.com.'
-                ],
-                images: [{ url: 'images/image16.png', caption: 'Intestazione originale della guida Arrampicare nei Monti Martani' }, { url: 'images/image11.png', caption: 'Licenza Creative Commons CC0 — Pubblico Dominio' }]
-            },
-            {
-                id: 'monti-martani',
-                icon: '⛰️',
-                title: '1.1 Monti Martani — Geografia e Roccia',
-                subtitle: 'Il massiccio calcareo tra Conca Ternana, Tevere e Valle Umbra',
-                content: [
-                    'La catena dei Monti Martani si sviluppa con una direttrice prevalente nord-sud per circa 45 chilometri nelle province di Terni e Perugia. È delimitata a est dalla Valle Umbra e dalla ValSerra, a ovest dalla valle del fiume Tevere e del torrente Naia, e a sud dalla Conca Ternana.',
-                    'Nella porzione meridionale, cime come il Monte di Torre Maggiore (1121 m), la Penna della Rocca e il Colle Zannuto espongono speroni e placche calcaree ben esposte al sole, ideali sia per l\'arrampicata sportiva monotiro che per vie multipitch.',
-                    'L\'origine calcarea rende l\'intero comprensorio un importante distretto carsico, costellato da grotte e inghiottitoi esplorati dagli speleologi.'
-                ],
-                images: [{ url: 'images/image28.png', caption: 'Inquadramento geografico e confini naturali dei Monti Martani' }, { url: 'images/image21.jpg', caption: 'Profilo della Penna della Rocca (707 m) dalla conca ternana' }]
-            },
-            {
-                id: 'storia',
-                icon: '⛏️',
-                title: '1.2 Cenni di Storia Alpinistica',
-                subtitle: 'Dai pionieri del CAI Terni alle vie plaisir moderne',
-                content: [
-                    'L\'esplorazione alpinistica dei Monti Martani ha avuto inizio sulla parete est della Penna della Rocca, oggi nota come "Austeri" in memoria di Orlando Austeri che vi perse la vita nel 1926.',
-                    'Dagli anni \'60 gli scalatori del CAI di Terni tracciarono i primi itinerari, seguiti negli anni \'70 e \'80 da Silvano Lepri e Paolo Nobili con vie classiche fino al VI grado su tutte le pareti del gruppo.',
-                    'Negli anni 2000 l\'attività è proseguita con Stefano Zavka, Fausto Sanna, Carlo e Gabriele Capuano. A partire dal 2015, in collaborazione con Carlo Capuano e l\'aiuto di diversi amici, sono stati aperti nuovi itinerari di tipo "plaisir", privilegiando roccia solida e chiodatura sistematica a fix.'
-                ],
-                images: [{ url: 'images/image14.jpg', caption: 'Carlo Capuano in apertura sull\'ultimo tiro della Tommaso Flavio' }]
-            },
-            {
-                id: 'curiosita',
-                icon: '🦅',
-                title: '1.3 Curiosità, Aneddoti e Tutela',
-                subtitle: 'Lo scoiattolo di Monte Eolo, il falchetto e il chiodo fantasma',
-                content: [
-                    'Esercitazioni di volo (Monte Eolo): Un giovane alpinista impegnato sulle rocce di Monte Eolo si vide precipitare in testa un oggetto non identificato: era un piccolo scoiattolo ben appigliato ai suoi capelli alle prese con una planata inattesa!',
-                    'Uno speciale compagno di scalata (Colle Zannuto): Preghiamo tutti i climber di evitare inutili schiamazzi che potrebbero disturbare il magnifico falchetto che nidifica sulle rocce sommitali dell\'Antro del Drago.',
-                    'Sottosopra (Colle Zannuto): In corrispondenza della cava di Colle Zannuto è stata rinvenuta un\'interessante grotta dello sviluppo di 300 metri, a conferma della natura carsica del territorio.',
-                    'Il chiodo fantasma (Penna della Rocca): Sul settore destro della parete, il forte scalatore ternano Bocci superò uno strapiombo giallo ritenuto inviolato trovando però un vecchio chiodo artigianale oltre il passaggio. Anni dopo un ripetitore trovò la fessura vuota con un ciuffo di fiorellini rupestri: l\'enigma dell\'autore resta tuttora avvolto nel mistero.'
-                ],
-                images: [{ url: 'images/image25.jpg', caption: 'Il grande anello di ferro, testimonianza delle prime vie degli anni \'80' }]
+                "url": "images/image16.png",
+                "caption": "Intestazione originale della guida Arrampicare nei Monti Martani"
             }
-        ];
+        ]
+    },
+    {
+        "id": "monti-martani",
+        "icon": "⛰️",
+        "title": "1.1 Monti Martani — Geografia e Roccia",
+        "subtitle": "Il massiccio calcareo tra Conca Ternana, Tevere e Valle Umbra",
+        "content": [
+            "La catena dei Monti Martani si sviluppa con una direttrice prevalente nord-sud per circa 45 chilometri nelle province di Terni e Perugia. È delimitata a est dalla Valle Umbra e dalla ValSerra, a ovest dalla valle del fiume Tevere e del torrente Naia, e a sud dalla Conca Ternana.",
+            "Nella porzione meridionale, cime come il Monte di Torre Maggiore (1121 m), la Penna della Rocca e il Colle Zannuto espongono speroni e placche calcaree ben esposte al sole, ideali sia per l'arrampicata sportiva monotiro che per vie multipitch.",
+            "L'origine calcarea rende l'intero comprensorio un importante distretto carsico, costellato da grotte e inghiottitoi esplorati dagli speleologi."
+        ],
+        "images": [
+            {
+                "url": "images/image28.png",
+                "caption": "Inquadramento geografico e confini naturali dei Monti Martani"
+            },
+            {
+                "url": "images/image21.jpg",
+                "caption": "Profilo della Penna della Rocca (707 m) dalla conca ternana"
+            }
+        ]
+    },
+    {
+        "id": "storia",
+        "icon": "⛏️",
+        "title": "1.2 Cenni di Storia Alpinistica",
+        "subtitle": "Dai pionieri del CAI Terni alle vie plaisir moderne",
+        "content": [
+            "L'esplorazione alpinistica dei Monti Martani ha avuto inizio sulla parete est della Penna della Rocca, oggi nota come \"Austeri\" in memoria di Orlando Austeri che vi perse la vita nel 1926.",
+            "Dagli anni '60 gli scalatori del CAI di Terni tracciarono i primi itinerari, seguiti negli anni '70 e '80 da Silvano Lepri e Paolo Nobili con vie classiche fino al VI grado su tutte le pareti del gruppo.",
+            "Negli anni 2000 l'attività è proseguita con Stefano Zavka, Fausto Sanna, Carlo e Gabriele Capuano. A partire dal 2015, in collaborazione con Carlo Capuano e l'aiuto di diversi amici, sono stati aperti nuovi itinerari di tipo \"plaisir\", privilegiando roccia solida e chiodatura sistematica a fix."
+        ],
+        "images": [
+            {
+                "url": "images/image14.jpg",
+                "caption": "Carlo Capuano in apertura sull'ultimo tiro della Tommaso Flavio"
+            }
+        ]
+    },
+    {
+        "id": "curiosita",
+        "icon": "🦅",
+        "title": "1.3 Curiosità, Aneddoti e Tutela",
+        "subtitle": "Lo scoiattolo di Monte Eolo, il falchetto e il chiodo fantasma",
+        "content": [
+            "Esercitazioni di volo (Monte Eolo): Un giovane alpinista impegnato sulle rocce di Monte Eolo si vide precipitare in testa un oggetto non identificato: era un piccolo scoiattolo ben appigliato ai suoi capelli alle prese con una planata inattesa!",
+            "Uno speciale compagno di scalata (Colle Zannuto): Preghiamo tutti i climber di evitare inutili schiamazzi che potrebbero disturbare il magnifico falchetto che nidifica sulle rocce sommitali dell'Antro del Drago.",
+            "Sottosopra (Colle Zannuto): In corrispondenza della cava di Colle Zannuto è stata rinvenuta un'interessante grotta dello sviluppo di 300 metri, a conferma della natura carsica del territorio.",
+            "Il chiodo fantasma (Penna della Rocca): Sul settore destro della parete, il forte scalatore ternano Bocci superò uno strapiombo giallo ritenuto inviolato trovando però un vecchio chiodo artigianale oltre il passaggio. Anni dopo un ripetitore trovò la fessura vuota con un ciuffo di fiorellini rupestri: l'enigma dell'autore resta tuttora avvolto nel mistero."
+        ],
+        "images": [
+            {
+                "url": "images/image25.jpg",
+                "caption": "Il grande anello di ferro, testimonianza delle prime vie degli anni '80"
+            }
+        ]
+    }
+];
 
         // ==========================================
         // 3. DATABASE COMPLETO VIE E FALESIE (25 SCHEDE)
         // ==========================================
         const routesData = [
-            // --- 2. PENNA DELLA ROCCA ---
+    {
+        "id": "cresta-persichetti",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.1.1 Penna della Rocca — La Rocca",
+        "name": "Cresta di Rocca Persichetti (Via Normale)",
+        "openers": "Itinerario classico di cresta ovest",
+        "gradeMax": "II",
+        "gradeObbl": "F+",
+        "difficultyLevel": "facile",
+        "length": "ca. 200 m",
+        "pitchesCount": 1,
+        "protectionType": "Non attrezzata (terreno alpinistico)",
+        "protectionCategory": "trad",
+        "exposure": "Ovest",
+        "climbTime": "45 min",
+        "descentTime": "20 min a piedi",
+        "gear": "Cordino, eventuali protezioni veloci, casco",
+        "gpsCoords": "42.6000, 12.6221 (Santuario Madonna dell’Ulivo)",
+        "photoUrl": "images/image21.jpg",
+        "photoCaption": "Profilo della Penna della Rocca (707 m) vista dalla pianura",
+        "gallery": [
             {
-                id: 'cresta-persichetti',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.1.1 Penna della Rocca — La Rocca',
-                name: 'Cresta di Rocca Persichetti (Via Normale)',
-                openers: 'Itinerario classico di cresta ovest',
-                gradeMax: 'II',
-                gradeObbl: 'F+',
-                difficultyLevel: 'facile',
-                length: 'ca. 200 m',
-                pitchesCount: 1,
-                protectionType: 'Non attrezzata (terreno alpinistico)',
-                protectionCategory: 'trad',
-                exposure: 'Ovest',
-                climbTime: '45 min',
-                descentTime: '20 min a piedi',
-                gear: 'Cordino, eventuali protezioni veloci, casco',
-                gpsCoords: '42.6000, 12.6221 (Santuario Madonna dell’Ulivo)',
-                photoUrl: 'images/image21.jpg',
-                photoCaption: 'Profilo della Penna della Rocca (707 m) vista dalla pianura',
-                gallery: [{ url: 'images/image13.jpg', caption: 'Mappa di accesso alla Penna della Rocca dal Santuario Madonna dell\'Ulivo' }],
-                summary: 'Risale integralmente la cresta ovest della Rocca fino alla vetta. Presenta brevi tratti di arrampicata e alcuni passaggi esposti.',
-                approach: 'Dalla strada pedonale che conduce al Santuario della Madonna dell\'Ulivo si devia a sinistra seguendo una traccia segnalata con bolli rossi, superando un muretto a secco fino al filo di cresta.',
-                descent: 'Dalla vetta attraversare la Rocca e scendere nel canalone di destra seguendo tracce di sentiero fino alla base della falesia e poi al Santuario.',
-                svgPath: [
-                    { x: 40, y: 205, label: 'Attacco' },
-                    { x: 185, y: 40, label: 'Vetta Rocca', pitchIndex: 0 }
-                ],
-                pitches: [
-                    { num: 'Cresta', grade: 'F+ (II)', length: '200 m', bolts: 'Non attrezzata', desc: 'Si prosegue sul filo della cresta ovest superando successivi saltini e paretine fino alla cima (45 minuti).' }
-                ]
-            },
-            {
-                id: 'assalto-rocca',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.1.2 Penna della Rocca — La Rocca',
-                name: 'Assalto alla Rocca',
-                openers: 'Silvano Lepri e Conti (1979)',
-                gradeMax: 'IV+',
-                gradeObbl: 'AD+',
-                difficultyLevel: 'facile',
-                length: '90 m',
-                pitchesCount: 2,
-                protectionType: 'L1 a fix + terreno alpinistico',
-                protectionCategory: 'trad',
-                exposure: 'Sud-Ovest',
-                climbTime: '1h 15m',
-                descentTime: '15 min a piedi',
-                gear: 'NDA (Normale Dotazione Alpinistica), cordini per alberi',
-                gpsCoords: '42.6000, 12.6221 (Santuario Madonna dell’Ulivo)',
-                summary: 'Via storica ottima per chi inizia ad arrampicare da capocordata su terreno alpinistico con possibilità di varianti di difficoltà superiore.',
-                approach: 'Dal Santuario Madonna dell\'Ulivo salire a sinistra nel sottobosco dopo il muretto, proseguendo sul ghiaione verso sinistra fino al margine sinistro della falesia della Rocca (15 min).',
-                descent: 'Entrare nella Rocca e imboccare il canalone di destra seguendo tracce di sentiero fino alla base della parete (circa 15 minuti).',
-                svgPath: [
-                    { x: 65, y: 205, label: 'Attacco' },
-                    { x: 95, y: 125, label: 'S1', pitchIndex: 0 },
-                    { x: 135, y: 45, label: 'S2', pitchIndex: 1 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: 'III', length: '40 m', bolts: 'Fix', desc: 'Salire dritti per placche su roccia molto buona fino a un terrazzino. Deviare leggermente a destra su rocce più appoggiate e poi verso sinistra, superando dei gradoni fino a un ampio terrazzo erboso. Sosta su alberello.' },
-                    { num: 'L2', grade: 'IV+', length: '30 m', bolts: 'Alpinistica', desc: 'Superare la paretina che si trova di fronte leggermente a destra e proseguire per ampi terrazzi fino alla Rocca (variante diretta con passi di V).' }
-                ]
-            },
-            {
-                id: 'innominata',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.1.3 Penna della Rocca — La Rocca',
-                name: 'Innominata',
-                openers: 'Carlo Catalano (Anni \'80)',
-                gradeMax: '5c',
-                gradeObbl: 'III+',
-                difficultyLevel: 'facile',
-                length: '90 m',
-                pitchesCount: 2,
-                protectionType: 'Fix sullo spigolo + NDA',
-                protectionCategory: 'trad',
-                exposure: 'Sud-Ovest',
-                climbTime: '1h 15m',
-                descentTime: '15 min a piedi',
-                gear: 'NDA (Normale Dotazione Alpinistica)',
-                gpsCoords: '42.6000, 12.6221 (Santuario Madonna dell’Ulivo)',
-                summary: 'Attacca dallo spigolo destro della falesia della Rocca e prosegue su placche appoggiate fino alla cima.',
-                approach: 'Come per la Falesia della Rocca (15 minuti dal Santuario Madonna dell\'Ulivo), portandosi sullo spigolo destro.',
-                descent: 'Dalla cima della Rocca scendere lungo il canalone di destra fino alla base.',
-                svgPath: [
-                    { x: 165, y: 205, label: 'Attacco' },
-                    { x: 160, y: 120, label: 'S1', pitchIndex: 0 },
-                    { x: 145, y: 45, label: 'S2', pitchIndex: 1 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '5c', length: '35 m', bolts: 'Fix', desc: 'Salire lo spigolo destro della falesia (primo tiro attrezzato).' },
-                    { num: 'L2', grade: 'III+', length: '55 m', bolts: 'NDA', desc: 'Proseguire su placche appoggiate fino alla cima della Rocca.' }
-                ]
-            },
-            {
-                id: 'falesia-rocca',
-                type: 'falesia',
-                sectorId: 'penna-rocca',
-                sector: '2.1.4 Penna della Rocca — Falesia',
-                name: 'Falesia della Rocca (12 lunghezze)',
-                openers: 'Valorizzata da Alessandro Quadriglia',
-                gradeMax: '6b+',
-                gradeObbl: '5a',
-                difficultyLevel: 'facile',
-                length: '11 vie (12 tiri)',
-                pitchesCount: 12,
-                protectionType: 'Fix acciaio inox',
-                protectionCategory: 'sport',
-                exposure: 'Sud-Est',
-                climbTime: 'Primavera - Autunno',
-                descentTime: '400 m s.l.m.',
-                gear: 'Corda singola, 10-12 rinvii',
-                gpsCoords: '42.6000, 12.6221 (Santuario Madonna dell’Ulivo)',
-                gallery: [{ url: 'images/image13.jpg', caption: 'Mappa accesso alla Penna della Rocca' }],
-                photoUrl: 'images/image3.jpg',
-                photoCaption: 'La Rocca: panoramica delle vie e mappa accesso dal Santuario Madonna dell’Ulivo',
-                summary: 'Falesia situata sotto la rocca diruta che domina la conca ternana, riattrezzata in ottica sportiva con ottima chiodatura a fix inox.',
-                approach: 'Dal Santuario Madonna dell\'Ulivo salire a sinistra nel sottobosco dopo il muretto e seguire il ghiaione verso sinistra fino alla base (15 min).',
-                descent: 'Calata sportiva in moulinette dagli anelli di sosta.',
-                cragRoutes: [
-                    { name: 'Cactus', grade: '6a', meters: '-', stars: '+++' },
-                    { name: 'Assalto alla rocca', grade: '5c', meters: '-', stars: '+++' },
-                    { name: 'Olio bollente', grade: '6a+', meters: '-', stars: '+++' },
-                    { name: 'Parla porco cane', grade: '6b', meters: '-', stars: '++++' },
-                    { name: 'Giulia', grade: '6a+', meters: '-', stars: '+++' },
-                    { name: 'Mitra', grade: '5c', meters: '-', stars: '+++' },
-                    { name: 'Non sarà un’avventura', grade: '6b', meters: '-', stars: '++++' },
-                    { name: 'Clessidre senza tempo', grade: '6a+', meters: '-', stars: '++++' },
-                    { name: 'Zazzà', grade: '6b+', meters: '-', stars: '++++' },
-                    { name: 'Viaggio in prima classe', grade: '6b+', meters: '-', stars: '++++' },
-                    { name: 'Lo spigolo L1', grade: '5a', meters: '-', stars: '+++' },
-                    { name: 'Lo spigolo L2', grade: '5c', meters: '-', stars: '+++' }
-                ]
-            },
-            {
-                id: 'ali-angelo',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.2.1 Penna della Rocca — Parete Sud-Ovest',
-                name: 'Le Ali dell’Angelo (Itinerario 4)',
-                openers: 'Lorenzo Di Tullio e Carlo Capuano (2016, restyling 2018)',
-                gradeMax: '6a',
-                gradeObbl: '5b',
-                difficultyLevel: 'facile',
-                length: '100 m',
-                pitchesCount: 3,
-                protectionType: 'Fix + qualche chiodo (S1)',
-                protectionCategory: 'sport',
-                exposure: 'Sud-Ovest',
-                climbTime: '1h 45m',
-                descentTime: '20 min (doppie)',
-                gear: '14 rinvii, mezze corde o corda da 60m',
-                gpsCoords: '42.6008, 12.6273 (Parete Sud-Ovest)',
-                gallery: [{ url: 'images/image10.jpg', caption: 'Secondo tiro de Le Ali dell\'Angelo — foto di Pino Calandrella' }],
-                photoUrl: 'images/image5.jpg',
-                photoCaption: 'Penna della Rocca parete sud-ovest (it. 4) e secondo tiro delle Ali dell’Angelo — foto di Pino Calandrella',
-                summary: 'Sale il netto diedro obliquo che incide lo scudo della parete sud-ovest. ATTENZIONE: non seguire i fix color oro a destra di L1 (roccia friabile).',
-                approach: 'Dal Santuario Madonna dell\'Ulivo salire a sinistra nel sottobosco dopo il muretto, salire il ghiaione verso sinistra, costeggiare il bosco e deviare a destra verso le pareti (15 min).',
-                descent: 'In doppia lungo la via (con una doppia da 60 m dalla terza sosta si arriva direttamente a terra).',
-                svgPath: [
-                    { x: 75, y: 205, label: 'Attacco (Chiodo)' },
-                    { x: 95, y: 150, label: 'S1', pitchIndex: 0 },
-                    { x: 115, y: 95, label: 'S2', pitchIndex: 1 },
-                    { x: 130, y: 40, label: 'S3', pitchIndex: 2 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '5c', length: '40 m', bolts: 'Chiodo + Fix', desc: 'Attacco con chiodo come prima protezione; salire la placca a sinistra, aggirare lo spigolo a destra e traversare fino al diedro risalendolo fino alla sosta. Non seguire i fix oro a destra.' },
-                    { num: 'L2', grade: '6a', length: '30 m', bolts: 'Fix', desc: 'Proseguire lungo il diedro accennato, deviare leggermente a destra per uscire dallo strapiombo e continuare su placche appoggiate fino in sosta.' },
-                    { num: 'L3', grade: '5a', length: '30 m', bolts: 'Fix', desc: 'Proseguire dritti per placche appoggiate fino a un diedrino al termine del quale si trova la sosta su una comoda cengia.' }
-                ]
-            },
-            {
-                id: 'tommaso-flavio',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.2.2 Penna della Rocca — Parete Sud-Ovest',
-                name: 'Tommaso Flavio (Itinerario 5)',
-                openers: 'Carlo Capuano, Lorenzo Di Tullio e altri (2015)',
-                gradeMax: '6b',
-                gradeObbl: '5c',
-                difficultyLevel: 'medio',
-                length: '105 m',
-                pitchesCount: 4,
-                protectionType: 'Fix + qualche chiodo (S1)',
-                protectionCategory: 'sport',
-                exposure: 'Sud-Ovest',
-                climbTime: '2h 00m',
-                descentTime: '25 min (doppie)',
-                gear: '14 rinvii, due corde da 60m',
-                gpsCoords: '42.6008, 12.6273 (Parete Sud-Ovest)',
-                gallery: [{ url: 'images/image14.jpg', caption: 'Carlo Capuano in apertura sull\'ultimo tiro della Tommaso Flavio' }],
-                photoUrl: 'images/image5.jpg',
-                photoCaption: 'Penna della Rocca parete sud-ovest (itinerario 5) e Carlo Capuano in apertura sull’ultimo tiro',
-                summary: 'Supera le placche compatte e i piccoli tetti della porzione centrale della parete sud-ovest con bella arrampicata su roccia buona.',
-                approach: 'Come per Le Ali dell\'Angelo (15 minuti dal Santuario Madonna dell\'Ulivo), nella porzione centrale della parete sud-ovest.',
-                descent: 'In corda doppia lungo la via (soste attrezzate con anello).',
-                svgPath: [
-                    { x: 105, y: 205, label: 'Attacco' },
-                    { x: 125, y: 165, label: 'S1', pitchIndex: 0 },
-                    { x: 145, y: 125, label: 'S2', pitchIndex: 1 },
-                    { x: 135, y: 80, label: 'S3', pitchIndex: 2 },
-                    { x: 150, y: 38, label: 'S4', pitchIndex: 3 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '6a', length: '15 m', bolts: 'Fix', desc: 'Attacco su piccola rampa obliqua verso destra, superare lo spigolo accennato e proseguire in placca fino a una fessura che porta al terrazzo di sosta (variante 6a a sinistra).' },
-                    { num: 'L2', grade: '6b', length: '20 m', bolts: 'Fix', desc: 'Proseguire lungo la rampa verso destra, poi per un piccolo diedro strapiombante fino a superare il tetto sopra il quale si trova la sosta.' },
-                    { num: 'L3', grade: '5b', length: '40 m', bolts: 'Fix', desc: 'Salire verticalmente e poi deviare a sinistra per piccoli salti più facili.' },
-                    { num: 'L4', grade: '5c', length: '30 m', bolts: 'Fix', desc: 'Salire la placca sopra la sosta, deviare verso destra e poi dritti per un diedro.' }
-                ]
-            },
-            {
-                id: 'zagara-ernesto',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.2.3 Penna della Rocca — Parete Sud-Ovest',
-                name: 'La Zagara di Ernesto',
-                openers: 'A. Pasquantonio, M. Principi, A. Leonardi e altri (2025)',
-                gradeMax: '6b+',
-                gradeObbl: '6a',
-                difficultyLevel: 'medio',
-                length: '100 m',
-                pitchesCount: 3,
-                protectionType: 'Interamente attrezzata a fix (S1)',
-                protectionCategory: 'sport',
-                exposure: 'Sud-Ovest',
-                climbTime: '2h 00m',
-                descentTime: '20 min (doppie)',
-                gear: '14 rinvii',
-                gpsCoords: '42.6008, 12.6273 (A destra di Tommaso Flavio)',
-                summary: 'Recente itinerario sportivo aperto nel 2025 immediatamente a destra della Tommaso Flavio, caratterizzato da un lungo traverso e una pancia tecnica.',
-                approach: 'Stesso avvicinamento della parete sud-ovest (15 min dal Santuario Madonna dell\'Ulivo), attacco subito a destra di Tommaso Flavio.',
-                descent: 'In corda doppia lungo la via.',
-                svgPath: [
-                    { x: 120, y: 205, label: 'Attacco' },
-                    { x: 165, y: 165, label: 'S1', pitchIndex: 0 },
-                    { x: 175, y: 105, label: 'S2', pitchIndex: 1 },
-                    { x: 170, y: 45, label: 'S3', pitchIndex: 2 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '5c+', length: '15 m', bolts: 'Fix', desc: 'Lungo traverso verso il lato destro fino alla prima sosta.' },
-                    { num: 'L2', grade: '6b+', length: '45 m', bolts: 'Fix', desc: 'Prosegue su placca compatta e verticale per poi superare una pancia fino alla sosta.' },
-                    { num: 'L3', grade: '6a', length: '40 m', bolts: 'Fix', desc: 'Ultimo tiro tecnico su calcare grigio fino alla sosta finale.' }
-                ]
-            },
-            {
-                id: 'ravanata-finanziere',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.2.4 Penna della Rocca — Parete Sud-Ovest',
-                name: 'Ravanata del Finanziere (Itinerario 6)',
-                openers: 'Lorenzo Di Tullio e Carlo Capuano (2018)',
-                gradeMax: '6a+',
-                gradeObbl: '5c',
-                difficultyLevel: 'facile',
-                length: '200 m',
-                pitchesCount: 8,
-                protectionType: 'Fix sui primi 2 tiri, poi alpinistica (S1/R1)',
-                protectionCategory: 'trad',
-                exposure: 'Sud-Ovest',
-                climbTime: '3h 30m',
-                descentTime: '40 min',
-                gear: 'NDA (friend/cordini per clessidre e alberi), 12 rinvii',
-                gpsCoords: '42.6008, 12.6273 (Sperone tra SO e Austeri)',
-                gallery: [{ url: 'images/image5.jpg', caption: 'Tracciato (Itinerario 6) sulla panoramica Sud-Ovest' }],
-                photoUrl: 'images/image24.jpg',
-                photoCaption: 'Itinerario 6 sulla panoramica Sud-Ovest e primo tiro della Ravanata del Finanziere — foto di Pino Calandrella',
-                summary: 'La via più lunga della parete: primi due tiri sportivi a fix e parte alta d\'avventura fino in vetta alla Penna della Rocca.',
-                approach: 'Come per la parete sud-ovest, poco a destra della Tommaso Flavio prima dello sperone che divide dalla parete Austeri.',
-                descent: 'Possibile calata di 50 m da S2, doppia da S5 fino al terrazzo delle doppie di Austeri, oppure proseguire fino in cima scendendo per la cresta verso la forcella con la Rocca.',
-                svgPath: [
-                    { x: 140, y: 210, label: 'Attacco' },
-                    { x: 155, y: 185, label: 'S1', pitchIndex: 0 },
-                    { x: 165, y: 160, label: 'S2', pitchIndex: 1 },
-                    { x: 160, y: 135, label: 'S3', pitchIndex: 2 },
-                    { x: 155, y: 110, label: 'S4', pitchIndex: 3 },
-                    { x: 165, y: 85, label: 'S5', pitchIndex: 4 },
-                    { x: 155, y: 60, label: 'S6', pitchIndex: 5 },
-                    { x: 145, y: 38, label: 'S7', pitchIndex: 6 },
-                    { x: 140, y: 18, label: 'Cima', pitchIndex: 7 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '6a+', length: '30 m', bolts: 'Fix', desc: 'Placca articolata piegando leggermente a destra verso una zona di roccia gialla, poi dritti fino al terrazzo erboso.' },
-                    { num: 'L2', grade: '5c+', length: '40 m', bolts: 'Fix', desc: 'Piegare a destra, superare un tettino e proseguire per diedro obliquo fino alla sosta (da qui calata di 50 m a terra).' },
-                    { num: 'L3', grade: 'IV', length: '20 m', bolts: 'Clessidre', desc: 'Lungo la fessura e poi dritti per rampette fino a sosta su clessidre.' },
-                    { num: 'L4', grade: 'II', length: '40 m', bolts: 'Alpinistica', desc: 'Dritti per paretine puntando all\'evidente placca.' },
-                    { num: 'L5', grade: '5c / III', length: '40 m', bolts: '3 Fix + cordone', desc: 'Salire la placca compatta (3 fix) fino a un terrazzo, poi 10 m a destra fino a sosta con cordone blu.' },
-                    { num: 'L6', grade: 'III', length: '30 m', bolts: 'Fix', desc: 'Lungo lo spigolo fino a una forcella con sosta a fix.' },
-                    { num: 'L7', grade: 'II', length: '60 m', bolts: 'Albero', desc: 'Cresta verso un boschetto sospeso superandolo a sinistra fino a sostare su albero.' },
-                    { num: 'L8', grade: 'III', length: '40 m', bolts: 'Clessidra', desc: 'Dritti per placche articolate fino a una clessidra con cordone sotto la vetta.' }
-                ]
-            },
-            {
-                id: 'via-placche',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.3.1 Penna della Rocca — Parete Austeri',
-                name: 'Via delle Placche (Itinerario 7)',
-                openers: 'S. Lepri, P. Nobili, Catalano, Fabbretti, Baroncini, Pierbattisti (1979-85)',
-                gradeMax: 'VI',
-                gradeObbl: 'TD / R2',
-                difficultyLevel: 'medio',
-                length: '110 m',
-                pitchesCount: 3,
-                protectionType: 'Chiodi tradizionali + alcuni fix (R2)',
-                protectionCategory: 'trad',
-                exposure: 'Est',
-                climbTime: '2h 30m',
-                descentTime: '30 min',
-                gear: 'NDA (friend/nut, cordini), corde da 60m',
-                gpsCoords: '42.6008, 12.6273 (Parete Austeri — Margine sx)',
-                photoUrl: 'images/image5.jpg',
-                photoCaption: 'Panoramica Parete Sud-Ovest — Itinerario 7 (Via delle Placche)',
-                summary: 'Considerata la più impegnativa tra le classiche della zona, si snoda sul margine sinistro verticale della parete Austeri.',
-                approach: 'Dal Santuario Madonna dell\'Ulivo prendere il sentiero nel sottobosco e, prima del ghiaione, svoltare a destra sul sentiero CAI in piano. Oltrepassato lo sperone ("coda di rondine"), salire a sinistra per tracce fino alla parete (20 min).',
-                descent: 'Consigliabile scendere dalla seconda sosta con una doppia da 60 m (oppure traversare a destra verso S3 della Via Austeri).',
-                svgPath: [
-                    { x: 65, y: 205, label: 'Attacco' },
-                    { x: 75, y: 130, label: 'S1', pitchIndex: 0 },
-                    { x: 60, y: 75, label: 'S2', pitchIndex: 1 },
-                    { x: 80, y: 30, label: 'S3', pitchIndex: 2 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: 'VI', length: '35 m', bolts: '3 Fix + 3 chiodi', desc: 'Placca appoggiata (1 fix poco visibile), superare lo strapiombo a sinistra (2 fix), poi spigolo fino a terrazzo erboso e camino/placca fino a sosta sotto un tetto.' },
-                    { num: 'L2', grade: 'V+', length: '20 m', bolts: '1 Fix + 3 chiodi', desc: 'Traverso a sinistra per circa 10 m (1 fix) fino a una fessura, risalirla fino alla sosta su esile cengia.' },
-                    { num: 'L3', grade: 'III+ / II+', length: '50 m', bolts: 'Alpinistica', desc: 'Sconsigliato proseguire dritti su roccia mediocre; consigliato traversare a destra per diedro-rampa fino a S3 di Via Austeri.' }
-                ]
-            },
-            {
-                id: 'via-austeri',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.3.2 Penna della Rocca — Parete Austeri',
-                name: 'Via Austeri — Parete Est (Itinerario 8)',
-                openers: 'Silvano Lepri e Paolo Nobili (1976, rettifica C. Capuano)',
-                gradeMax: 'V+',
-                gradeObbl: 'D+ / R2',
-                difficultyLevel: 'facile',
-                length: '110 m',
-                pitchesCount: 4,
-                protectionType: 'Chiodi classici + soste a 2 fix (R2)',
-                protectionCategory: 'trad',
-                exposure: 'Est',
-                climbTime: '2h 15m',
-                descentTime: '30 min',
-                gear: 'NDA (friend medi/piccoli, cordini)',
-                gpsCoords: '42.6008, 12.6273 (Targa Orlando Austeri)',
-                summary: 'Storica linea al centro della parete est dedicata a Orlando Austeri (targa e croce all\'attacco). Soste attrezzate a fix.',
-                approach: 'Come per la Parete Austeri (20 minuti dal Santuario Madonna dell\'Ulivo), fino alla croce e alla targa commemorativa alla base.',
-                descent: 'Dal terrazzo finale effettuare una doppia di 30 m nel canalone opposto (calata su albero 5 m sotto l\'ultima sosta) e scendere per tracce alla base.',
-                svgPath: [
-                    { x: 110, y: 205, label: 'Attacco (Targa)' },
-                    { x: 115, y: 155, label: 'S1', pitchIndex: 0 },
-                    { x: 105, y: 105, label: 'S2', pitchIndex: 1 },
-                    { x: 115, y: 60, label: 'S3', pitchIndex: 2 },
-                    { x: 120, y: 25, label: 'S4 Terrazzo', pitchIndex: 3 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: 'III+', length: '20 m', bolts: '2 chiodi', desc: 'Attacco dritti sopra la targa commemorativa su rocce articolate, piccolo diedro uscendo a destra fino a un terrazzino.' },
-                    { num: 'L2', grade: 'V+', length: '35 m', bolts: 'Chiodi + clessidra', desc: 'Lungo lame (chiodo), diedro a sinistra fino a chiodo con cordino azzurro, leggero strapiombo a sinistra e dritti fino al tettino che nasconde la sosta.' },
-                    { num: 'L3', grade: 'IV', length: '30 m', bolts: 'Chiodi + 2 Fix', desc: 'Fessura obliqua a destra poi diedro a sinistra (chiodi), canale facile, pilastrino a destra fino a masso con cavo d\'acciaio e sosta su 2 fix.' },
-                    { num: 'L4', grade: 'III-', length: '20 m', bolts: '2 Fix', desc: 'Tenersi a destra tra arbusti aggirando una parete strapiombante a sinistra fino al comodissimo terrazzo finale.' }
-                ]
-            },
-            {
-                id: 'via-gea',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.3.3 Penna della Rocca — Parete Austeri',
-                name: 'GEA (Itinerario 9)',
-                openers: 'Carlo Capuano e altri (2011)',
-                gradeMax: '6a+',
-                gradeObbl: '5c',
-                difficultyLevel: 'medio',
-                length: '110 m',
-                pitchesCount: 4,
-                protectionType: 'Mista: Fix + chiodi e clessidre (S2/R2)',
-                protectionCategory: 'trad',
-                exposure: 'Est',
-                climbTime: '2h 15m',
-                descentTime: '30 min',
-                gear: 'NDA (friend fino al #2, cordini), 10 rinvii',
-                gpsCoords: '42.6008, 12.6273 (Parete Austeri — Centro-dx)',
-                summary: 'Dedicata a Giulio, Elia e Anita. Condivide L1 con la Austeri per poi salire autonomamente a destra su un secondo tiro di roccia fantastica.',
-                approach: 'Come per la Parete Austeri (20 minuti dal Santuario Madonna dell\'Ulivo), attacco sopra la targa Austeri o poco a destra.',
-                descent: 'Dal terrazzo finale doppia di 30 m su albero nel canalone opposto (5 m sotto l\'ultima sosta) e rientro per sentiero.',
-                svgPath: [
-                    { x: 115, y: 205, label: 'Attacco' },
-                    { x: 120, y: 155, label: 'S1', pitchIndex: 0 },
-                    { x: 140, y: 100, label: 'S2', pitchIndex: 1 },
-                    { x: 145, y: 60, label: 'S3', pitchIndex: 2 },
-                    { x: 130, y: 25, label: 'S4 Terrazzo', pitchIndex: 3 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: 'III+', length: '20 m', bolts: 'Chiodo + cordone', desc: 'Lama-fessura sopra o poco a destra della targa fino al terrazzino di sosta in comune con Austeri.' },
-                    { num: 'L2', grade: '6a+', length: '40 m', bolts: 'Fix + trad', desc: 'Diedro e poi leggermente a destra puntando a un evidente tetto, placca verticale e secondo strapiombo fino in sosta.' },
-                    { num: 'L3', grade: '5b', length: '20 m', bolts: 'Fix azzurro', desc: 'Verso destra in placca e dritti fino a un piccolo tetto protetto da uno spit azzurro, superandolo a destra.' },
-                    { num: 'L4', grade: 'III', length: '30 m', bolts: 'Clessidra', desc: 'Diedro-camino con cordone rosso su clessidra, terrazzo e ultimo salto roccioso fino al terrazzo delle doppie.' }
-                ]
-            },
-            {
-                id: 'fashion-v',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.3.4 Penna della Rocca — Parete Austeri',
-                name: 'Fashion V (Itinerario 10)',
-                openers: 'Carlo Capuano e altri (2010)',
-                gradeMax: 'VI+',
-                gradeObbl: 'TD+',
-                difficultyLevel: 'medio',
-                length: '110 m',
-                pitchesCount: 3,
-                protectionType: 'Classica con fix sul passaggio chiave',
-                protectionCategory: 'trad',
-                exposure: 'Est',
-                climbTime: '2h 30m',
-                descentTime: '30 min',
-                gear: 'NDA (friend, nut, cordini)',
-                gpsCoords: '42.6008, 12.6273 (Parete Austeri — Destra targa)',
-                photoUrl: 'images/image12.jpg',
-                photoCaption: 'Parete Austeri (itinerario 10) e primo tiro di Fashion V — foto di Pino Calandrella',
-                summary: 'Ripercorre la prima parte del "Naso dell\'Indiano" (Lepri-Nobili 1978) per poi deviare a sinistra su una placca verticale tecnica.',
-                approach: 'Come per la Parete Austeri (20 minuti dal Santuario Madonna dell\'Ulivo), attacco presso una clessidra con cordino poco a destra della targa Austeri.',
-                descent: 'Dal terrazzo finale doppia di 30 m su albero nel canalone opposto e discesa per tracce di sentiero.',
-                svgPath: [
-                    { x: 145, y: 205, label: 'Attacco' },
-                    { x: 155, y: 140, label: 'S1', pitchIndex: 0 },
-                    { x: 165, y: 80, label: 'S2', pitchIndex: 1 },
-                    { x: 140, y: 25, label: 'S3 Terrazzo', pitchIndex: 2 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: 'IV', length: '40 m', bolts: 'Clessidra + trad', desc: 'Placche facili fino a una placca verticale nera chiusa da un tettino a sinistra; non andare a destra verso la catena ma proseguire per salti fino alla sosta.' },
-                    { num: 'L2', grade: 'VI+', length: '30 m', bolts: 'Chiodi + Fix', desc: 'Placca verticale leggermente a sinistra (chiodi), poi a destra sul grande masso sporgente (Naso dell\'Indiano) e in verticale fino alla fessura in alto a sinistra (sosta su albero).' },
-                    { num: 'L3', grade: 'III', length: '40 m', bolts: 'Alpinistica', desc: 'A destra per facile placca fino a una cengia, superare la paretina sopra (attenzione roccia poco solida) fino al terrazzo delle doppie.' }
-                ]
-            },
-            {
-                id: 'dente-cinghiale',
-                type: 'multipitch',
-                sectorId: 'penna-rocca',
-                sector: '2.4.1 Penna della Rocca — Parete Est',
-                name: 'Dente del Cinghiale',
-                openers: 'Itinerario classico di cresta/sperone',
-                gradeMax: 'IV',
-                gradeObbl: 'AD+',
-                difficultyLevel: 'facile',
-                length: '150 m',
-                pitchesCount: 5,
-                protectionType: 'Alpinistica (soste da attrezzare su spuntoni/alberi)',
-                protectionCategory: 'trad',
-                exposure: 'Est',
-                climbTime: '2h 30m',
-                descentTime: '45 min a piedi',
-                gear: 'NDA, cordini lunghi per spuntoni e alberi, 2 corde 50/60m',
-                gpsCoords: '42.6008, 12.6273 (Spigolo destro Parete Austeri)',
-                photoUrl: 'images/image9.jpg',
-                photoCaption: 'Parete est Penna della Rocca — Dente del Cinghiale, foto di Bruno Spina',
-                summary: 'Itinerario d\'ambiente lungo lo sperone est fino alla vetta della Penna della Rocca. Consigliati tiri da 30 m per evitare attriti.',
-                approach: 'Raggiunta la base della Parete Austeri (20 min), proseguire sotto la parete aggirando lo spigolo destro e salire per tracce fino allo spiazzo con bollo rosso (25-30 min).',
-                descent: 'Percorrere la cresta sommitale fino alla sella con la cima della Penna della Rocca, scendere a destra nel boschetto verso il versante ovest e aggirare lo spigolone fino alla base.',
-                svgPath: [
-                    { x: 185, y: 205, label: 'Attacco (Bollo)' },
-                    { x: 180, y: 165, label: 'S1', pitchIndex: 0 },
-                    { x: 175, y: 130, label: 'S2 Selletta', pitchIndex: 1 },
-                    { x: 170, y: 95, label: 'S3', pitchIndex: 2 },
-                    { x: 165, y: 60, label: 'S4 Tetto', pitchIndex: 3 },
-                    { x: 155, y: 22, label: 'Vetta', pitchIndex: 4 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: 'III', length: '30 m', bolts: 'Spuntoni', desc: 'Attacco sull\'evidente crestina formata da grandi blocchi (bollo rosso alla base), sosta su spuntoni.' },
-                    { num: 'L2', grade: 'III', length: '30 m', bolts: 'Spuntoni', desc: 'Proseguire per via intuitiva fino a una selletta (possibile via di fuga a destra verso il ghiaione).' },
-                    { num: 'L3', grade: 'III', length: '30 m', bolts: 'Alberi', desc: 'Proseguire sull\'accennato filo di cresta passando tra diversi alberelli.' },
-                    { num: 'L4', grade: 'IV', length: '30 m', bolts: '2 chiodi', desc: 'Saliscendi poi placchetta solcata da una bella fessura fino a sosta su alberello e spuntone sotto un tetto evidente.' },
-                    { num: 'L5', grade: 'IV', length: '30 m', bolts: '2 chiodi', desc: 'Affrontare il tetto da destra, rimontarlo sulla verticale della sosta e proseguire in placca e canale erboso fino alla vetta.' }
-                ]
-            },
-
-            // --- 3. COLLE ZANNUTO ---
-            {
-                id: 'falesia-colle-zannuto',
-                type: 'falesia',
-                sectorId: 'colle-zannuto',
-                sector: '3.1 Colle Zannuto — Falesia',
-                name: 'Falesia di Colle Zannuto (15 vie)',
-                openers: 'Andrea Di Bari e altri',
-                gradeMax: '8b',
-                gradeObbl: '6b',
-                difficultyLevel: 'difficile',
-                length: '15 vie',
-                pitchesCount: 15,
-                protectionType: 'Fix acciaio inox (anelli chiusi, manovra richiesta)',
-                protectionCategory: 'sport',
-                exposure: 'Ovest / Bosco',
-                climbTime: 'Estate',
-                descentTime: '700 m s.l.m.',
-                gear: 'Corda da 70/80m, 15 rinvii',
-                gpsCoords: '42.6032, 12.6086 (Voc. S. Biagio / Sentiero 3)',
-                photoUrl: 'images/image18.jpg',
-                photoCaption: 'Mappa di accesso alla falesia e pareti di Colle Zannuto',
-                summary: 'La falesia più bella della zona per qualità del calcare e lunghezza dei tiri, immersa in un ambiente selvaggio sopra Cesi.',
-                approach: 'Da Cesi salire la sterrata via Vocabolo S. Biagio (consigliato 4x4), al casolare a sinistra e al cartello CAI n.3 a destra. Parcheggiare a 550m s.l.m., seguire il sentiero n.3 per 15 min fino a quota 700m, entrare nel bosco a destra superando un muretto e scendere nel canale con corde fisse.',
-                descent: 'Soste con anello chiuso di calata: manovra in sosta richiesta.',
-                cragRoutes: [
-                    { name: 'Old boy', grade: '7b', meters: '-', stars: '' },
-                    { name: 'Match point', grade: 'Progetto', meters: '-', stars: '' },
-                    { name: 'La bocca del lupo', grade: '7b/7b+', meters: '-', stars: '' },
-                    { name: 'La rabbia giovane', grade: '8b', meters: '-', stars: '' },
-                    { name: 'La fontana della vergine', grade: '7b', meters: '-', stars: '' },
-                    { name: 'Gomorra', grade: '7c', meters: '-', stars: '' },
-                    { name: 'Inception', grade: '8a+', meters: '-', stars: '' },
-                    { name: 'Ferro 3', grade: '6c', meters: '-', stars: '' },
-                    { name: 'Bud guy', grade: '6c+', meters: '-', stars: '' },
-                    { name: 'Japon', grade: '6b+', meters: '-', stars: '' },
-                    { name: '2046', grade: '7a+', meters: '-', stars: '' },
-                    { name: 'Nostalghia', grade: '6b+', meters: '-', stars: '' },
-                    { name: 'Fizcarraldo', grade: '6c+', meters: '-', stars: '' },
-                    { name: 'Sorgo rosso', grade: '7a+', meters: '-', stars: '' },
-                    { name: 'Delitto perfetto', grade: '6b', meters: '-', stars: '' }
-                ]
-            },
-            {
-                id: 'umbri-dispersi',
-                type: 'multipitch',
-                sectorId: 'colle-zannuto',
-                sector: '3.1.2 Colle Zannuto — Parete Principale',
-                name: 'Cercando gli Umbri Dispersi',
-                openers: 'Carlo e Gianni Pagliochini, Silvano Lepri, Pierbattisti (1986)',
-                gradeMax: 'V+',
-                gradeObbl: 'TD',
-                difficultyLevel: 'medio',
-                length: '130 m',
-                pitchesCount: 3,
-                protectionType: 'Via d\'avventura (chiodi e alberi)',
-                protectionCategory: 'trad',
-                exposure: 'Ovest',
-                climbTime: '2h 30m',
-                descentTime: '40 min a piedi',
-                gear: 'NDA, chiodi e martello indispensabili, GPS consigliato',
-                gpsCoords: '42.6059, 12.6068 (Attacco via)',
-                gallery: [{ url: 'images/image27.png', caption: 'Mappa dettaglio avvicinamento all\'attacco della via' }, { url: 'images/image7.jpg', caption: 'Carlo Capuano impegnato sul primo tiro' }, { url: 'images/image20.jpg', caption: 'Passaggio chiave sul primo tiro di Cercando gli Umbri Dispersi' }, { url: 'images/image22.png', caption: 'Traccia GPS completa di avvicinamento e discesa' }],
-                photoUrl: 'images/image19.png',
-                photoCaption: 'Tracciato della via, mappa di avvicinamento/discesa e Carlo Capuano sul primo tiro',
-                summary: 'Itinerario selvaggio e d\'avventura riservato a cordate esperte. Avvicinamento intricato nel sottobosco e roccia da verificare.',
-                approach: 'Da Cesi percorrere via della Lince poi a sinistra in strada di Lione fino al primo tornante. Seguire il sentiero verso ovest e tagliare a destra verso la parete (usare GPS). Attacco sulla cima di un piccolo gendarme.',
-                descent: 'Proseguire per rocce facili verso nord fino alla cima di Colle Zannuto, poi sentiero a destra fino a Fonte Regne e discesa nel fosso "Valle di Licino" fino alla strada (40 min).',
-                svgPath: [
-                    { x: 95, y: 205, label: 'Attacco (Gendarme)' },
-                    { x: 125, y: 145, label: 'S1 Albero', pitchIndex: 0 },
-                    { x: 115, y: 85, label: 'S2 Albero', pitchIndex: 1 },
-                    { x: 135, y: 30, label: 'S3 Cima', pitchIndex: 2 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: 'V', length: '40 m', bolts: '2 chiodi + albero', desc: 'A destra di un diedro-canale salire un caminetto giallastro, attraversare il canale e salire una rampa obliqua a destra sotto un tettino (2 chiodi), cengia erbosa e placche fino a sosta su alberello.' },
-                    { num: 'L2', grade: 'V+', length: '40 m', bolts: 'Alpinistica', desc: 'Diedri e fessure piegando leggermente a sinistra, poi fessura verticale verso zona appoggiata e diedri fino a sosta su alberello a destra.' },
-                    { num: 'L3', grade: 'IV', length: '50 m', bolts: 'Albero', desc: 'Diedri verticali (attenzione ai sassi instabili), piegare nel canale a sinistra fino alla cima della parete (sosta su albero).' }
-                ]
-            },
-            {
-                id: 'antro-drago',
-                type: 'falesia',
-                sectorId: 'colle-zannuto',
-                sector: '3.3 Colle Zannuto — Cava di Cesi',
-                name: 'Falesia Antro del Drago (Accesso Vietato)',
-                openers: 'Area storica abbandonata (10 vie)',
-                gradeMax: 'N.D.',
-                gradeObbl: 'N.D.',
-                difficultyLevel: 'facile',
-                length: '10 vie (dismessa)',
-                pitchesCount: 0,
-                protectionType: 'Vecchia chiodatura da verificare',
-                protectionCategory: 'trad',
-                exposure: 'Ovest',
-                climbTime: 'Accesso Vietato',
-                descentTime: '700 m s.l.m.',
-                gear: 'Divieto di accesso imposto dalla proprietà della cava',
-                gpsCoords: '42.6065, 12.6069 (Sopra cava dismessa S.S. 79)',
-                summary: 'Falesia situata sopra la cava di Cesi dentro una grande caverna di calcare giallo-arancio. Attualmente abbandonata con divieto di accesso.',
-                approach: 'Area soggetta a divieto di accesso da parte dei responsabili della cava.',
-                descent: 'Non praticabile.',
-                cragRoutes: []
-            },
-
-            // --- 4. MONTE EOLO / SANT'ERASMO / PENNE DI SANT'ANDREA ---
-            {
-                id: 'falesia-sant-erasmo',
-                type: 'falesia',
-                sectorId: 'monte-eolo',
-                sector: '4.1 Monte Eolo — Eremo di Sant’Erasmo',
-                name: 'Falesia di Sant’Erasmo (6 Settori)',
-                openers: 'Attrezzata nel 2010 da climber di San Gemini',
-                gradeMax: '8a+',
-                gradeObbl: '5a',
-                difficultyLevel: 'facile',
-                length: '59 vie (6 settori)',
-                pitchesCount: 59,
-                protectionType: 'Fix acciaio inox',
-                protectionCategory: 'sport',
-                exposure: 'Sud-Est (molto ombreggiata nel bosco)',
-                climbTime: 'Primavera - Autunno',
-                descentTime: '700 m s.l.m.',
-                gear: 'Corda singola da 60/70m, 12 rinvii',
-                gpsCoords: '42.6143, 12.5914 (Eremo di Sant’Erasmo)',
-                gallery: [{ url: 'images/image4.jpg', caption: 'Cartello descrittivo della falesia — foto di Stefano Cudini' }, { url: 'images/image1.jpg', caption: 'Mappa di accesso alla Rocchetta di Cesi ed Eremo di Sant\'Erasmo' }],
-                photoUrl: 'images/image23.jpg',
-                photoCaption: 'Cartello descrittivo e panoramica della falesia di Sant’Erasmo — foto di Stefano Cudini',
-                summary: 'Sito immerso nel verde della Rocchetta di Cesi con ottime zone d\'ombra, diviso nei settori Torre Alta, Torre Bassa, Diavoli e Santi, Sasso Est, Mezzogiorno e Sasso Nuovo.',
-                approach: 'Da Cesi salire per 4 km fino al parcheggio dell\'Eremo di S. Erasmo. Oltrepassare la chiesa verso sinistra nel bosco fino ai ruderi delle Torri, poi scendere ripidamente a sinistra fino alle pareti (15 min).',
-                descent: 'Calata sportiva dagli anelli di sosta.',
-                cragRoutes: [
-                    { sectorTag: 'Torre Alta', name: 'Metto la staffa', grade: '6a', meters: '10m', stars: '++' },
-                    { sectorTag: 'Torre Alta', name: 'La vita è tutta un paranco', grade: '5c+', meters: '12m', stars: '+++' },
-                    { sectorTag: 'Torre Alta', name: 'Tourkana', grade: '5c+', meters: '13m', stars: '++' },
-                    { sectorTag: 'Torre Alta', name: 'Mimmo creatore di vie', grade: '5c+', meters: '15m', stars: '+++' },
-                    { sectorTag: 'Torre Alta', name: 'Vino e partimo', grade: '6a', meters: '15m', stars: '+++' },
-                    { sectorTag: 'Torre Alta', name: 'Giardinaggio estremo', grade: '6b', meters: '15m', stars: '+++' },
-                    { sectorTag: 'Torre Alta', name: 'La libertà dei servi', grade: '6a+', meters: '12m', stars: '++' },
-                    { sectorTag: 'Torre Alta', name: 'Annina, gatta sbarazzina', grade: '6b', meters: '20m', stars: '' },
-                    { sectorTag: 'Torre Bassa', name: 'Professione canaro', grade: '6a', meters: '10m', stars: '++' },
-                    { sectorTag: 'Torre Bassa', name: 'Odio puro e duraturo', grade: '5b', meters: '12m', stars: '+++' },
-                    { sectorTag: 'Torre Bassa', name: 'Regine guerriere', grade: '5b', meters: '12m', stars: '+++' },
-                    { sectorTag: 'Torre Bassa', name: 'Alta quota', grade: '7a', meters: '-', stars: '' },
-                    { sectorTag: 'Torre Bassa', name: 'Zozzi d’intelletto', grade: '6c', meters: '15m', stars: '' },
-                    { sectorTag: 'Torre Bassa', name: 'Sottopanza de cavallo', grade: '6c', meters: '15m', stars: '' },
-                    { sectorTag: 'Torre Bassa', name: 'La traccia di un sogno', grade: '6b', meters: '15m', stars: '' },
-                    { sectorTag: 'Torre Bassa', name: 'Efficiente efficace', grade: '6a+', meters: '10m', stars: '+++' },
-                    { sectorTag: 'Torre Bassa', name: 'Sognatore di navi', grade: '6c', meters: '12m', stars: '' },
-                    { sectorTag: 'Torre Bassa', name: 'Tommina', grade: '6a+', meters: '12m', stars: '+++' },
-                    { sectorTag: 'Diavoli e Santi', name: 'Mani di pietra', grade: '5c', meters: '16m', stars: '+++' },
-                    { sectorTag: 'Diavoli e Santi', name: 'Strani sintomi', grade: '6a+', meters: '14m', stars: '+++' },
-                    { sectorTag: 'Diavoli e Santi', name: 'Spacciatrice di gatti', grade: '6a', meters: '14m', stars: '++++' },
-                    { sectorTag: 'Diavoli e Santi', name: 'Mappina', grade: '5a', meters: '24m', stars: '+++' },
-                    { sectorTag: 'Diavoli e Santi', name: 'Aldo e Nella nel vento', grade: '6a', meters: '24m', stars: '+++' },
-                    { sectorTag: 'Diavoli e Santi', name: 'Lacrima gialla', grade: '8a+', meters: '24m', stars: '' },
-                    { sectorTag: 'Diavoli e Santi', name: 'Una minestra di quinoa', grade: '7c', meters: '24m', stars: '+++' },
-                    { sectorTag: 'Diavoli e Santi', name: 'L\'anello di Sandokan', grade: '6b+', meters: '16m', stars: '++++' },
-                    { sectorTag: 'Diavoli e Santi', name: 'Un libro per Anna L1+L2', grade: '7a+', meters: '32m', stars: '+++++' },
-                    { sectorTag: 'Diavoli e Santi', name: 'Per sempre amici', grade: '6c+', meters: '20m', stars: '+++++' },
-                    { sectorTag: 'Diavoli e Santi', name: 'Sifu Enrico', grade: '7b+', meters: '22m', stars: '+++++' },
-                    { sectorTag: 'Diavoli e Santi', name: 'Super Nico', grade: '6b', meters: '14m', stars: '++++' },
-                    { sectorTag: 'Sasso Est', name: 'Clara Blanca Alba', grade: '6a+', meters: '15m', stars: '++' },
-                    { sectorTag: 'Sasso Est', name: 'Troverò una grotta', grade: '6b', meters: '20m', stars: '+++' },
-                    { sectorTag: 'Sasso Est', name: 'Esploratori degli abissi', grade: '6b', meters: '22m', stars: '' },
-                    { sectorTag: 'Mezzogiorno', name: 'La principessa delle terre arnolfe', grade: '6a+', meters: '26m', stars: '++++' },
-                    { sectorTag: 'Mezzogiorno', name: 'Il tiranno colpisce ancora', grade: '6a', meters: '26m', stars: '++++' },
-                    { sectorTag: 'Mezzogiorno', name: 'Una supposta per Gheddafi', grade: '6b+', meters: '26m', stars: '+++++' },
-                    { sectorTag: 'Sasso Nuovo', name: 'Terra d’asparago', grade: '6a', meters: '12m', stars: '+++' },
-                    { sectorTag: 'Sasso Nuovo', name: 'Timo di Sant\'Erasmo', grade: '6a', meters: '12m', stars: '+++' },
-                    { sectorTag: 'Sasso Nuovo', name: 'Amore da lontano', grade: '6b', meters: '10m', stars: '++' }
-                ]
-            },
-            {
-                id: 'concatenamento-sant-erasmo',
-                type: 'multipitch',
-                sectorId: 'monte-eolo',
-                sector: '4.2 Monte Eolo — Sant’Erasmo',
-                name: 'Concatenamento Multipitch di Sant’Erasmo',
-                openers: 'Combinazione tiri della falesia',
-                gradeMax: '6a',
-                gradeObbl: '5b',
-                difficultyLevel: 'facile',
-                length: '65 m',
-                pitchesCount: 4,
-                protectionType: 'Fix acciaio inox',
-                protectionCategory: 'sport',
-                exposure: 'Sud-Est',
-                climbTime: '1h 15m',
-                descentTime: '10 min a piedi',
-                gear: '12 rinvii, corda singola da 60m',
-                gpsCoords: '42.6104, 12.5908 (Scaletta a pioli — Sant’Erasmo)',
-                summary: 'Combinazione di tiri della falesia che permette di raggiungere direttamente i ruderi posti sulla sommità dell\'altopiano di Sant\'Erasmo.',
-                approach: 'Come per la falesia di Sant\'Erasmo (15 min dall\'Eremo), attaccando direttamente dalla scaletta a pioli fissata in parete.',
-                descent: 'Dall\'uscita presso i ruderi delle Torri si rientra comodamente a piedi verso l\'Eremo di Sant\'Erasmo in 10 minuti.',
-                svgPath: [
-                    { x: 90, y: 205, label: 'Attacco (Scaletta)' },
-                    { x: 105, y: 160, label: 'S1', pitchIndex: 0 },
-                    { x: 115, y: 115, label: 'S2', pitchIndex: 1 },
-                    { x: 125, y: 70, label: 'S3', pitchIndex: 2 },
-                    { x: 135, y: 30, label: 'Ruderi', pitchIndex: 3 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '5c', length: '15 m', bolts: 'Fix', desc: 'Si attacca dalla scaletta a pioli; si può salire sia la via di destra che quella di sinistra.' },
-                    { num: 'L2', grade: '5b', length: '15 m', bolts: 'Fix', desc: 'Secondo tiro su calcare articolato.' },
-                    { num: 'L3', grade: '5b / 6a', length: '15 m', bolts: 'Fix', desc: 'Si può scegliere tra due vie simili adiacenti.' },
-                    { num: 'L4', grade: '6a', length: '20 m', bolts: 'Fix', desc: 'Ultimo tiro fino all\'uscita presso i ruderi sull\'altopiano.' }
-                ]
-            },
-            {
-                id: 'falesia-sant-andrea',
-                type: 'falesia',
-                sectorId: 'monte-eolo',
-                sector: '4.3.1 & 4.3.4 Penne di Sant’Andrea (Cesi)',
-                name: 'Falesia e Pilastri di Sant’Andrea (27 vie)',
-                openers: 'Settori storici e recenti sopra Cesi',
-                gradeMax: '7a',
-                gradeObbl: '4b',
-                difficultyLevel: 'facile',
-                length: '27 vie (2 settori)',
-                pitchesCount: 27,
-                protectionType: 'Fix acciaio inox',
-                protectionCategory: 'sport',
-                exposure: 'Sud',
-                climbTime: 'Inverno - Primavera - Autunno',
-                descentTime: '400 m s.l.m.',
-                gear: 'Corda singola 60m, 12 rinvii',
-                gpsCoords: '42.6124, 12.5854 (Penne di Sant’Andrea)',
-                photoUrl: 'images/image15.jpg',
-                photoCaption: 'La caratteristica scala a pioli da cui partono le vie dei Pilastri di Sant\'Andrea',
-                summary: 'Calcare grigio compatto con grip eccezionale in una piccola gola sopra Cesi. Include la falesia principale (17 vie) e i Pilastri a sinistra di Rock n\' Roll (10 vie).',
-                approach: 'Da Cesi imboccare la strada per S. Erasmo; dopo una curva a gomito a sinistra parcheggiare presso un casottino e seguire il sentiero a destra per pochi minuti.',
-                descent: 'Calata sportiva dagli anelli di sosta.',
-                cragRoutes: [
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'La pazienza di Federica', grade: '4c', meters: '30m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Riccioli al vento', grade: '6a+', meters: '30m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'O dente o ganassa', grade: '6b+', meters: '30m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Khan', grade: '5c', meters: '13m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Arbusto tosto', grade: '6b+', meters: '-', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Vena bagnata', grade: '6b', meters: '15m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'La bionda celtica', grade: '7a', meters: '15m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Arrosto misto', grade: '6b', meters: '15m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Suprema armonia', grade: '6a', meters: '12m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Mimmo Tse Tong', grade: '6b+', meters: '12m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Principina', grade: '6b', meters: '10m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Ispuligidenie', grade: '5c', meters: '15m', stars: '++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Altai', grade: '5c', meters: '13m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'L\'ululato di Artù', grade: '5b', meters: '15m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'Il deserto del Gobi', grade: '6a', meters: '15m', stars: '+++' },
-                    { sectorTag: 'Falesia Sant\'Andrea', name: 'La neve del 2012', grade: '6a', meters: '14m', stars: '+++' },
-                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Ryoby', grade: '5c', meters: '-', stars: '' },
-                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Yocesity', grade: '5c', meters: '-', stars: '' },
-                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'North Face', grade: '6b+', meters: '-', stars: '' },
-                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Lolly pop', grade: '6a+', meters: '-', stars: '' },
-                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Emma', grade: '5c', meters: '-', stars: '' },
-                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Scorpio', grade: '4b', meters: '-', stars: '' },
-                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Mecarozzi', grade: '5c', meters: '-', stars: '' },
-                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Pandevia', grade: '6a', meters: '-', stars: '' },
-                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Viagra', grade: '6b+/6c', meters: '-', stars: '' },
-                    { sectorTag: 'Pilastri Sant\'Andrea', name: 'Spigolo nord', grade: '6b', meters: '-', stars: '' }
-                ]
-            },
-            {
-                id: 'rock-n-roll',
-                type: 'multipitch',
-                sectorId: 'monte-eolo',
-                sector: '4.3.2 Monte Eolo — Penne di Sant’Andrea',
-                name: 'Rock n’ Roll',
-                openers: 'Marco Biagiola e Stefano Laurenti (2018)',
-                gradeMax: '6b+',
-                gradeObbl: '6a',
-                difficultyLevel: 'medio',
-                length: '110 m',
-                pitchesCount: 5,
-                protectionType: 'Interamente attrezzata a fix (S1)',
-                protectionCategory: 'sport',
-                exposure: 'Sud',
-                climbTime: '2h 00m',
-                descentTime: '20 min (doppie)',
-                gear: '14 rinvii, due corde da 60m',
-                gpsCoords: '42.6124, 12.5854 (Sentiero Falesia Sant’Andrea)',
-                gallery: [{ url: 'images/image17.jpg', caption: 'Il bellissimo secondo tiro della via Rock n\' Roll' }],
-                photoUrl: 'images/image6.jpg',
-                photoCaption: 'Tracciato della via Rock n’ Roll e secondo tiro — foto di Pino Calandrella',
-                summary: 'Bella via plaisir chiodata dal basso che segue diverse fessure e diedri regalando una scalata tecnica e divertente.',
-                approach: 'Dal casottino sulla strada per S. Erasmo seguire il sentiero per la falesia di Sant\'Andrea fino a una freccia verso destra che porta sotto l\'attacco.',
-                descent: 'In corda doppia lungo la via.',
-                svgPath: [
-                    { x: 80, y: 210, label: 'Attacco' },
-                    { x: 95, y: 175, label: 'S1', pitchIndex: 0 },
-                    { x: 85, y: 135, label: 'S2', pitchIndex: 1 },
-                    { x: 115, y: 100, label: 'S3', pitchIndex: 2 },
-                    { x: 130, y: 65, label: 'S4', pitchIndex: 3 },
-                    { x: 140, y: 30, label: 'S5', pitchIndex: 4 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '6a+', length: '20 m', bolts: 'Fix', desc: 'Salire dritti sulla placca poco a sinistra di uno spigolo che si aggira poco prima del terrazzo di sosta.' },
-                    { num: 'L2', grade: '6a', length: '25 m', bolts: 'Fix', desc: 'Seguire il diedro-fessura sulla sinistra fino al suo termine.' },
-                    { num: 'L3', grade: '6b', length: '25 m', bolts: 'Fix', desc: 'Traversare per circa 10 m verso destra fino a prendere una fessura, seguirla e al suo termine traversare verso sinistra.' },
-                    { num: 'L4', grade: '4c', length: '20 m', bolts: 'Fix', desc: 'Aggirare sulla destra la placca iniziale e per facili rampe arrivare alla sosta.' },
-                    { num: 'L5', grade: '6b+', length: '20 m', bolts: 'Fix', desc: 'Salire la larga fessura sulla destra per poi proseguire in un diedro e per paretine fino alla sosta.' }
-                ]
-            },
-            {
-                id: 'frida-calo',
-                type: 'multipitch',
-                sectorId: 'monte-eolo',
-                sector: '4.3.3 Monte Eolo — Penne di Sant’Andrea',
-                name: 'Frida “Calo”',
-                openers: 'Carlo Capuano e Alessandro Pasquantonio (ottobre 2024)',
-                gradeMax: '6b+',
-                gradeObbl: '6a',
-                difficultyLevel: 'medio',
-                length: '80 m',
-                pitchesCount: 3,
-                protectionType: 'Fix acciaio inox',
-                protectionCategory: 'sport',
-                exposure: 'Sud',
-                climbTime: '1h 30m',
-                descentTime: '15 min (a piedi o 3 doppie)',
-                gear: '12 rinvii',
-                gpsCoords: '42.6124, 12.5854 (A sinistra di Rock n’ Roll)',
-                summary: 'Itinerario recente aperto nell\'ottobre 2024 immediatamente a sinistra di Rock n\' Roll con un bellissimo terzo tiro su placca.',
-                approach: 'Come per Rock n\' Roll, l\'attacco è situato subito alla sua sinistra.',
-                descent: 'Dalla sosta finale è possibile proseguire a piedi lungo il sentiero fino alla strada principale oppure effettuare 3 calate in doppia.',
-                svgPath: [
-                    { x: 65, y: 205, label: 'Attacco' },
-                    { x: 60, y: 145, label: 'S1', pitchIndex: 0 },
-                    { x: 65, y: 90, label: 'S2', pitchIndex: 1 },
-                    { x: 75, y: 35, label: 'S3', pitchIndex: 2 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '6b', length: '25 m', bolts: 'Fix', desc: 'Si parte subito su placca; dopo una decina di metri si affronta un diedro al termine del quale (passaggio erboso) si trova la sosta.' },
-                    { num: 'L2', grade: '5c', length: '25 m', bolts: 'Fix', desc: 'Tiro di raccordo su roccia da ripulire leggermente.' },
-                    { num: 'L3', grade: '6b+', length: '30 m', bolts: 'Fix', desc: 'Affrontare la parete a sinistra su una bellissima placca, per poi deviare a destra a metà tiro seguendo una piccola fessura fino in sosta.' }
-                ]
-            },
-            {
-                id: 'die-gartenroute',
-                type: 'multipitch',
-                sectorId: 'monte-eolo',
-                sector: '4.3.5 Monte Eolo — Penne di Sant’Andrea',
-                name: 'Die Gartenroute (Itinerario 15)',
-                openers: 'Approccio al pilastro superiore',
-                gradeMax: '5a',
-                gradeObbl: '5a',
-                difficultyLevel: 'facile',
-                length: '45 m',
-                pitchesCount: 1,
-                protectionType: 'Interamente attrezzata a fix (S1)',
-                protectionCategory: 'sport',
-                exposure: 'Sud',
-                climbTime: '30 min',
-                descentTime: '10 min (corda fissa + cengia)',
-                gear: '14 rinvii',
-                gpsCoords: '42.6124, 12.5854 (Destra Falesia S. Andrea)',
-                photoUrl: 'images/image8.jpg',
-                photoCaption: 'Tracciato di Die Gartenroute (15) e Akuna Matata (16) — foto Pino Calandrella',
-                summary: 'Interessante tiro di approccio alla parte alta del pilastro; conduce in prossimità dell\'attacco di Akuna Matata.',
-                approach: 'Come per la falesia di Sant\'Andrea, subito dopo l\'ultima via "La neve del 2012" (targhetta alla base).',
-                descent: 'Spostarsi alla base dello spigolo dove è fissata una corda fissa e traversare su piccola cengia verso destra fino al sentiero principale (oppure proseguire su Akuna Matata).',
-                svgPath: [
-                    { x: 105, y: 205, label: 'Attacco (Targhetta)' },
-                    { x: 125, y: 120, label: 'S1 Pilastro', pitchIndex: 0 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '5a', length: '45 m', bolts: 'Fix', desc: 'Salire due tratti verticali interrotti da una cengia fino a una crestina (possibile sosta intermedia), poi per facili rocce spostandosi a destra verso la sosta.' }
-                ]
-            },
-            {
-                id: 'akuna-matata',
-                type: 'multipitch',
-                sectorId: 'monte-eolo',
-                sector: '4.3.6 Monte Eolo — Penne di Sant’Andrea',
-                name: 'Akuna Matata (Itinerario 16)',
-                openers: 'Marco Principi e Francesco Novelli (2019)',
-                gradeMax: '6a+',
-                gradeObbl: '5a',
-                difficultyLevel: 'facile',
-                length: '135 m',
-                pitchesCount: 5,
-                protectionType: 'Fix (L3 distanziati, integrabili) (S1)',
-                protectionCategory: 'sport',
-                exposure: 'Sud',
-                climbTime: '2h 15m',
-                descentTime: '20 min (doppie o sentiero CAI 674/c)',
-                gear: '14 rinvii, qualche friend medio per L3',
-                gpsCoords: '42.6124, 12.5854 (A monte di Die Gartenroute)',
-                gallery: [{ url: 'images/image26.jpg', caption: 'I tratti finali della via Akuna Matata' }, { url: 'images/image25.jpg', caption: 'Il grande anello di ferro degli anni \'80 lungo il tracciato' }],
-                photoUrl: 'images/image8.jpg',
-                photoCaption: 'Tracciato di Die Gartenroute (15), Akuna Matata (16) e il grande anello di ferro degli anni \'80 — foto Pino Calandrella',
-                summary: 'Ripercorre in parte la storica "Via dell\'Anello" (Lepri-Nobili 1981) salendo direttamente il placcone monolitico superiore.',
-                approach: 'A monte di Die Gartenroute (raggiungibile salendo Die Gartenroute oppure dal sentiero principale tramite la cengia con corda fissa).',
-                descent: 'In doppia sulla via (corde da 60 m saltando L5) fino alla corda fissa, oppure a piedi verso la falesia Le Due Torri e il sentiero CAI 674/c Andrea Sabatini (20 min).',
-                svgPath: [
-                    { x: 115, y: 205, label: 'Attacco' },
-                    { x: 115, y: 170, label: 'S1', pitchIndex: 0 },
-                    { x: 105, y: 135, label: 'S2', pitchIndex: 1 },
-                    { x: 100, y: 95, label: 'S3', pitchIndex: 2 },
-                    { x: 115, y: 55, label: 'S4 (Anello)', pitchIndex: 3 },
-                    { x: 125, y: 22, label: 'Cima', pitchIndex: 4 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '4a', length: '30 m', bolts: 'Fix', desc: 'Salire la facile placca ammanigliata fino alla base del pilastro su una cengia.' },
-                    { num: 'L2', grade: '5b', length: '25 m', bolts: 'Fix', desc: 'Salire verso sinistra seguendo piccole cenge fino alla placca, poi per caminetto fino al terrazzo di sosta.' },
-                    { num: 'L3', grade: '6a+', length: '30 m', bolts: 'Fix + friend', desc: 'Dritti sulle sovrastanti placche poi leggermente a sinistra per un diedro fino a comodo terrazzo (chiodatura più lunga, integrabile a friend).' },
-                    { num: 'L4', grade: '5b', length: '30 m', bolts: 'Fix + grande anello', desc: 'Diedro fessurato a destra poi paretine verticali incontrando il grande anello di ferro degli anni \'80 fino a sosta a fix.' },
-                    { num: 'L5', grade: 'III', length: '20 m', bolts: 'Alpinistica', desc: 'Proseguire per saltini fino alla cima.' }
-                ]
-            },
-            {
-                id: 'via-zaer',
-                type: 'multipitch',
-                sectorId: 'monte-eolo',
-                sector: '4.3.7 Monte Eolo — Penne di Sant’Andrea',
-                name: 'ZAER',
-                openers: 'Marco Principi, Alessandro Pasquantonio e Andrea Leonardi (2024)',
-                gradeMax: '5c',
-                gradeObbl: '5b',
-                difficultyLevel: 'facile',
-                length: '45 m',
-                pitchesCount: 2,
-                protectionType: 'Fix acciaio inox (S1)',
-                protectionCategory: 'sport',
-                exposure: 'Sud',
-                climbTime: '1h 00m',
-                descentTime: '20 min (come Akuna Matata)',
-                gear: '12 rinvii',
-                gpsCoords: '42.6124, 12.5854 (A sinistra del 2° tiro Akuna Matata)',
-                summary: 'Sfrutta la bellissima parete di placca alla sinistra di Akuna Matata, partendo dai primi 3 spit del secondo tiro di quest\'ultima.',
-                approach: 'Come per Akuna Matata (raggiungere S1 di Akuna Matata).',
-                descent: 'Vedere discesa di Akuna Matata (doppie o sentiero CAI 674/c).',
-                svgPath: [
-                    { x: 110, y: 205, label: 'Attacco (S1 Akuna)' },
-                    { x: 80, y: 135, label: 'S1 Terrazzino', pitchIndex: 0 },
-                    { x: 75, y: 60, label: 'S2', pitchIndex: 1 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '5b', length: '15 m', bolts: 'Fix', desc: 'Sfrutta i primi 3 spit di L2 di Akuna Matata per poi deviare a sinistra in un traverso che termina su un comodo terrazzino.' },
-                    { num: 'L2', grade: '5c', length: '30 m', bolts: 'Fix', desc: 'Tiro di placca su ottima roccia che continua verticalmente fino a un diedro oltre il quale si scorge la sosta.' }
-                ]
-            },
-            {
-                id: 'canti-bosco',
-                type: 'multipitch',
-                sectorId: 'monte-eolo',
-                sector: '4.3.7 Monte Eolo — Penne di Sant’Andrea',
-                name: 'Canti nel Bosco',
-                openers: 'Settore destro Akuna Matata',
-                gradeMax: '5c',
-                gradeObbl: '5b',
-                difficultyLevel: 'facile',
-                length: '75 m',
-                pitchesCount: 3,
-                protectionType: 'Fix acciaio inox',
-                protectionCategory: 'sport',
-                exposure: 'Sud',
-                climbTime: '1h 15m',
-                descentTime: '20 min (doppie)',
-                gear: '12 rinvii',
-                gpsCoords: '42.6124, 12.5854 (A destra di Akuna Matata)',
-                summary: 'Via plaisir di tre lunghezze situata immediatamente sulla destra di Akuna Matata.',
-                approach: 'Come per Akuna Matata, attaccando sulla destra della stessa.',
-                descent: 'In corda doppia lungo la via.',
-                svgPath: [
-                    { x: 135, y: 205, label: 'Attacco' },
-                    { x: 140, y: 150, label: 'S1', pitchIndex: 0 },
-                    { x: 145, y: 95, label: 'S2', pitchIndex: 1 },
-                    { x: 145, y: 40, label: 'S3', pitchIndex: 2 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '5b', length: '25 m', bolts: 'Fix', desc: 'Prima lunghezza su calcare articolato.' },
-                    { num: 'L2', grade: '5c', length: '25 m', bolts: 'Fix', desc: 'Seconda lunghezza su placca lavorata.' },
-                    { num: 'L3', grade: '5c', length: '25 m', bolts: 'Fix', desc: 'Terza lunghezza fino alla sosta di calata.' }
-                ]
-            },
-            {
-                id: 'qualche-volta',
-                type: 'multipitch',
-                sectorId: 'monte-eolo',
-                sector: '4.3.8 Monte Eolo — Penne di Sant’Andrea',
-                name: 'Qualche Volta',
-                openers: 'Settore destro Akuna Matata',
-                gradeMax: '6a',
-                gradeObbl: '5b',
-                difficultyLevel: 'facile',
-                length: '75 m',
-                pitchesCount: 3,
-                protectionType: 'Fix acciaio inox',
-                protectionCategory: 'sport',
-                exposure: 'Sud',
-                climbTime: '1h 15m',
-                descentTime: '20 min (doppie)',
-                gear: '12 rinvii',
-                gpsCoords: '42.6124, 12.5854 (A destra di Canti nel Bosco)',
-                summary: 'Itinerario sportivo di tre tiri subito a destra di Canti nel Bosco.',
-                approach: 'Come per Akuna Matata, attaccando a destra di Canti nel Bosco.',
-                descent: 'In corda doppia lungo la via.',
-                svgPath: [
-                    { x: 155, y: 205, label: 'Attacco' },
-                    { x: 160, y: 150, label: 'S1', pitchIndex: 0 },
-                    { x: 165, y: 95, label: 'S2', pitchIndex: 1 },
-                    { x: 165, y: 40, label: 'S3', pitchIndex: 2 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '5b', length: '25 m', bolts: 'Fix', desc: 'Primo tiro fino alla prima sosta attrezzata.' },
-                    { num: 'L2', grade: '6a', length: '25 m', bolts: 'Fix', desc: 'Secondo tiro continuo su calcare compatto.' },
-                    { num: 'L3', grade: '6a', length: '25 m', bolts: 'Fix', desc: 'Terzo tiro fino alla sosta finale.' }
-                ]
-            },
-            {
-                id: 'terza-via',
-                type: 'multipitch',
-                sectorId: 'monte-eolo',
-                sector: '4.3.9 Monte Eolo — Penne di Sant’Andrea',
-                name: 'La Terza Via',
-                openers: 'Settore destro pilastro superiore',
-                gradeMax: '6b+',
-                gradeObbl: '5c',
-                difficultyLevel: 'medio',
-                length: '100 m',
-                pitchesCount: 4,
-                protectionType: 'Fix acciaio inox',
-                protectionCategory: 'sport',
-                exposure: 'Sud',
-                climbTime: '1h 45m',
-                descentTime: '25 min (doppie su Akuna Matata)',
-                gear: '12 rinvii, due corde da 60m',
-                gpsCoords: '42.6124, 12.5854 (A destra di Qualche Volta)',
-                photoUrl: 'images/image2.jpg',
-                photoCaption: 'Tracciato della Terza Via con indicazione delle calate in doppia',
-                summary: 'Quattro lunghezze di ottima arrampicata che culminano sulla cresta sommitale con rientro sulle calate di Akuna Matata.',
-                approach: 'Come per Akuna Matata, sul lato destro del pilastro superiore.',
-                descent: 'Seguire la facile cresta fino a raggiungere le doppie di Akuna Matata (corde da 60 m) fino alla corda fissa e al sentiero principale.',
-                svgPath: [
-                    { x: 175, y: 205, label: 'Attacco' },
-                    { x: 180, y: 160, label: 'S1', pitchIndex: 0 },
-                    { x: 185, y: 115, label: 'S2', pitchIndex: 1 },
-                    { x: 180, y: 70, label: 'S3', pitchIndex: 2 },
-                    { x: 165, y: 30, label: 'Cresta', pitchIndex: 3 }
-                ],
-                pitches: [
-                    { num: 'L1', grade: '5c', length: '25 m', bolts: 'Fix', desc: 'Prima lunghezza di riscaldamento su calcare grigio.' },
-                    { num: 'L2', grade: '6b+', length: '25 m', bolts: 'Fix', desc: 'Tiro chiave della via con passaggi tecnici su placca/muro.' },
-                    { num: 'L3', grade: '6a', length: '25 m', bolts: 'Fix', desc: 'Terza lunghezza continua.' },
-                    { num: 'L4', grade: '5c', length: '25 m', bolts: 'Fix', desc: 'Quarta lunghezza fino alla facile cresta sommitale.' }
-                ]
-            },
-            {
-                id: 'falesia-due-torri',
-                type: 'falesia',
-                sectorId: 'monte-eolo',
-                sector: '4.4 Monte Eolo — Osservatorio / S. Erasmo',
-                name: 'Falesia Le Due Torri (8 vie)',
-                openers: 'Luigi Martino e Federico Nullo',
-                gradeMax: '8a+',
-                gradeObbl: '5b',
-                difficultyLevel: 'facile',
-                length: '8 vie',
-                pitchesCount: 8,
-                protectionType: 'Fix acciaio inox',
-                protectionCategory: 'sport',
-                exposure: 'Sud-Est',
-                climbTime: 'Inverno - Primavera - Autunno',
-                descentTime: '580 m s.l.m.',
-                gear: 'Corda singola 60m, 10 rinvii',
-                gpsCoords: '42.6143, 12.5914 (Osservatorio Astronomico / S. Erasmo)',
-                summary: 'Piccola falesia ben esposta nei pressi dell\'Osservatorio Astronomico sopra Cesi con tiri dal 5b fino all\'8a+.',
-                approach: 'Da Terni Nord verso Cesi, poi Strada della Pittura, via di Terra Maiura (cartello giallo OSSERVATORIO) e Vocabolo S. Erasmo per 2,7 km fino all\'Osservatorio. Scendere a sud lasciando l\'osservatorio a destra, seguire gli omini e la freccia sull\'albero verso sud-est fino alla bacheca alla base (10 min).',
-                descent: 'Calata sportiva dagli anelli di sosta.',
-                cragRoutes: [
-                    { name: 'Habanero', grade: '5c+', meters: '10 m', stars: '+++' },
-                    { name: 'Morbidis e Gnomis', grade: '5b', meters: '14 m', stars: '++' },
-                    { name: 'Tienilo duro', grade: '7b+', meters: '14 m', stars: '' },
-                    { name: 'La forza del muschio', grade: '7c+/8a+', meters: '20 m', stars: '+++' },
-                    { name: 'I 4 e la liberazione', grade: '7b', meters: '16 m', stars: '++' },
-                    { name: 'Federico spaccacaviglie', grade: '6b+/6c', meters: '18 m', stars: '++++' },
-                    { name: 'La via del di dietro', grade: '6a+', meters: '18 m', stars: '+++' },
-                    { name: 'Fifty/fifty', grade: '6a', meters: '15 m', stars: '+++' }
-                ]
-            },
-            {
-                id: 'sassi-pelasgi',
-                type: 'falesia',
-                sectorId: 'monte-eolo',
-                sector: '4.5 Monte Eolo — Cesi (S.S. 79)',
-                name: 'Sassi dei Pelasgi',
-                openers: 'Settore d\'arrampicata sopra Cesi',
-                gradeMax: 'N.D.',
-                gradeObbl: 'N.D.',
-                difficultyLevel: 'facile',
-                length: 'Settore monotiri',
-                pitchesCount: 0,
-                protectionType: 'Fix / Chiodatura locale',
-                protectionCategory: 'sport',
-                exposure: 'Sud-Ovest',
-                climbTime: 'Primavera - Autunno - Inverno',
-                descentTime: '10 min avv.',
-                gear: 'Corda singola, 10 rinvii',
-                gpsCoords: 'S.S. 79 — Cartello stradale località Cesi',
-                summary: 'Piccolo settore immerso nel bosco di pini d\'Aleppo immediatamente a monte del cartello stradale di Cesi lungo la S.S. 79.',
-                approach: 'Parcheggiare l\'auto su uno slargo (a destra venendo da Terni) della S.S. 79 in corrispondenza del cartello stradale di Cesi. Imboccare il sentiero poco oltre che sale prima verso Cesi e poi a destra nel bosco di pini d\'Aleppo (10 min).',
-                descent: 'Calata sportiva dagli anelli di sosta.',
-                cragRoutes: []
+                "url": "images/image13.jpg",
+                "caption": "Mappa di accesso alla Penna della Rocca dal Santuario Madonna dell'Ulivo"
             }
-        ];
+        ],
+        "summary": "Risale integralmente la cresta ovest della Rocca fino alla vetta. Presenta brevi tratti di arrampicata e alcuni passaggi esposti.",
+        "approach": "Dalla strada pedonale che conduce al Santuario della Madonna dell'Ulivo si devia a sinistra seguendo una traccia segnalata con bolli rossi, superando un muretto a secco fino al filo di cresta.",
+        "descent": "Dalla vetta attraversare la Rocca e scendere nel canalone di destra seguendo tracce di sentiero fino alla base della falesia e poi al Santuario.",
+        "svgPath": [
+            {
+                "x": 40,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 185,
+                "y": 40,
+                "label": "Vetta Rocca",
+                "pitchIndex": 0
+            }
+        ],
+        "pitches": [
+            {
+                "num": "Cresta",
+                "grade": "F+ (II)",
+                "length": "200 m",
+                "bolts": "Non attrezzata",
+                "desc": "Si prosegue sul filo della cresta ovest superando successivi saltini e paretine fino alla cima (45 minuti)."
+            }
+        ]
+    },
+    {
+        "id": "assalto-rocca",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.1.2 Penna della Rocca — La Rocca",
+        "name": "Assalto alla Rocca",
+        "openers": "Silvano Lepri e Conti (1979)",
+        "gradeMax": "IV+",
+        "gradeObbl": "AD+",
+        "difficultyLevel": "facile",
+        "length": "90 m",
+        "pitchesCount": 2,
+        "protectionType": "L1 a fix + terreno alpinistico",
+        "protectionCategory": "trad",
+        "exposure": "Sud-Ovest",
+        "climbTime": "1h 15m",
+        "descentTime": "15 min a piedi",
+        "gear": "NDA (Normale Dotazione Alpinistica), cordini per alberi",
+        "gpsCoords": "42.6000, 12.6221 (Santuario Madonna dell’Ulivo)",
+        "summary": "Via storica ottima per chi inizia ad arrampicare da capocordata su terreno alpinistico con possibilità di varianti di difficoltà superiore.",
+        "approach": "Dal Santuario Madonna dell'Ulivo salire a sinistra nel sottobosco dopo il muretto, proseguendo sul ghiaione verso sinistra fino al margine sinistro della falesia della Rocca (15 min).",
+        "descent": "Entrare nella Rocca e imboccare il canalone di destra seguendo tracce di sentiero fino alla base della parete (circa 15 minuti).",
+        "svgPath": [
+            {
+                "x": 65,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 95,
+                "y": 125,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 135,
+                "y": 45,
+                "label": "S2",
+                "pitchIndex": 1
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "III",
+                "length": "40 m",
+                "bolts": "Fix",
+                "desc": "Salire dritti per placche su roccia molto buona fino a un terrazzino. Deviare leggermente a destra su rocce più appoggiate e poi verso sinistra, superando dei gradoni fino a un ampio terrazzo erboso. Sosta su alberello."
+            },
+            {
+                "num": "L2",
+                "grade": "IV+",
+                "length": "30 m",
+                "bolts": "Alpinistica",
+                "desc": "Superare la paretina che si trova di fronte leggermente a destra e proseguire per ampi terrazzi fino alla Rocca (variante diretta con passi di V)."
+            }
+        ]
+    },
+    {
+        "id": "innominata",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.1.3 Penna della Rocca — La Rocca",
+        "name": "Innominata",
+        "openers": "Carlo Catalano (Anni '80)",
+        "gradeMax": "5c",
+        "gradeObbl": "III+",
+        "difficultyLevel": "facile",
+        "length": "90 m",
+        "pitchesCount": 2,
+        "protectionType": "Fix sullo spigolo + NDA",
+        "protectionCategory": "trad",
+        "exposure": "Sud-Ovest",
+        "climbTime": "1h 15m",
+        "descentTime": "15 min a piedi",
+        "gear": "NDA (Normale Dotazione Alpinistica)",
+        "gpsCoords": "42.6000, 12.6221 (Santuario Madonna dell’Ulivo)",
+        "summary": "Attacca dallo spigolo destro della falesia della Rocca e prosegue su placche appoggiate fino alla cima.",
+        "approach": "Come per la Falesia della Rocca (15 minuti dal Santuario Madonna dell'Ulivo), portandosi sullo spigolo destro.",
+        "descent": "Dalla cima della Rocca scendere lungo il canalone di destra fino alla base.",
+        "svgPath": [
+            {
+                "x": 165,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 160,
+                "y": 120,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 145,
+                "y": 45,
+                "label": "S2",
+                "pitchIndex": 1
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "5c",
+                "length": "35 m",
+                "bolts": "Fix",
+                "desc": "Salire lo spigolo destro della falesia (primo tiro attrezzato)."
+            },
+            {
+                "num": "L2",
+                "grade": "III+",
+                "length": "55 m",
+                "bolts": "NDA",
+                "desc": "Proseguire su placche appoggiate fino alla cima della Rocca."
+            }
+        ]
+    },
+    {
+        "id": "falesia-rocca",
+        "type": "falesia",
+        "sectorId": "penna-rocca",
+        "sector": "2.1.4 Penna della Rocca — Falesia",
+        "name": "Falesia della Rocca (12 lunghezze)",
+        "openers": "Valorizzata da Alessandro Quadriglia",
+        "gradeMax": "6b+",
+        "gradeObbl": "5a",
+        "difficultyLevel": "facile",
+        "length": "11 vie (12 tiri)",
+        "pitchesCount": 12,
+        "protectionType": "Fix acciaio inox",
+        "protectionCategory": "sport",
+        "exposure": "Sud-Est",
+        "climbTime": "Primavera - Autunno",
+        "descentTime": "400 m s.l.m.",
+        "gear": "Corda singola, 10-12 rinvii",
+        "gpsCoords": "42.6000, 12.6221 (Santuario Madonna dell’Ulivo)",
+        "gallery": [
+            {
+                "url": "images/image13.jpg",
+                "caption": "Mappa accesso alla Penna della Rocca"
+            }
+        ],
+        "photoUrl": "images/image3.jpg",
+        "photoCaption": "La Rocca: panoramica delle vie e mappa accesso dal Santuario Madonna dell’Ulivo",
+        "summary": "Falesia situata sotto la rocca diruta che domina la conca ternana, riattrezzata in ottica sportiva con ottima chiodatura a fix inox.",
+        "approach": "Dal Santuario Madonna dell'Ulivo salire a sinistra nel sottobosco dopo il muretto e seguire il ghiaione verso sinistra fino alla base (15 min).",
+        "descent": "Calata sportiva in moulinette dagli anelli di sosta.",
+        "cragRoutes": [
+            {
+                "name": "Cactus",
+                "grade": "6a",
+                "meters": "-",
+                "stars": "+++"
+            },
+            {
+                "name": "Assalto alla rocca",
+                "grade": "5c",
+                "meters": "-",
+                "stars": "+++"
+            },
+            {
+                "name": "Olio bollente",
+                "grade": "6a+",
+                "meters": "-",
+                "stars": "+++"
+            },
+            {
+                "name": "Parla porco cane",
+                "grade": "6b",
+                "meters": "-",
+                "stars": "++++"
+            },
+            {
+                "name": "Giulia",
+                "grade": "6a+",
+                "meters": "-",
+                "stars": "+++"
+            },
+            {
+                "name": "Mitra",
+                "grade": "5c",
+                "meters": "-",
+                "stars": "+++"
+            },
+            {
+                "name": "Non sarà un’avventura",
+                "grade": "6b",
+                "meters": "-",
+                "stars": "++++"
+            },
+            {
+                "name": "Clessidre senza tempo",
+                "grade": "6a+",
+                "meters": "-",
+                "stars": "++++"
+            },
+            {
+                "name": "Zazzà",
+                "grade": "6b+",
+                "meters": "-",
+                "stars": "++++"
+            },
+            {
+                "name": "Viaggio in prima classe",
+                "grade": "6b+",
+                "meters": "-",
+                "stars": "++++"
+            },
+            {
+                "name": "Lo spigolo L1",
+                "grade": "5a",
+                "meters": "-",
+                "stars": "+++"
+            },
+            {
+                "name": "Lo spigolo L2",
+                "grade": "5c",
+                "meters": "-",
+                "stars": "+++"
+            }
+        ]
+    },
+    {
+        "id": "ali-angelo",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.2.1 Penna della Rocca — Parete Sud-Ovest",
+        "name": "Le Ali dell’Angelo (Itinerario 4)",
+        "openers": "Lorenzo Di Tullio e Carlo Capuano (2016, restyling 2018)",
+        "gradeMax": "6a",
+        "gradeObbl": "5b",
+        "difficultyLevel": "facile",
+        "length": "100 m",
+        "pitchesCount": 3,
+        "protectionType": "Fix + qualche chiodo (S1)",
+        "protectionCategory": "sport",
+        "exposure": "Sud-Ovest",
+        "climbTime": "1h 45m",
+        "descentTime": "20 min (doppie)",
+        "gear": "14 rinvii, mezze corde o corda da 60m",
+        "gpsCoords": "42.6008, 12.6273 (Parete Sud-Ovest)",
+        "gallery": [
+            {
+                "url": "images/image10.jpg",
+                "caption": "Secondo tiro de Le Ali dell'Angelo — foto di Pino Calandrella"
+            }
+        ],
+        "photoUrl": "images/image5.jpg",
+        "photoCaption": "Penna della Rocca parete sud-ovest (it. 4) e secondo tiro delle Ali dell’Angelo — foto di Pino Calandrella",
+        "summary": "Sale il netto diedro obliquo che incide lo scudo della parete sud-ovest. ATTENZIONE: non seguire i fix color oro a destra di L1 (roccia friabile).",
+        "approach": "Dal Santuario Madonna dell'Ulivo salire a sinistra nel sottobosco dopo il muretto, salire il ghiaione verso sinistra, costeggiare il bosco e deviare a destra verso le pareti (15 min).",
+        "descent": "In doppia lungo la via (con una doppia da 60 m dalla terza sosta si arriva direttamente a terra).",
+        "svgPath": [
+            {
+                "x": 75,
+                "y": 205,
+                "label": "Attacco (Chiodo)"
+            },
+            {
+                "x": 95,
+                "y": 150,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 115,
+                "y": 95,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 130,
+                "y": 40,
+                "label": "S3",
+                "pitchIndex": 2
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "5c",
+                "length": "40 m",
+                "bolts": "Chiodo + Fix",
+                "desc": "Attacco con chiodo come prima protezione; salire la placca a sinistra, aggirare lo spigolo a destra e traversare fino al diedro risalendolo fino alla sosta. Non seguire i fix oro a destra."
+            },
+            {
+                "num": "L2",
+                "grade": "6a",
+                "length": "30 m",
+                "bolts": "Fix",
+                "desc": "Proseguire lungo il diedro accennato, deviare leggermente a destra per uscire dallo strapiombo e continuare su placche appoggiate fino in sosta."
+            },
+            {
+                "num": "L3",
+                "grade": "5a",
+                "length": "30 m",
+                "bolts": "Fix",
+                "desc": "Proseguire dritti per placche appoggiate fino a un diedrino al termine del quale si trova la sosta su una comoda cengia."
+            }
+        ]
+    },
+    {
+        "id": "tommaso-flavio",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.2.2 Penna della Rocca — Parete Sud-Ovest",
+        "name": "Tommaso Flavio (Itinerario 5)",
+        "openers": "Carlo Capuano, Lorenzo Di Tullio e altri (2015)",
+        "gradeMax": "6b",
+        "gradeObbl": "5c",
+        "difficultyLevel": "medio",
+        "length": "105 m",
+        "pitchesCount": 4,
+        "protectionType": "Fix + qualche chiodo (S1)",
+        "protectionCategory": "sport",
+        "exposure": "Sud-Ovest",
+        "climbTime": "2h 00m",
+        "descentTime": "25 min (doppie)",
+        "gear": "14 rinvii, due corde da 60m",
+        "gpsCoords": "42.6008, 12.6273 (Parete Sud-Ovest)",
+        "gallery": [
+            {
+                "url": "images/image14.jpg",
+                "caption": "Carlo Capuano in apertura sull'ultimo tiro della Tommaso Flavio"
+            }
+        ],
+        "photoUrl": "images/image5.jpg",
+        "photoCaption": "Penna della Rocca parete sud-ovest (itinerario 5) e Carlo Capuano in apertura sull’ultimo tiro",
+        "summary": "Supera le placche compatte e i piccoli tetti della porzione centrale della parete sud-ovest con bella arrampicata su roccia buona.",
+        "approach": "Come per Le Ali dell'Angelo (15 minuti dal Santuario Madonna dell'Ulivo), nella porzione centrale della parete sud-ovest.",
+        "descent": "In corda doppia lungo la via (soste attrezzate con anello).",
+        "svgPath": [
+            {
+                "x": 105,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 125,
+                "y": 165,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 145,
+                "y": 125,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 135,
+                "y": 80,
+                "label": "S3",
+                "pitchIndex": 2
+            },
+            {
+                "x": 150,
+                "y": 38,
+                "label": "S4",
+                "pitchIndex": 3
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "6a",
+                "length": "15 m",
+                "bolts": "Fix",
+                "desc": "Attacco su piccola rampa obliqua verso destra, superare lo spigolo accennato e proseguire in placca fino a una fessura che porta al terrazzo di sosta (variante 6a a sinistra)."
+            },
+            {
+                "num": "L2",
+                "grade": "6b",
+                "length": "20 m",
+                "bolts": "Fix",
+                "desc": "Proseguire lungo la rampa verso destra, poi per un piccolo diedro strapiombante fino a superare il tetto sopra il quale si trova la sosta."
+            },
+            {
+                "num": "L3",
+                "grade": "5b",
+                "length": "40 m",
+                "bolts": "Fix",
+                "desc": "Salire verticalmente e poi deviare a sinistra per piccoli salti più facili."
+            },
+            {
+                "num": "L4",
+                "grade": "5c",
+                "length": "30 m",
+                "bolts": "Fix",
+                "desc": "Salire la placca sopra la sosta, deviare verso destra e poi dritti per un diedro."
+            }
+        ]
+    },
+    {
+        "id": "zagara-ernesto",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.2.3 Penna della Rocca — Parete Sud-Ovest",
+        "name": "La Zagara di Ernesto",
+        "openers": "A. Pasquantonio, M. Principi, A. Leonardi e altri (2025)",
+        "gradeMax": "6b+",
+        "gradeObbl": "6a",
+        "difficultyLevel": "medio",
+        "length": "100 m",
+        "pitchesCount": 3,
+        "protectionType": "Interamente attrezzata a fix (S1)",
+        "protectionCategory": "sport",
+        "exposure": "Sud-Ovest",
+        "climbTime": "2h 00m",
+        "descentTime": "20 min (doppie)",
+        "gear": "14 rinvii",
+        "gpsCoords": "42.6008, 12.6273 (A destra di Tommaso Flavio)",
+        "summary": "Recente itinerario sportivo aperto nel 2025 immediatamente a destra della Tommaso Flavio, caratterizzato da un lungo traverso e una pancia tecnica.",
+        "approach": "Stesso avvicinamento della parete sud-ovest (15 min dal Santuario Madonna dell'Ulivo), attacco subito a destra di Tommaso Flavio.",
+        "descent": "In corda doppia lungo la via.",
+        "svgPath": [
+            {
+                "x": 120,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 165,
+                "y": 165,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 175,
+                "y": 105,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 170,
+                "y": 45,
+                "label": "S3",
+                "pitchIndex": 2
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "5c+",
+                "length": "15 m",
+                "bolts": "Fix",
+                "desc": "Lungo traverso verso il lato destro fino alla prima sosta."
+            },
+            {
+                "num": "L2",
+                "grade": "6b+",
+                "length": "45 m",
+                "bolts": "Fix",
+                "desc": "Prosegue su placca compatta e verticale per poi superare una pancia fino alla sosta."
+            },
+            {
+                "num": "L3",
+                "grade": "6a",
+                "length": "40 m",
+                "bolts": "Fix",
+                "desc": "Ultimo tiro tecnico su calcare grigio fino alla sosta finale."
+            }
+        ]
+    },
+    {
+        "id": "ravanata-finanziere",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.2.4 Penna della Rocca — Parete Sud-Ovest",
+        "name": "Ravanata del Finanziere (Itinerario 6)",
+        "openers": "Lorenzo Di Tullio e Carlo Capuano (2018)",
+        "gradeMax": "6a+",
+        "gradeObbl": "5c",
+        "difficultyLevel": "facile",
+        "length": "200 m",
+        "pitchesCount": 8,
+        "protectionType": "Fix sui primi 2 tiri, poi alpinistica (S1/R1)",
+        "protectionCategory": "trad",
+        "exposure": "Sud-Ovest",
+        "climbTime": "3h 30m",
+        "descentTime": "40 min",
+        "gear": "NDA (friend/cordini per clessidre e alberi), 12 rinvii",
+        "gpsCoords": "42.6008, 12.6273 (Sperone tra SO e Austeri)",
+        "gallery": [
+            {
+                "url": "images/image5.jpg",
+                "caption": "Tracciato (Itinerario 6) sulla panoramica Sud-Ovest"
+            }
+        ],
+        "photoUrl": "images/image24.jpg",
+        "photoCaption": "Itinerario 6 sulla panoramica Sud-Ovest e primo tiro della Ravanata del Finanziere — foto di Pino Calandrella",
+        "summary": "La via più lunga della parete: primi due tiri sportivi a fix e parte alta d'avventura fino in vetta alla Penna della Rocca.",
+        "approach": "Come per la parete sud-ovest, poco a destra della Tommaso Flavio prima dello sperone che divide dalla parete Austeri.",
+        "descent": "Possibile calata di 50 m da S2, doppia da S5 fino al terrazzo delle doppie di Austeri, oppure proseguire fino in cima scendendo per la cresta verso la forcella con la Rocca.",
+        "svgPath": [
+            {
+                "x": 140,
+                "y": 210,
+                "label": "Attacco"
+            },
+            {
+                "x": 155,
+                "y": 185,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 165,
+                "y": 160,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 160,
+                "y": 135,
+                "label": "S3",
+                "pitchIndex": 2
+            },
+            {
+                "x": 155,
+                "y": 110,
+                "label": "S4",
+                "pitchIndex": 3
+            },
+            {
+                "x": 165,
+                "y": 85,
+                "label": "S5",
+                "pitchIndex": 4
+            },
+            {
+                "x": 155,
+                "y": 60,
+                "label": "S6",
+                "pitchIndex": 5
+            },
+            {
+                "x": 145,
+                "y": 38,
+                "label": "S7",
+                "pitchIndex": 6
+            },
+            {
+                "x": 140,
+                "y": 18,
+                "label": "Cima",
+                "pitchIndex": 7
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "6a+",
+                "length": "30 m",
+                "bolts": "Fix",
+                "desc": "Placca articolata piegando leggermente a destra verso una zona di roccia gialla, poi dritti fino al terrazzo erboso."
+            },
+            {
+                "num": "L2",
+                "grade": "5c+",
+                "length": "40 m",
+                "bolts": "Fix",
+                "desc": "Piegare a destra, superare un tettino e proseguire per diedro obliquo fino alla sosta (da qui calata di 50 m a terra)."
+            },
+            {
+                "num": "L3",
+                "grade": "IV",
+                "length": "20 m",
+                "bolts": "Clessidre",
+                "desc": "Lungo la fessura e poi dritti per rampette fino a sosta su clessidre."
+            },
+            {
+                "num": "L4",
+                "grade": "II",
+                "length": "40 m",
+                "bolts": "Alpinistica",
+                "desc": "Dritti per paretine puntando all'evidente placca."
+            },
+            {
+                "num": "L5",
+                "grade": "5c / III",
+                "length": "40 m",
+                "bolts": "3 Fix + cordone",
+                "desc": "Salire la placca compatta (3 fix) fino a un terrazzo, poi 10 m a destra fino a sosta con cordone blu."
+            },
+            {
+                "num": "L6",
+                "grade": "III",
+                "length": "30 m",
+                "bolts": "Fix",
+                "desc": "Lungo lo spigolo fino a una forcella con sosta a fix."
+            },
+            {
+                "num": "L7",
+                "grade": "II",
+                "length": "60 m",
+                "bolts": "Albero",
+                "desc": "Cresta verso un boschetto sospeso superandolo a sinistra fino a sostare su albero."
+            },
+            {
+                "num": "L8",
+                "grade": "III",
+                "length": "40 m",
+                "bolts": "Clessidra",
+                "desc": "Dritti per placche articolate fino a una clessidra con cordone sotto la vetta."
+            }
+        ]
+    },
+    {
+        "id": "via-placche",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.3.1 Penna della Rocca — Parete Austeri",
+        "name": "Via delle Placche (Itinerario 7)",
+        "openers": "S. Lepri, P. Nobili, Catalano, Fabbretti, Baroncini, Pierbattisti (1979-85)",
+        "gradeMax": "VI",
+        "gradeObbl": "TD / R2",
+        "difficultyLevel": "medio",
+        "length": "110 m",
+        "pitchesCount": 3,
+        "protectionType": "Chiodi tradizionali + alcuni fix (R2)",
+        "protectionCategory": "trad",
+        "exposure": "Est",
+        "climbTime": "2h 30m",
+        "descentTime": "30 min",
+        "gear": "NDA (friend/nut, cordini), corde da 60m",
+        "gpsCoords": "42.6008, 12.6273 (Parete Austeri — Margine sx)",
+        "photoUrl": "images/image5.jpg",
+        "photoCaption": "Panoramica Parete Sud-Ovest — Itinerario 7 (Via delle Placche)",
+        "summary": "Considerata la più impegnativa tra le classiche della zona, si snoda sul margine sinistro verticale della parete Austeri.",
+        "approach": "Dal Santuario Madonna dell'Ulivo prendere il sentiero nel sottobosco e, prima del ghiaione, svoltare a destra sul sentiero CAI in piano. Oltrepassato lo sperone (\"coda di rondine\"), salire a sinistra per tracce fino alla parete (20 min).",
+        "descent": "Consigliabile scendere dalla seconda sosta con una doppia da 60 m (oppure traversare a destra verso S3 della Via Austeri).",
+        "svgPath": [
+            {
+                "x": 65,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 75,
+                "y": 130,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 60,
+                "y": 75,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 80,
+                "y": 30,
+                "label": "S3",
+                "pitchIndex": 2
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "VI",
+                "length": "35 m",
+                "bolts": "3 Fix + 3 chiodi",
+                "desc": "Placca appoggiata (1 fix poco visibile), superare lo strapiombo a sinistra (2 fix), poi spigolo fino a terrazzo erboso e camino/placca fino a sosta sotto un tetto."
+            },
+            {
+                "num": "L2",
+                "grade": "V+",
+                "length": "20 m",
+                "bolts": "1 Fix + 3 chiodi",
+                "desc": "Traverso a sinistra per circa 10 m (1 fix) fino a una fessura, risalirla fino alla sosta su esile cengia."
+            },
+            {
+                "num": "L3",
+                "grade": "III+ / II+",
+                "length": "50 m",
+                "bolts": "Alpinistica",
+                "desc": "Sconsigliato proseguire dritti su roccia mediocre; consigliato traversare a destra per diedro-rampa fino a S3 di Via Austeri."
+            }
+        ]
+    },
+    {
+        "id": "via-austeri",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.3.2 Penna della Rocca — Parete Austeri",
+        "name": "Via Austeri — Parete Est (Itinerario 8)",
+        "openers": "Silvano Lepri e Paolo Nobili (1976, rettifica C. Capuano)",
+        "gradeMax": "V+",
+        "gradeObbl": "D+ / R2",
+        "difficultyLevel": "facile",
+        "length": "110 m",
+        "pitchesCount": 4,
+        "protectionType": "Chiodi classici + soste a 2 fix (R2)",
+        "protectionCategory": "trad",
+        "exposure": "Est",
+        "climbTime": "2h 15m",
+        "descentTime": "30 min",
+        "gear": "NDA (friend medi/piccoli, cordini)",
+        "gpsCoords": "42.6008, 12.6273 (Targa Orlando Austeri)",
+        "summary": "Storica linea al centro della parete est dedicata a Orlando Austeri (targa e croce all'attacco). Soste attrezzate a fix.",
+        "approach": "Come per la Parete Austeri (20 minuti dal Santuario Madonna dell'Ulivo), fino alla croce e alla targa commemorativa alla base.",
+        "descent": "Dal terrazzo finale effettuare una doppia di 30 m nel canalone opposto (calata su albero 5 m sotto l'ultima sosta) e scendere per tracce alla base.",
+        "svgPath": [
+            {
+                "x": 110,
+                "y": 205,
+                "label": "Attacco (Targa)"
+            },
+            {
+                "x": 115,
+                "y": 155,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 105,
+                "y": 105,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 115,
+                "y": 60,
+                "label": "S3",
+                "pitchIndex": 2
+            },
+            {
+                "x": 120,
+                "y": 25,
+                "label": "S4 Terrazzo",
+                "pitchIndex": 3
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "III+",
+                "length": "20 m",
+                "bolts": "2 chiodi",
+                "desc": "Attacco dritti sopra la targa commemorativa su rocce articolate, piccolo diedro uscendo a destra fino a un terrazzino."
+            },
+            {
+                "num": "L2",
+                "grade": "V+",
+                "length": "35 m",
+                "bolts": "Chiodi + clessidra",
+                "desc": "Lungo lame (chiodo), diedro a sinistra fino a chiodo con cordino azzurro, leggero strapiombo a sinistra e dritti fino al tettino che nasconde la sosta."
+            },
+            {
+                "num": "L3",
+                "grade": "IV",
+                "length": "30 m",
+                "bolts": "Chiodi + 2 Fix",
+                "desc": "Fessura obliqua a destra poi diedro a sinistra (chiodi), canale facile, pilastrino a destra fino a masso con cavo d'acciaio e sosta su 2 fix."
+            },
+            {
+                "num": "L4",
+                "grade": "III-",
+                "length": "20 m",
+                "bolts": "2 Fix",
+                "desc": "Tenersi a destra tra arbusti aggirando una parete strapiombante a sinistra fino al comodissimo terrazzo finale."
+            }
+        ]
+    },
+    {
+        "id": "via-gea",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.3.3 Penna della Rocca — Parete Austeri",
+        "name": "GEA (Itinerario 9)",
+        "openers": "Carlo Capuano e altri (2011)",
+        "gradeMax": "6a+",
+        "gradeObbl": "5c",
+        "difficultyLevel": "medio",
+        "length": "110 m",
+        "pitchesCount": 4,
+        "protectionType": "Mista: Fix + chiodi e clessidre (S2/R2)",
+        "protectionCategory": "trad",
+        "exposure": "Est",
+        "climbTime": "2h 15m",
+        "descentTime": "30 min",
+        "gear": "NDA (friend fino al #2, cordini), 10 rinvii",
+        "gpsCoords": "42.6008, 12.6273 (Parete Austeri — Centro-dx)",
+        "summary": "Dedicata a Giulio, Elia e Anita. Condivide L1 con la Austeri per poi salire autonomamente a destra su un secondo tiro di roccia fantastica.",
+        "approach": "Come per la Parete Austeri (20 minuti dal Santuario Madonna dell'Ulivo), attacco sopra la targa Austeri o poco a destra.",
+        "descent": "Dal terrazzo finale doppia di 30 m su albero nel canalone opposto (5 m sotto l'ultima sosta) e rientro per sentiero.",
+        "svgPath": [
+            {
+                "x": 115,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 120,
+                "y": 155,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 140,
+                "y": 100,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 145,
+                "y": 60,
+                "label": "S3",
+                "pitchIndex": 2
+            },
+            {
+                "x": 130,
+                "y": 25,
+                "label": "S4 Terrazzo",
+                "pitchIndex": 3
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "III+",
+                "length": "20 m",
+                "bolts": "Chiodo + cordone",
+                "desc": "Lama-fessura sopra o poco a destra della targa fino al terrazzino di sosta in comune con Austeri."
+            },
+            {
+                "num": "L2",
+                "grade": "6a+",
+                "length": "40 m",
+                "bolts": "Fix + trad",
+                "desc": "Diedro e poi leggermente a destra puntando a un evidente tetto, placca verticale e secondo strapiombo fino in sosta."
+            },
+            {
+                "num": "L3",
+                "grade": "5b",
+                "length": "20 m",
+                "bolts": "Fix azzurro",
+                "desc": "Verso destra in placca e dritti fino a un piccolo tetto protetto da uno spit azzurro, superandolo a destra."
+            },
+            {
+                "num": "L4",
+                "grade": "III",
+                "length": "30 m",
+                "bolts": "Clessidra",
+                "desc": "Diedro-camino con cordone rosso su clessidra, terrazzo e ultimo salto roccioso fino al terrazzo delle doppie."
+            }
+        ]
+    },
+    {
+        "id": "fashion-v",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.3.4 Penna della Rocca — Parete Austeri",
+        "name": "Fashion V (Itinerario 10)",
+        "openers": "Carlo Capuano e altri (2010)",
+        "gradeMax": "VI+",
+        "gradeObbl": "TD+",
+        "difficultyLevel": "medio",
+        "length": "110 m",
+        "pitchesCount": 3,
+        "protectionType": "Classica con fix sul passaggio chiave",
+        "protectionCategory": "trad",
+        "exposure": "Est",
+        "climbTime": "2h 30m",
+        "descentTime": "30 min",
+        "gear": "NDA (friend, nut, cordini)",
+        "gpsCoords": "42.6008, 12.6273 (Parete Austeri — Destra targa)",
+        "photoUrl": "images/image12.jpg",
+        "photoCaption": "Parete Austeri (itinerario 10) e primo tiro di Fashion V — foto di Pino Calandrella",
+        "summary": "Ripercorre la prima parte del \"Naso dell'Indiano\" (Lepri-Nobili 1978) per poi deviare a sinistra su una placca verticale tecnica.",
+        "approach": "Come per la Parete Austeri (20 minuti dal Santuario Madonna dell'Ulivo), attacco presso una clessidra con cordino poco a destra della targa Austeri.",
+        "descent": "Dal terrazzo finale doppia di 30 m su albero nel canalone opposto e discesa per tracce di sentiero.",
+        "svgPath": [
+            {
+                "x": 145,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 155,
+                "y": 140,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 165,
+                "y": 80,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 140,
+                "y": 25,
+                "label": "S3 Terrazzo",
+                "pitchIndex": 2
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "IV",
+                "length": "40 m",
+                "bolts": "Clessidra + trad",
+                "desc": "Placche facili fino a una placca verticale nera chiusa da un tettino a sinistra; non andare a destra verso la catena ma proseguire per salti fino alla sosta."
+            },
+            {
+                "num": "L2",
+                "grade": "VI+",
+                "length": "30 m",
+                "bolts": "Chiodi + Fix",
+                "desc": "Placca verticale leggermente a sinistra (chiodi), poi a destra sul grande masso sporgente (Naso dell'Indiano) e in verticale fino alla fessura in alto a sinistra (sosta su albero)."
+            },
+            {
+                "num": "L3",
+                "grade": "III",
+                "length": "40 m",
+                "bolts": "Alpinistica",
+                "desc": "A destra per facile placca fino a una cengia, superare la paretina sopra (attenzione roccia poco solida) fino al terrazzo delle doppie."
+            }
+        ]
+    },
+    {
+        "id": "dente-cinghiale",
+        "type": "multipitch",
+        "sectorId": "penna-rocca",
+        "sector": "2.4.1 Penna della Rocca — Parete Est",
+        "name": "Dente del Cinghiale",
+        "openers": "Itinerario classico di cresta/sperone",
+        "gradeMax": "IV",
+        "gradeObbl": "AD+",
+        "difficultyLevel": "facile",
+        "length": "150 m",
+        "pitchesCount": 5,
+        "protectionType": "Alpinistica (soste da attrezzare su spuntoni/alberi)",
+        "protectionCategory": "trad",
+        "exposure": "Est",
+        "climbTime": "2h 30m",
+        "descentTime": "45 min a piedi",
+        "gear": "NDA, cordini lunghi per spuntoni e alberi, 2 corde 50/60m",
+        "gpsCoords": "42.6008, 12.6273 (Spigolo destro Parete Austeri)",
+        "photoUrl": "images/image9.jpg",
+        "photoCaption": "Parete est Penna della Rocca — Dente del Cinghiale, foto di Bruno Spina",
+        "summary": "Itinerario d'ambiente lungo lo sperone est fino alla vetta della Penna della Rocca. Consigliati tiri da 30 m per evitare attriti.",
+        "approach": "Raggiunta la base della Parete Austeri (20 min), proseguire sotto la parete aggirando lo spigolo destro e salire per tracce fino allo spiazzo con bollo rosso (25-30 min).",
+        "descent": "Percorrere la cresta sommitale fino alla sella con la cima della Penna della Rocca, scendere a destra nel boschetto verso il versante ovest e aggirare lo spigolone fino alla base.",
+        "svgPath": [
+            {
+                "x": 185,
+                "y": 205,
+                "label": "Attacco (Bollo)"
+            },
+            {
+                "x": 180,
+                "y": 165,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 175,
+                "y": 130,
+                "label": "S2 Selletta",
+                "pitchIndex": 1
+            },
+            {
+                "x": 170,
+                "y": 95,
+                "label": "S3",
+                "pitchIndex": 2
+            },
+            {
+                "x": 165,
+                "y": 60,
+                "label": "S4 Tetto",
+                "pitchIndex": 3
+            },
+            {
+                "x": 155,
+                "y": 22,
+                "label": "Vetta",
+                "pitchIndex": 4
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "III",
+                "length": "30 m",
+                "bolts": "Spuntoni",
+                "desc": "Attacco sull'evidente crestina formata da grandi blocchi (bollo rosso alla base), sosta su spuntoni."
+            },
+            {
+                "num": "L2",
+                "grade": "III",
+                "length": "30 m",
+                "bolts": "Spuntoni",
+                "desc": "Proseguire per via intuitiva fino a una selletta (possibile via di fuga a destra verso il ghiaione)."
+            },
+            {
+                "num": "L3",
+                "grade": "III",
+                "length": "30 m",
+                "bolts": "Alberi",
+                "desc": "Proseguire sull'accennato filo di cresta passando tra diversi alberelli."
+            },
+            {
+                "num": "L4",
+                "grade": "IV",
+                "length": "30 m",
+                "bolts": "2 chiodi",
+                "desc": "Saliscendi poi placchetta solcata da una bella fessura fino a sosta su alberello e spuntone sotto un tetto evidente."
+            },
+            {
+                "num": "L5",
+                "grade": "IV",
+                "length": "30 m",
+                "bolts": "2 chiodi",
+                "desc": "Affrontare il tetto da destra, rimontarlo sulla verticale della sosta e proseguire in placca e canale erboso fino alla vetta."
+            }
+        ]
+    },
+    {
+        "id": "falesia-colle-zannuto",
+        "type": "falesia",
+        "sectorId": "colle-zannuto",
+        "sector": "3.1 Colle Zannuto — Falesia",
+        "name": "Falesia di Colle Zannuto (15 vie)",
+        "openers": "Andrea Di Bari e altri",
+        "gradeMax": "8b",
+        "gradeObbl": "6b",
+        "difficultyLevel": "difficile",
+        "length": "15 vie",
+        "pitchesCount": 15,
+        "protectionType": "Fix acciaio inox (anelli chiusi, manovra richiesta)",
+        "protectionCategory": "sport",
+        "exposure": "Ovest / Bosco",
+        "climbTime": "Estate",
+        "descentTime": "700 m s.l.m.",
+        "gear": "Corda da 70/80m, 15 rinvii",
+        "gpsCoords": "42.6032, 12.6086 (Voc. S. Biagio / Sentiero 3)",
+        "photoUrl": "images/image18.jpg",
+        "photoCaption": "Mappa di accesso alla falesia e pareti di Colle Zannuto",
+        "summary": "La falesia più bella della zona per qualità del calcare e lunghezza dei tiri, immersa in un ambiente selvaggio sopra Cesi.",
+        "approach": "Da Cesi salire la sterrata via Vocabolo S. Biagio (consigliato 4x4), al casolare a sinistra e al cartello CAI n.3 a destra. Parcheggiare a 550m s.l.m., seguire il sentiero n.3 per 15 min fino a quota 700m, entrare nel bosco a destra superando un muretto e scendere nel canale con corde fisse.",
+        "descent": "Soste con anello chiuso di calata: manovra in sosta richiesta.",
+        "cragRoutes": [
+            {
+                "name": "Old boy",
+                "grade": "7b",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "Match point",
+                "grade": "Progetto",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "La bocca del lupo",
+                "grade": "7b/7b+",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "La rabbia giovane",
+                "grade": "8b",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "La fontana della vergine",
+                "grade": "7b",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "Gomorra",
+                "grade": "7c",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "Inception",
+                "grade": "8a+",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "Ferro 3",
+                "grade": "6c",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "Bud guy",
+                "grade": "6c+",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "Japon",
+                "grade": "6b+",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "2046",
+                "grade": "7a+",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "Nostalghia",
+                "grade": "6b+",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "Fizcarraldo",
+                "grade": "6c+",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "Sorgo rosso",
+                "grade": "7a+",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "name": "Delitto perfetto",
+                "grade": "6b",
+                "meters": "-",
+                "stars": ""
+            }
+        ]
+    },
+    {
+        "id": "umbri-dispersi",
+        "type": "multipitch",
+        "sectorId": "colle-zannuto",
+        "sector": "3.1.2 Colle Zannuto — Parete Principale",
+        "name": "Cercando gli Umbri Dispersi",
+        "openers": "Carlo e Gianni Pagliochini, Silvano Lepri, Pierbattisti (1986)",
+        "gradeMax": "V+",
+        "gradeObbl": "TD",
+        "difficultyLevel": "medio",
+        "length": "130 m",
+        "pitchesCount": 3,
+        "protectionType": "Via d'avventura (chiodi e alberi)",
+        "protectionCategory": "trad",
+        "exposure": "Ovest",
+        "climbTime": "2h 30m",
+        "descentTime": "40 min a piedi",
+        "gear": "NDA, chiodi e martello indispensabili, GPS consigliato",
+        "gpsCoords": "42.6059, 12.6068 (Attacco via)",
+        "gallery": [
+            {
+                "url": "images/image27.png",
+                "caption": "Mappa dettaglio avvicinamento all'attacco della via"
+            },
+            {
+                "url": "images/image7.jpg",
+                "caption": "Carlo Capuano impegnato sul primo tiro"
+            },
+            {
+                "url": "images/image20.jpg",
+                "caption": "Passaggio chiave sul primo tiro di Cercando gli Umbri Dispersi"
+            },
+            {
+                "url": "images/image22.png",
+                "caption": "Traccia GPS completa di avvicinamento e discesa"
+            }
+        ],
+        "photoUrl": "images/image19.png",
+        "photoCaption": "Tracciato della via, mappa di avvicinamento/discesa e Carlo Capuano sul primo tiro",
+        "summary": "Itinerario selvaggio e d'avventura riservato a cordate esperte. Avvicinamento intricato nel sottobosco e roccia da verificare.",
+        "approach": "Da Cesi percorrere via della Lince poi a sinistra in strada di Lione fino al primo tornante. Seguire il sentiero verso ovest e tagliare a destra verso la parete (usare GPS). Attacco sulla cima di un piccolo gendarme.",
+        "descent": "Proseguire per rocce facili verso nord fino alla cima di Colle Zannuto, poi sentiero a destra fino a Fonte Regne e discesa nel fosso \"Valle di Licino\" fino alla strada (40 min).",
+        "svgPath": [
+            {
+                "x": 95,
+                "y": 205,
+                "label": "Attacco (Gendarme)"
+            },
+            {
+                "x": 125,
+                "y": 145,
+                "label": "S1 Albero",
+                "pitchIndex": 0
+            },
+            {
+                "x": 115,
+                "y": 85,
+                "label": "S2 Albero",
+                "pitchIndex": 1
+            },
+            {
+                "x": 135,
+                "y": 30,
+                "label": "S3 Cima",
+                "pitchIndex": 2
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "V",
+                "length": "40 m",
+                "bolts": "2 chiodi + albero",
+                "desc": "A destra di un diedro-canale salire un caminetto giallastro, attraversare il canale e salire una rampa obliqua a destra sotto un tettino (2 chiodi), cengia erbosa e placche fino a sosta su alberello."
+            },
+            {
+                "num": "L2",
+                "grade": "V+",
+                "length": "40 m",
+                "bolts": "Alpinistica",
+                "desc": "Diedri e fessure piegando leggermente a sinistra, poi fessura verticale verso zona appoggiata e diedri fino a sosta su alberello a destra."
+            },
+            {
+                "num": "L3",
+                "grade": "IV",
+                "length": "50 m",
+                "bolts": "Albero",
+                "desc": "Diedri verticali (attenzione ai sassi instabili), piegare nel canale a sinistra fino alla cima della parete (sosta su albero)."
+            }
+        ]
+    },
+    {
+        "id": "antro-drago",
+        "type": "falesia",
+        "sectorId": "colle-zannuto",
+        "sector": "3.3 Colle Zannuto — Cava di Cesi",
+        "name": "Falesia Antro del Drago (Accesso Vietato)",
+        "openers": "Area storica abbandonata (10 vie)",
+        "gradeMax": "N.D.",
+        "gradeObbl": "N.D.",
+        "difficultyLevel": "facile",
+        "length": "10 vie (dismessa)",
+        "pitchesCount": 0,
+        "protectionType": "Vecchia chiodatura da verificare",
+        "protectionCategory": "trad",
+        "exposure": "Ovest",
+        "climbTime": "Accesso Vietato",
+        "descentTime": "700 m s.l.m.",
+        "gear": "Divieto di accesso imposto dalla proprietà della cava",
+        "gpsCoords": "42.6065, 12.6069 (Sopra cava dismessa S.S. 79)",
+        "summary": "Falesia situata sopra la cava di Cesi dentro una grande caverna di calcare giallo-arancio. Attualmente abbandonata con divieto di accesso.",
+        "approach": "Area soggetta a divieto di accesso da parte dei responsabili della cava.",
+        "descent": "Non praticabile.",
+        "cragRoutes": []
+    },
+    {
+        "id": "falesia-sant-erasmo",
+        "type": "falesia",
+        "sectorId": "monte-eolo",
+        "sector": "4.1 Monte Eolo — Eremo di Sant’Erasmo",
+        "name": "Falesia di Sant’Erasmo (6 Settori)",
+        "openers": "Attrezzata nel 2010 da climber di San Gemini",
+        "gradeMax": "8a+",
+        "gradeObbl": "5a",
+        "difficultyLevel": "facile",
+        "length": "59 vie (6 settori)",
+        "pitchesCount": 59,
+        "protectionType": "Fix acciaio inox",
+        "protectionCategory": "sport",
+        "exposure": "Sud-Est (molto ombreggiata nel bosco)",
+        "climbTime": "Primavera - Autunno",
+        "descentTime": "700 m s.l.m.",
+        "gear": "Corda singola da 60/70m, 12 rinvii",
+        "gpsCoords": "42.6143, 12.5914 (Eremo di Sant’Erasmo)",
+        "gallery": [
+            {
+                "url": "images/image4.jpg",
+                "caption": "Cartello descrittivo della falesia — foto di Stefano Cudini"
+            },
+            {
+                "url": "images/image1.jpg",
+                "caption": "Mappa di accesso alla Rocchetta di Cesi ed Eremo di Sant'Erasmo"
+            }
+        ],
+        "photoUrl": "images/image23.jpg",
+        "photoCaption": "Cartello descrittivo e panoramica della falesia di Sant’Erasmo — foto di Stefano Cudini",
+        "summary": "Sito immerso nel verde della Rocchetta di Cesi con ottime zone d'ombra, diviso nei settori Torre Alta, Torre Bassa, Diavoli e Santi, Sasso Est, Mezzogiorno e Sasso Nuovo.",
+        "approach": "Da Cesi salire per 4 km fino al parcheggio dell'Eremo di S. Erasmo. Oltrepassare la chiesa verso sinistra nel bosco fino ai ruderi delle Torri, poi scendere ripidamente a sinistra fino alle pareti (15 min).",
+        "descent": "Calata sportiva dagli anelli di sosta.",
+        "cragRoutes": [
+            {
+                "sectorTag": "Torre Alta",
+                "name": "Metto la staffa",
+                "grade": "6a",
+                "meters": "10m",
+                "stars": "++"
+            },
+            {
+                "sectorTag": "Torre Alta",
+                "name": "La vita è tutta un paranco",
+                "grade": "5c+",
+                "meters": "12m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Torre Alta",
+                "name": "Tourkana",
+                "grade": "5c+",
+                "meters": "13m",
+                "stars": "++"
+            },
+            {
+                "sectorTag": "Torre Alta",
+                "name": "Mimmo creatore di vie",
+                "grade": "5c+",
+                "meters": "15m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Torre Alta",
+                "name": "Vino e partimo",
+                "grade": "6a",
+                "meters": "15m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Torre Alta",
+                "name": "Giardinaggio estremo",
+                "grade": "6b",
+                "meters": "15m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Torre Alta",
+                "name": "La libertà dei servi",
+                "grade": "6a+",
+                "meters": "12m",
+                "stars": "++"
+            },
+            {
+                "sectorTag": "Torre Alta",
+                "name": "Annina, gatta sbarazzina",
+                "grade": "6b",
+                "meters": "20m",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Torre Bassa",
+                "name": "Professione canaro",
+                "grade": "6a",
+                "meters": "10m",
+                "stars": "++"
+            },
+            {
+                "sectorTag": "Torre Bassa",
+                "name": "Odio puro e duraturo",
+                "grade": "5b",
+                "meters": "12m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Torre Bassa",
+                "name": "Regine guerriere",
+                "grade": "5b",
+                "meters": "12m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Torre Bassa",
+                "name": "Alta quota",
+                "grade": "7a",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Torre Bassa",
+                "name": "Zozzi d’intelletto",
+                "grade": "6c",
+                "meters": "15m",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Torre Bassa",
+                "name": "Sottopanza de cavallo",
+                "grade": "6c",
+                "meters": "15m",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Torre Bassa",
+                "name": "La traccia di un sogno",
+                "grade": "6b",
+                "meters": "15m",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Torre Bassa",
+                "name": "Efficiente efficace",
+                "grade": "6a+",
+                "meters": "10m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Torre Bassa",
+                "name": "Sognatore di navi",
+                "grade": "6c",
+                "meters": "12m",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Torre Bassa",
+                "name": "Tommina",
+                "grade": "6a+",
+                "meters": "12m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "Mani di pietra",
+                "grade": "5c",
+                "meters": "16m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "Strani sintomi",
+                "grade": "6a+",
+                "meters": "14m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "Spacciatrice di gatti",
+                "grade": "6a",
+                "meters": "14m",
+                "stars": "++++"
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "Mappina",
+                "grade": "5a",
+                "meters": "24m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "Aldo e Nella nel vento",
+                "grade": "6a",
+                "meters": "24m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "Lacrima gialla",
+                "grade": "8a+",
+                "meters": "24m",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "Una minestra di quinoa",
+                "grade": "7c",
+                "meters": "24m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "L'anello di Sandokan",
+                "grade": "6b+",
+                "meters": "16m",
+                "stars": "++++"
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "Un libro per Anna L1+L2",
+                "grade": "7a+",
+                "meters": "32m",
+                "stars": "+++++"
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "Per sempre amici",
+                "grade": "6c+",
+                "meters": "20m",
+                "stars": "+++++"
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "Sifu Enrico",
+                "grade": "7b+",
+                "meters": "22m",
+                "stars": "+++++"
+            },
+            {
+                "sectorTag": "Diavoli e Santi",
+                "name": "Super Nico",
+                "grade": "6b",
+                "meters": "14m",
+                "stars": "++++"
+            },
+            {
+                "sectorTag": "Sasso Est",
+                "name": "Clara Blanca Alba",
+                "grade": "6a+",
+                "meters": "15m",
+                "stars": "++"
+            },
+            {
+                "sectorTag": "Sasso Est",
+                "name": "Troverò una grotta",
+                "grade": "6b",
+                "meters": "20m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Sasso Est",
+                "name": "Esploratori degli abissi",
+                "grade": "6b",
+                "meters": "22m",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Mezzogiorno",
+                "name": "La principessa delle terre arnolfe",
+                "grade": "6a+",
+                "meters": "26m",
+                "stars": "++++"
+            },
+            {
+                "sectorTag": "Mezzogiorno",
+                "name": "Il tiranno colpisce ancora",
+                "grade": "6a",
+                "meters": "26m",
+                "stars": "++++"
+            },
+            {
+                "sectorTag": "Mezzogiorno",
+                "name": "Una supposta per Gheddafi",
+                "grade": "6b+",
+                "meters": "26m",
+                "stars": "+++++"
+            },
+            {
+                "sectorTag": "Sasso Nuovo",
+                "name": "Terra d’asparago",
+                "grade": "6a",
+                "meters": "12m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Sasso Nuovo",
+                "name": "Timo di Sant'Erasmo",
+                "grade": "6a",
+                "meters": "12m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Sasso Nuovo",
+                "name": "Amore da lontano",
+                "grade": "6b",
+                "meters": "10m",
+                "stars": "++"
+            }
+        ]
+    },
+    {
+        "id": "concatenamento-sant-erasmo",
+        "type": "multipitch",
+        "sectorId": "monte-eolo",
+        "sector": "4.2 Monte Eolo — Sant’Erasmo",
+        "name": "Concatenamento Multipitch di Sant’Erasmo",
+        "openers": "Combinazione tiri della falesia",
+        "gradeMax": "6a",
+        "gradeObbl": "5b",
+        "difficultyLevel": "facile",
+        "length": "65 m",
+        "pitchesCount": 4,
+        "protectionType": "Fix acciaio inox",
+        "protectionCategory": "sport",
+        "exposure": "Sud-Est",
+        "climbTime": "1h 15m",
+        "descentTime": "10 min a piedi",
+        "gear": "12 rinvii, corda singola da 60m",
+        "gpsCoords": "42.6104, 12.5908 (Scaletta a pioli — Sant’Erasmo)",
+        "summary": "Combinazione di tiri della falesia che permette di raggiungere direttamente i ruderi posti sulla sommità dell'altopiano di Sant'Erasmo.",
+        "approach": "Come per la falesia di Sant'Erasmo (15 min dall'Eremo), attaccando direttamente dalla scaletta a pioli fissata in parete.",
+        "descent": "Dall'uscita presso i ruderi delle Torri si rientra comodamente a piedi verso l'Eremo di Sant'Erasmo in 10 minuti.",
+        "svgPath": [
+            {
+                "x": 90,
+                "y": 205,
+                "label": "Attacco (Scaletta)"
+            },
+            {
+                "x": 105,
+                "y": 160,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 115,
+                "y": 115,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 125,
+                "y": 70,
+                "label": "S3",
+                "pitchIndex": 2
+            },
+            {
+                "x": 135,
+                "y": 30,
+                "label": "Ruderi",
+                "pitchIndex": 3
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "5c",
+                "length": "15 m",
+                "bolts": "Fix",
+                "desc": "Si attacca dalla scaletta a pioli; si può salire sia la via di destra che quella di sinistra."
+            },
+            {
+                "num": "L2",
+                "grade": "5b",
+                "length": "15 m",
+                "bolts": "Fix",
+                "desc": "Secondo tiro su calcare articolato."
+            },
+            {
+                "num": "L3",
+                "grade": "5b / 6a",
+                "length": "15 m",
+                "bolts": "Fix",
+                "desc": "Si può scegliere tra due vie simili adiacenti."
+            },
+            {
+                "num": "L4",
+                "grade": "6a",
+                "length": "20 m",
+                "bolts": "Fix",
+                "desc": "Ultimo tiro fino all'uscita presso i ruderi sull'altopiano."
+            }
+        ]
+    },
+    {
+        "id": "falesia-sant-andrea",
+        "type": "falesia",
+        "sectorId": "monte-eolo",
+        "sector": "4.3.1 & 4.3.4 Penne di Sant’Andrea (Cesi)",
+        "name": "Falesia e Pilastri di Sant’Andrea (27 vie)",
+        "openers": "Settori storici e recenti sopra Cesi",
+        "gradeMax": "7a",
+        "gradeObbl": "4b",
+        "difficultyLevel": "facile",
+        "length": "27 vie (2 settori)",
+        "pitchesCount": 27,
+        "protectionType": "Fix acciaio inox",
+        "protectionCategory": "sport",
+        "exposure": "Sud",
+        "climbTime": "Inverno - Primavera - Autunno",
+        "descentTime": "400 m s.l.m.",
+        "gear": "Corda singola 60m, 12 rinvii",
+        "gpsCoords": "42.6124, 12.5854 (Penne di Sant’Andrea)",
+        "photoUrl": "images/image15.jpg",
+        "photoCaption": "La caratteristica scala a pioli da cui partono le vie dei Pilastri di Sant'Andrea",
+        "summary": "Calcare grigio compatto con grip eccezionale in una piccola gola sopra Cesi. Include la falesia principale (17 vie) e i Pilastri a sinistra di Rock n' Roll (10 vie).",
+        "approach": "Da Cesi imboccare la strada per S. Erasmo; dopo una curva a gomito a sinistra parcheggiare presso un casottino e seguire il sentiero a destra per pochi minuti.",
+        "descent": "Calata sportiva dagli anelli di sosta.",
+        "cragRoutes": [
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "La pazienza di Federica",
+                "grade": "4c",
+                "meters": "30m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "Riccioli al vento",
+                "grade": "6a+",
+                "meters": "30m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "O dente o ganassa",
+                "grade": "6b+",
+                "meters": "30m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "Khan",
+                "grade": "5c",
+                "meters": "13m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "Arbusto tosto",
+                "grade": "6b+",
+                "meters": "-",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "Vena bagnata",
+                "grade": "6b",
+                "meters": "15m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "La bionda celtica",
+                "grade": "7a",
+                "meters": "15m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "Arrosto misto",
+                "grade": "6b",
+                "meters": "15m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "Suprema armonia",
+                "grade": "6a",
+                "meters": "12m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "Mimmo Tse Tong",
+                "grade": "6b+",
+                "meters": "12m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "Principina",
+                "grade": "6b",
+                "meters": "10m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "Ispuligidenie",
+                "grade": "5c",
+                "meters": "15m",
+                "stars": "++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "Altai",
+                "grade": "5c",
+                "meters": "13m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "L'ululato di Artù",
+                "grade": "5b",
+                "meters": "15m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "Il deserto del Gobi",
+                "grade": "6a",
+                "meters": "15m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Falesia Sant'Andrea",
+                "name": "La neve del 2012",
+                "grade": "6a",
+                "meters": "14m",
+                "stars": "+++"
+            },
+            {
+                "sectorTag": "Pilastri Sant'Andrea",
+                "name": "Ryoby",
+                "grade": "5c",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Pilastri Sant'Andrea",
+                "name": "Yocesity",
+                "grade": "5c",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Pilastri Sant'Andrea",
+                "name": "North Face",
+                "grade": "6b+",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Pilastri Sant'Andrea",
+                "name": "Lolly pop",
+                "grade": "6a+",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Pilastri Sant'Andrea",
+                "name": "Emma",
+                "grade": "5c",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Pilastri Sant'Andrea",
+                "name": "Scorpio",
+                "grade": "4b",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Pilastri Sant'Andrea",
+                "name": "Mecarozzi",
+                "grade": "5c",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Pilastri Sant'Andrea",
+                "name": "Pandevia",
+                "grade": "6a",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Pilastri Sant'Andrea",
+                "name": "Viagra",
+                "grade": "6b+/6c",
+                "meters": "-",
+                "stars": ""
+            },
+            {
+                "sectorTag": "Pilastri Sant'Andrea",
+                "name": "Spigolo nord",
+                "grade": "6b",
+                "meters": "-",
+                "stars": ""
+            }
+        ]
+    },
+    {
+        "id": "rock-n-roll",
+        "type": "multipitch",
+        "sectorId": "monte-eolo",
+        "sector": "4.3.2 Monte Eolo — Penne di Sant’Andrea",
+        "name": "Rock n’ Roll",
+        "openers": "Marco Biagiola e Stefano Laurenti (2018)",
+        "gradeMax": "6b+",
+        "gradeObbl": "6a",
+        "difficultyLevel": "medio",
+        "length": "110 m",
+        "pitchesCount": 5,
+        "protectionType": "Interamente attrezzata a fix (S1)",
+        "protectionCategory": "sport",
+        "exposure": "Sud",
+        "climbTime": "2h 00m",
+        "descentTime": "20 min (doppie)",
+        "gear": "14 rinvii, due corde da 60m",
+        "gpsCoords": "42.6124, 12.5854 (Sentiero Falesia Sant’Andrea)",
+        "gallery": [
+            {
+                "url": "images/image17.jpg",
+                "caption": "Il bellissimo secondo tiro della via Rock n' Roll"
+            }
+        ],
+        "photoUrl": "images/image6.jpg",
+        "photoCaption": "Tracciato della via Rock n’ Roll e secondo tiro — foto di Pino Calandrella",
+        "summary": "Bella via plaisir chiodata dal basso che segue diverse fessure e diedri regalando una scalata tecnica e divertente.",
+        "approach": "Dal casottino sulla strada per S. Erasmo seguire il sentiero per la falesia di Sant'Andrea fino a una freccia verso destra che porta sotto l'attacco.",
+        "descent": "In corda doppia lungo la via.",
+        "svgPath": [
+            {
+                "x": 80,
+                "y": 210,
+                "label": "Attacco"
+            },
+            {
+                "x": 95,
+                "y": 175,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 85,
+                "y": 135,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 115,
+                "y": 100,
+                "label": "S3",
+                "pitchIndex": 2
+            },
+            {
+                "x": 130,
+                "y": 65,
+                "label": "S4",
+                "pitchIndex": 3
+            },
+            {
+                "x": 140,
+                "y": 30,
+                "label": "S5",
+                "pitchIndex": 4
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "6a+",
+                "length": "20 m",
+                "bolts": "Fix",
+                "desc": "Salire dritti sulla placca poco a sinistra di uno spigolo che si aggira poco prima del terrazzo di sosta."
+            },
+            {
+                "num": "L2",
+                "grade": "6a",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Seguire il diedro-fessura sulla sinistra fino al suo termine."
+            },
+            {
+                "num": "L3",
+                "grade": "6b",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Traversare per circa 10 m verso destra fino a prendere una fessura, seguirla e al suo termine traversare verso sinistra."
+            },
+            {
+                "num": "L4",
+                "grade": "4c",
+                "length": "20 m",
+                "bolts": "Fix",
+                "desc": "Aggirare sulla destra la placca iniziale e per facili rampe arrivare alla sosta."
+            },
+            {
+                "num": "L5",
+                "grade": "6b+",
+                "length": "20 m",
+                "bolts": "Fix",
+                "desc": "Salire la larga fessura sulla destra per poi proseguire in un diedro e per paretine fino alla sosta."
+            }
+        ]
+    },
+    {
+        "id": "frida-calo",
+        "type": "multipitch",
+        "sectorId": "monte-eolo",
+        "sector": "4.3.3 Monte Eolo — Penne di Sant’Andrea",
+        "name": "Frida “Calo”",
+        "openers": "Carlo Capuano e Alessandro Pasquantonio (ottobre 2024)",
+        "gradeMax": "6b+",
+        "gradeObbl": "6a",
+        "difficultyLevel": "medio",
+        "length": "80 m",
+        "pitchesCount": 3,
+        "protectionType": "Fix acciaio inox",
+        "protectionCategory": "sport",
+        "exposure": "Sud",
+        "climbTime": "1h 30m",
+        "descentTime": "15 min (a piedi o 3 doppie)",
+        "gear": "12 rinvii",
+        "gpsCoords": "42.6124, 12.5854 (A sinistra di Rock n’ Roll)",
+        "summary": "Itinerario recente aperto nell'ottobre 2024 immediatamente a sinistra di Rock n' Roll con un bellissimo terzo tiro su placca.",
+        "approach": "Come per Rock n' Roll, l'attacco è situato subito alla sua sinistra.",
+        "descent": "Dalla sosta finale è possibile proseguire a piedi lungo il sentiero fino alla strada principale oppure effettuare 3 calate in doppia.",
+        "svgPath": [
+            {
+                "x": 65,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 60,
+                "y": 145,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 65,
+                "y": 90,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 75,
+                "y": 35,
+                "label": "S3",
+                "pitchIndex": 2
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "6b",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Si parte subito su placca; dopo una decina di metri si affronta un diedro al termine del quale (passaggio erboso) si trova la sosta."
+            },
+            {
+                "num": "L2",
+                "grade": "5c",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Tiro di raccordo su roccia da ripulire leggermente."
+            },
+            {
+                "num": "L3",
+                "grade": "6b+",
+                "length": "30 m",
+                "bolts": "Fix",
+                "desc": "Affrontare la parete a sinistra su una bellissima placca, per poi deviare a destra a metà tiro seguendo una piccola fessura fino in sosta."
+            }
+        ]
+    },
+    {
+        "id": "die-gartenroute",
+        "type": "multipitch",
+        "sectorId": "monte-eolo",
+        "sector": "4.3.5 Monte Eolo — Penne di Sant’Andrea",
+        "name": "Die Gartenroute (Itinerario 15)",
+        "openers": "Approccio al pilastro superiore",
+        "gradeMax": "5a",
+        "gradeObbl": "5a",
+        "difficultyLevel": "facile",
+        "length": "45 m",
+        "pitchesCount": 1,
+        "protectionType": "Interamente attrezzata a fix (S1)",
+        "protectionCategory": "sport",
+        "exposure": "Sud",
+        "climbTime": "30 min",
+        "descentTime": "10 min (corda fissa + cengia)",
+        "gear": "14 rinvii",
+        "gpsCoords": "42.6124, 12.5854 (Destra Falesia S. Andrea)",
+        "photoUrl": "images/image8.jpg",
+        "photoCaption": "Tracciato di Die Gartenroute (15) e Akuna Matata (16) — foto Pino Calandrella",
+        "summary": "Interessante tiro di approccio alla parte alta del pilastro; conduce in prossimità dell'attacco di Akuna Matata.",
+        "approach": "Come per la falesia di Sant'Andrea, subito dopo l'ultima via \"La neve del 2012\" (targhetta alla base).",
+        "descent": "Spostarsi alla base dello spigolo dove è fissata una corda fissa e traversare su piccola cengia verso destra fino al sentiero principale (oppure proseguire su Akuna Matata).",
+        "svgPath": [
+            {
+                "x": 105,
+                "y": 205,
+                "label": "Attacco (Targhetta)"
+            },
+            {
+                "x": 125,
+                "y": 120,
+                "label": "S1 Pilastro",
+                "pitchIndex": 0
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "5a",
+                "length": "45 m",
+                "bolts": "Fix",
+                "desc": "Salire due tratti verticali interrotti da una cengia fino a una crestina (possibile sosta intermedia), poi per facili rocce spostandosi a destra verso la sosta."
+            }
+        ]
+    },
+    {
+        "id": "akuna-matata",
+        "type": "multipitch",
+        "sectorId": "monte-eolo",
+        "sector": "4.3.6 Monte Eolo — Penne di Sant’Andrea",
+        "name": "Akuna Matata (Itinerario 16)",
+        "openers": "Marco Principi e Francesco Novelli (2019)",
+        "gradeMax": "6a+",
+        "gradeObbl": "5a",
+        "difficultyLevel": "facile",
+        "length": "135 m",
+        "pitchesCount": 5,
+        "protectionType": "Fix (L3 distanziati, integrabili) (S1)",
+        "protectionCategory": "sport",
+        "exposure": "Sud",
+        "climbTime": "2h 15m",
+        "descentTime": "20 min (doppie o sentiero CAI 674/c)",
+        "gear": "14 rinvii, qualche friend medio per L3",
+        "gpsCoords": "42.6124, 12.5854 (A monte di Die Gartenroute)",
+        "gallery": [
+            {
+                "url": "images/image26.jpg",
+                "caption": "I tratti finali della via Akuna Matata"
+            },
+            {
+                "url": "images/image25.jpg",
+                "caption": "Il grande anello di ferro degli anni '80 lungo il tracciato"
+            }
+        ],
+        "photoUrl": "images/image8.jpg",
+        "photoCaption": "Tracciato di Die Gartenroute (15), Akuna Matata (16) e il grande anello di ferro degli anni '80 — foto Pino Calandrella",
+        "summary": "Ripercorre in parte la storica \"Via dell'Anello\" (Lepri-Nobili 1981) salendo direttamente il placcone monolitico superiore.",
+        "approach": "A monte di Die Gartenroute (raggiungibile salendo Die Gartenroute oppure dal sentiero principale tramite la cengia con corda fissa).",
+        "descent": "In doppia sulla via (corde da 60 m saltando L5) fino alla corda fissa, oppure a piedi verso la falesia Le Due Torri e il sentiero CAI 674/c Andrea Sabatini (20 min).",
+        "svgPath": [
+            {
+                "x": 115,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 115,
+                "y": 170,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 105,
+                "y": 135,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 100,
+                "y": 95,
+                "label": "S3",
+                "pitchIndex": 2
+            },
+            {
+                "x": 115,
+                "y": 55,
+                "label": "S4 (Anello)",
+                "pitchIndex": 3
+            },
+            {
+                "x": 125,
+                "y": 22,
+                "label": "Cima",
+                "pitchIndex": 4
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "4a",
+                "length": "30 m",
+                "bolts": "Fix",
+                "desc": "Salire la facile placca ammanigliata fino alla base del pilastro su una cengia."
+            },
+            {
+                "num": "L2",
+                "grade": "5b",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Salire verso sinistra seguendo piccole cenge fino alla placca, poi per caminetto fino al terrazzo di sosta."
+            },
+            {
+                "num": "L3",
+                "grade": "6a+",
+                "length": "30 m",
+                "bolts": "Fix + friend",
+                "desc": "Dritti sulle sovrastanti placche poi leggermente a sinistra per un diedro fino a comodo terrazzo (chiodatura più lunga, integrabile a friend)."
+            },
+            {
+                "num": "L4",
+                "grade": "5b",
+                "length": "30 m",
+                "bolts": "Fix + grande anello",
+                "desc": "Diedro fessurato a destra poi paretine verticali incontrando il grande anello di ferro degli anni '80 fino a sosta a fix."
+            },
+            {
+                "num": "L5",
+                "grade": "III",
+                "length": "20 m",
+                "bolts": "Alpinistica",
+                "desc": "Proseguire per saltini fino alla cima."
+            }
+        ]
+    },
+    {
+        "id": "via-zaer",
+        "type": "multipitch",
+        "sectorId": "monte-eolo",
+        "sector": "4.3.7 Monte Eolo — Penne di Sant’Andrea",
+        "name": "ZAER",
+        "openers": "Marco Principi, Alessandro Pasquantonio e Andrea Leonardi (2024)",
+        "gradeMax": "5c",
+        "gradeObbl": "5b",
+        "difficultyLevel": "facile",
+        "length": "45 m",
+        "pitchesCount": 2,
+        "protectionType": "Fix acciaio inox (S1)",
+        "protectionCategory": "sport",
+        "exposure": "Sud",
+        "climbTime": "1h 00m",
+        "descentTime": "20 min (come Akuna Matata)",
+        "gear": "12 rinvii",
+        "gpsCoords": "42.6124, 12.5854 (A sinistra del 2° tiro Akuna Matata)",
+        "summary": "Sfrutta la bellissima parete di placca alla sinistra di Akuna Matata, partendo dai primi 3 spit del secondo tiro di quest'ultima.",
+        "approach": "Come per Akuna Matata (raggiungere S1 di Akuna Matata).",
+        "descent": "Vedere discesa di Akuna Matata (doppie o sentiero CAI 674/c).",
+        "svgPath": [
+            {
+                "x": 110,
+                "y": 205,
+                "label": "Attacco (S1 Akuna)"
+            },
+            {
+                "x": 80,
+                "y": 135,
+                "label": "S1 Terrazzino",
+                "pitchIndex": 0
+            },
+            {
+                "x": 75,
+                "y": 60,
+                "label": "S2",
+                "pitchIndex": 1
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "5b",
+                "length": "15 m",
+                "bolts": "Fix",
+                "desc": "Sfrutta i primi 3 spit di L2 di Akuna Matata per poi deviare a sinistra in un traverso che termina su un comodo terrazzino."
+            },
+            {
+                "num": "L2",
+                "grade": "5c",
+                "length": "30 m",
+                "bolts": "Fix",
+                "desc": "Tiro di placca su ottima roccia che continua verticalmente fino a un diedro oltre il quale si scorge la sosta."
+            }
+        ]
+    },
+    {
+        "id": "canti-bosco",
+        "type": "multipitch",
+        "sectorId": "monte-eolo",
+        "sector": "4.3.7 Monte Eolo — Penne di Sant’Andrea",
+        "name": "Canti nel Bosco",
+        "openers": "Settore destro Akuna Matata",
+        "gradeMax": "5c",
+        "gradeObbl": "5b",
+        "difficultyLevel": "facile",
+        "length": "75 m",
+        "pitchesCount": 3,
+        "protectionType": "Fix acciaio inox",
+        "protectionCategory": "sport",
+        "exposure": "Sud",
+        "climbTime": "1h 15m",
+        "descentTime": "20 min (doppie)",
+        "gear": "12 rinvii",
+        "gpsCoords": "42.6124, 12.5854 (A destra di Akuna Matata)",
+        "summary": "Via plaisir di tre lunghezze situata immediatamente sulla destra di Akuna Matata.",
+        "approach": "Come per Akuna Matata, attaccando sulla destra della stessa.",
+        "descent": "In corda doppia lungo la via.",
+        "svgPath": [
+            {
+                "x": 135,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 140,
+                "y": 150,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 145,
+                "y": 95,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 145,
+                "y": 40,
+                "label": "S3",
+                "pitchIndex": 2
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "5b",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Prima lunghezza su calcare articolato."
+            },
+            {
+                "num": "L2",
+                "grade": "5c",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Seconda lunghezza su placca lavorata."
+            },
+            {
+                "num": "L3",
+                "grade": "5c",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Terza lunghezza fino alla sosta di calata."
+            }
+        ]
+    },
+    {
+        "id": "qualche-volta",
+        "type": "multipitch",
+        "sectorId": "monte-eolo",
+        "sector": "4.3.8 Monte Eolo — Penne di Sant’Andrea",
+        "name": "Qualche Volta",
+        "openers": "Settore destro Akuna Matata",
+        "gradeMax": "6a",
+        "gradeObbl": "5b",
+        "difficultyLevel": "facile",
+        "length": "75 m",
+        "pitchesCount": 3,
+        "protectionType": "Fix acciaio inox",
+        "protectionCategory": "sport",
+        "exposure": "Sud",
+        "climbTime": "1h 15m",
+        "descentTime": "20 min (doppie)",
+        "gear": "12 rinvii",
+        "gpsCoords": "42.6124, 12.5854 (A destra di Canti nel Bosco)",
+        "summary": "Itinerario sportivo di tre tiri subito a destra di Canti nel Bosco.",
+        "approach": "Come per Akuna Matata, attaccando a destra di Canti nel Bosco.",
+        "descent": "In corda doppia lungo la via.",
+        "svgPath": [
+            {
+                "x": 155,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 160,
+                "y": 150,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 165,
+                "y": 95,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 165,
+                "y": 40,
+                "label": "S3",
+                "pitchIndex": 2
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "5b",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Primo tiro fino alla prima sosta attrezzata."
+            },
+            {
+                "num": "L2",
+                "grade": "6a",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Secondo tiro continuo su calcare compatto."
+            },
+            {
+                "num": "L3",
+                "grade": "6a",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Terzo tiro fino alla sosta finale."
+            }
+        ]
+    },
+    {
+        "id": "terza-via",
+        "type": "multipitch",
+        "sectorId": "monte-eolo",
+        "sector": "4.3.9 Monte Eolo — Penne di Sant’Andrea",
+        "name": "La Terza Via",
+        "openers": "Settore destro pilastro superiore",
+        "gradeMax": "6b+",
+        "gradeObbl": "5c",
+        "difficultyLevel": "medio",
+        "length": "100 m",
+        "pitchesCount": 4,
+        "protectionType": "Fix acciaio inox",
+        "protectionCategory": "sport",
+        "exposure": "Sud",
+        "climbTime": "1h 45m",
+        "descentTime": "25 min (doppie su Akuna Matata)",
+        "gear": "12 rinvii, due corde da 60m",
+        "gpsCoords": "42.6124, 12.5854 (A destra di Qualche Volta)",
+        "photoUrl": "images/image2.jpg",
+        "photoCaption": "Tracciato della Terza Via con indicazione delle calate in doppia",
+        "summary": "Quattro lunghezze di ottima arrampicata che culminano sulla cresta sommitale con rientro sulle calate di Akuna Matata.",
+        "approach": "Come per Akuna Matata, sul lato destro del pilastro superiore.",
+        "descent": "Seguire la facile cresta fino a raggiungere le doppie di Akuna Matata (corde da 60 m) fino alla corda fissa e al sentiero principale.",
+        "svgPath": [
+            {
+                "x": 175,
+                "y": 205,
+                "label": "Attacco"
+            },
+            {
+                "x": 180,
+                "y": 160,
+                "label": "S1",
+                "pitchIndex": 0
+            },
+            {
+                "x": 185,
+                "y": 115,
+                "label": "S2",
+                "pitchIndex": 1
+            },
+            {
+                "x": 180,
+                "y": 70,
+                "label": "S3",
+                "pitchIndex": 2
+            },
+            {
+                "x": 165,
+                "y": 30,
+                "label": "Cresta",
+                "pitchIndex": 3
+            }
+        ],
+        "pitches": [
+            {
+                "num": "L1",
+                "grade": "5c",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Prima lunghezza di riscaldamento su calcare grigio."
+            },
+            {
+                "num": "L2",
+                "grade": "6b+",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Tiro chiave della via con passaggi tecnici su placca/muro."
+            },
+            {
+                "num": "L3",
+                "grade": "6a",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Terza lunghezza continua."
+            },
+            {
+                "num": "L4",
+                "grade": "5c",
+                "length": "25 m",
+                "bolts": "Fix",
+                "desc": "Quarta lunghezza fino alla facile cresta sommitale."
+            }
+        ]
+    },
+    {
+        "id": "falesia-due-torri",
+        "type": "falesia",
+        "sectorId": "monte-eolo",
+        "sector": "4.4 Monte Eolo — Osservatorio / S. Erasmo",
+        "name": "Falesia Le Due Torri (8 vie)",
+        "openers": "Luigi Martino e Federico Nullo",
+        "gradeMax": "8a+",
+        "gradeObbl": "5b",
+        "difficultyLevel": "facile",
+        "length": "8 vie",
+        "pitchesCount": 8,
+        "protectionType": "Fix acciaio inox",
+        "protectionCategory": "sport",
+        "exposure": "Sud-Est",
+        "climbTime": "Inverno - Primavera - Autunno",
+        "descentTime": "580 m s.l.m.",
+        "gear": "Corda singola 60m, 10 rinvii",
+        "gpsCoords": "42.6143, 12.5914 (Osservatorio Astronomico / S. Erasmo)",
+        "summary": "Piccola falesia ben esposta nei pressi dell'Osservatorio Astronomico sopra Cesi con tiri dal 5b fino all'8a+.",
+        "approach": "Da Terni Nord verso Cesi, poi Strada della Pittura, via di Terra Maiura (cartello giallo OSSERVATORIO) e Vocabolo S. Erasmo per 2,7 km fino all'Osservatorio. Scendere a sud lasciando l'osservatorio a destra, seguire gli omini e la freccia sull'albero verso sud-est fino alla bacheca alla base (10 min).",
+        "descent": "Calata sportiva dagli anelli di sosta.",
+        "cragRoutes": [
+            {
+                "name": "Habanero",
+                "grade": "5c+",
+                "meters": "10 m",
+                "stars": "+++"
+            },
+            {
+                "name": "Morbidis e Gnomis",
+                "grade": "5b",
+                "meters": "14 m",
+                "stars": "++"
+            },
+            {
+                "name": "Tienilo duro",
+                "grade": "7b+",
+                "meters": "14 m",
+                "stars": ""
+            },
+            {
+                "name": "La forza del muschio",
+                "grade": "7c+/8a+",
+                "meters": "20 m",
+                "stars": "+++"
+            },
+            {
+                "name": "I 4 e la liberazione",
+                "grade": "7b",
+                "meters": "16 m",
+                "stars": "++"
+            },
+            {
+                "name": "Federico spaccacaviglie",
+                "grade": "6b+/6c",
+                "meters": "18 m",
+                "stars": "++++"
+            },
+            {
+                "name": "La via del di dietro",
+                "grade": "6a+",
+                "meters": "18 m",
+                "stars": "+++"
+            },
+            {
+                "name": "Fifty/fifty",
+                "grade": "6a",
+                "meters": "15 m",
+                "stars": "+++"
+            }
+        ]
+    },
+    {
+        "id": "sassi-pelasgi",
+        "type": "falesia",
+        "sectorId": "monte-eolo",
+        "sector": "4.5 Monte Eolo — Cesi (S.S. 79)",
+        "name": "Sassi dei Pelasgi",
+        "openers": "Settore d'arrampicata sopra Cesi",
+        "gradeMax": "N.D.",
+        "gradeObbl": "N.D.",
+        "difficultyLevel": "facile",
+        "length": "Settore monotiri",
+        "pitchesCount": 0,
+        "protectionType": "Fix / Chiodatura locale",
+        "protectionCategory": "sport",
+        "exposure": "Sud-Ovest",
+        "climbTime": "Primavera - Autunno - Inverno",
+        "descentTime": "10 min avv.",
+        "gear": "Corda singola, 10 rinvii",
+        "gpsCoords": "S.S. 79 — Cartello stradale località Cesi",
+        "summary": "Piccolo settore immerso nel bosco di pini d'Aleppo immediatamente a monte del cartello stradale di Cesi lungo la S.S. 79.",
+        "approach": "Parcheggiare l'auto su uno slargo (a destra venendo da Terni) della S.S. 79 in corrispondenza del cartello stradale di Cesi. Imboccare il sentiero poco oltre che sale prima verso Cesi e poi a destra nel bosco di pini d'Aleppo (10 min).",
+        "descent": "Calata sportiva dagli anelli di sosta.",
+        "cragRoutes": []
+    }
+];
 
         // ==========================================
         // 4. STATO APPLICAZIONE E PERSISTENZA
