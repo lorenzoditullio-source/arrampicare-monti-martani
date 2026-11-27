@@ -1,0 +1,23 @@
+{
+  "name": "Arrampicare nei Monti Martani",
+  "short_name": "Monti Martani",
+  "description": "Guida di arrampicata offline per i settori dei Monti Martani",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fafaf9",
+  "theme_color": "#1c1917",
+  "icons": [
+    {
+      "src": "./images/image1.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "./images/image1.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
