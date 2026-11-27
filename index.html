@@ -56,6 +56,18 @@
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="apple-mobile-web-app-title" content="Monti Martani">
+    <link rel="apple-touch-icon" href="./images/image1.jpg">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('PWA Service Worker attivo:', reg.scope))
+            .catch(err => console.warn('Errore Service Worker:', err));
+        });
+      }
+    </script>
 </head>
 <body class="min-h-screen flex flex-col bg-stone-50 selection:bg-orange-200 selection:text-stone-900">
 
